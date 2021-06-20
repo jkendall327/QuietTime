@@ -1,3 +1,16 @@
 {
-  "InitialMaxVolume": 50
+  "InitialMaxVolume": 50,
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Error"
+    },
+    "File": {
+      "Path": "app.log",
+      "Append": "True",
+      "FileSizeLimitBytes": 0, // use to activate rolling file behaviour
+      "MaxRollingFiles": 0 // use to specify max number of log files
+    }
+  }
 }

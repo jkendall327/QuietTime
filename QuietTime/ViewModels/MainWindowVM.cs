@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using NAudio.CoreAudioApi;
 using QuietTime.Other;
@@ -37,25 +38,27 @@ namespace QuietTime.ViewModels
             set { _versionInfo = value; }
         }
 
-
         private string GetVersionInfo()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             DateTime buildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
 
-            return $"v{version}, built {buildDate.ToString("g")}";
+            return $"v{version}, built {buildDate:g}";
         }
 
-        public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config)
-        {
-            _config = config ?? throw new System.ArgumentNullException(nameof(config));
+        readonly ILogger _log;
 
-            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
+        public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log)
+        {
+            _config = config ?? throw new ArgumentNullException(nameof(config));
+            _log = log ?? throw new ArgumentNullException(nameof(log));
 
             if (enumerator is null)
             {
-                throw new System.ArgumentNullException(nameof(enumerator));
+                throw new ArgumentNullException(nameof(enumerator));
             }
+
+            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
 
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
 
@@ -68,6 +71,8 @@ namespace QuietTime.ViewModels
 
         private void OnVolumeChange(AudioVolumeNotificationData data)
         {
+            _log.LogInformation("Volume change");
+
             var volume = data.MasterVolume.ToPercentage();
 
             if (volume > MaxVolume)
