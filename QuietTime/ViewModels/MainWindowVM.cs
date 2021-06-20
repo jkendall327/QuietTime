@@ -109,16 +109,8 @@ namespace QuietTime.ViewModels
         /// </summary>
         private void OnLock()
         {
-            if (IsLocked)
-            {
-                IsLocked = false;
-                MaxVolume = 0;
-
-                return;
-            }
-
-            IsLocked = true;
-            MaxVolume = NewMaxVolume;
+            IsLocked = !IsLocked;
+            MaxVolume = IsLocked ? NewMaxVolume : 0;
         }
 
         /// <summary>
