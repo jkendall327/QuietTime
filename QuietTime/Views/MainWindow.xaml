@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuietTime"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <StackPanel>
@@ -18,5 +19,9 @@
             <Label Content="{Binding MaxVolume}"></Label>
         </StackPanel>
         <Slider Maximum="100" MaxWidth="500"  Value="{Binding MaxVolume}"></Slider>
+
+        <tb:TaskbarIcon x:Name="myNotifyIcon" Visibility="Visible" ToolTipText="QuietTime"
+                       MenuActivation="DoubleClick"/>
     </StackPanel>
+
 </Window>
