@@ -8,10 +8,11 @@ namespace QuietTime
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainWindowVM vm)
         {
             InitializeComponent();
-            this.DataContext = new MainWindowVM();
+
+            DataContext = vm;
         }
     }
 }

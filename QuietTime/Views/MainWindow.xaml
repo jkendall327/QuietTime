@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:QuietTime"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <StackPanel>
+        
         <Label>Maximum volume setter program</Label>
-    </Grid>
+        <StackPanel Orientation="Horizontal">
+            <Label>Current volume: </Label>
+            <Label Content="{Binding CurrentVolume}"></Label>
+        </StackPanel>
+    </StackPanel>
 </Window>

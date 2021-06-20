@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Autofac;
+using NAudio.CoreAudioApi;
+using QuietTime.ViewModels;
 using System.Windows;
 
 namespace QuietTime
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<MainWindowVM>();
+            builder.RegisterType<MainWindow>();
+            builder.RegisterInstance(new MMDeviceEnumerator());
+
+            builder.Build().Resolve<MainWindow>().Show();
+        }
     }
 }
