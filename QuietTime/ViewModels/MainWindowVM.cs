@@ -2,6 +2,9 @@
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using NAudio.CoreAudioApi;
 using QuietTime.Other;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace QuietTime.ViewModels
 {
@@ -26,6 +29,23 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _maxVolume, value); }
         }
 
+        private string _versionInfo;
+
+        public string VersionInfo
+        {
+            get { return _versionInfo; }
+            set { _versionInfo = value; }
+        }
+
+
+        private string GetVersionInfo()
+        {
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            DateTime buildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
+
+            return $"v{version}, built {buildDate.ToString("g")}";
+        }
+
         public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config)
         {
             _config = config ?? throw new System.ArgumentNullException(nameof(config));
@@ -42,6 +62,8 @@ namespace QuietTime.ViewModels
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
 
             CurrentVolume = _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
+
+            VersionInfo = GetVersionInfo();
         }
 
         private void OnVolumeChange(AudioVolumeNotificationData data)

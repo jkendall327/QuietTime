@@ -20,6 +20,10 @@
         </StackPanel>
         <Slider Maximum="100" MaxWidth="500"  Value="{Binding MaxVolume}"></Slider>
 
+        <StackPanel Orientation="Horizontal">
+            <Label>Version:</Label>
+            <Label Content="{Binding VersionInfo}"></Label>
+        </StackPanel>
         <tb:TaskbarIcon x:Name="myNotifyIcon" Visibility="Visible" ToolTipText="QuietTime"
                        MenuActivation="DoubleClick"/>
     </StackPanel>
