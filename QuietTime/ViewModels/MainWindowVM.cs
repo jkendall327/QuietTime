@@ -44,6 +44,16 @@ namespace QuietTime.ViewModels
         private int _maxVolume;
 
         /// <summary>
+        /// What <see cref="MaxVolume"/> will be set to when <see cref="OnLock"/> is called.
+        /// </summary>
+        public int NewMaxVolume
+        {
+            get { return _newMaxVolume; }
+            set { SetProperty(ref _newMaxVolume, value); }
+        }
+        private int _newMaxVolume;
+
+        /// <summary>
         /// Returns the current assembly's version and build date.
         /// </summary>
         public string VersionInfo
@@ -114,7 +124,7 @@ namespace QuietTime.ViewModels
 
             IsLocked = true;
             ButtonText = "Unlock";
-            MaxVolume = CurrentVolume;
+            MaxVolume = NewMaxVolume;
         }
 
         /// <summary>
