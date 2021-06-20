@@ -79,19 +79,15 @@ namespace QuietTime.ViewModels
         }
 
         /// <summary>
-        /// The text of the lock button.
-        /// </summary>
-        public string ButtonText
-        {
-            get { return _buttonText; }
-            set { SetProperty(ref _buttonText, value); }
-        }
-        private string _buttonText = "Lock";
-
-        /// <summary>
         /// Whether the user's audio is currently locked.
         /// </summary>
-        private bool IsLocked { get; set; }
+        private bool _isLocked;
+        public bool IsLocked
+        {
+            get { return _isLocked; }
+            set { SetProperty(ref _isLocked, value); }
+        }
+
 
         /// <summary>
         /// Locks volume at current levels.
@@ -128,7 +124,6 @@ namespace QuietTime.ViewModels
         {
             if (IsLocked)
             {
-                ButtonText = "Lock";
                 IsLocked = false;
                 MaxVolume = 0;
                 BackgroundColor = BlueTint;
@@ -137,7 +132,6 @@ namespace QuietTime.ViewModels
             }
 
             IsLocked = true;
-            ButtonText = "Unlock";
             MaxVolume = NewMaxVolume;
             BackgroundColor = RedTint;
         }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuietTime"
         xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:l="clr-namespace:QuietTime.Other"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Window.Background>
@@ -18,6 +19,9 @@
                 Color="{Binding BackgroundColor}" />
         </LinearGradientBrush>
     </Window.Background>
+    <Window.Resources>
+        <l:BoolToButtonTextConverter x:Key="buttonConverter" />
+    </Window.Resources>
     <StackPanel>
         <Label>Maximum volume setter program</Label>
         
@@ -36,7 +40,7 @@
             <Label Content="{Binding MaxVolume}"></Label>
         </StackPanel>
         
-        <Button Content="{Binding ButtonText}" Command="{Binding LockVolume}" Width="100" HorizontalAlignment="Left"></Button>
+        <Button Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" Command="{Binding LockVolume}" Width="100" HorizontalAlignment="Left"></Button>
         
         <StackPanel Orientation="Horizontal">
             <Label>Version:</Label>
