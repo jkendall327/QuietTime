@@ -7,7 +7,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:l="clr-namespace:QuietTime.Other"
         mc:Ignorable="d"
-        Title="MainWindow" MinWidth="420" MinHeight="295">
+        Title="MainWindow" Name="MyWindow" MinWidth="800" MinHeight="500">
     
     <Window.Resources>
         <l:BoolToButtonTextConverter x:Key="buttonConverter" />
@@ -28,31 +28,38 @@
         </LinearGradientBrush>
     </Window.Background>
     
-    <Grid >
+    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="ApplicationScaleTransform"
+                        CenterX="0"
+                        CenterY="0"
+                        ScaleX="{Binding ElementName=MyWindow, Path=ScaleValue}"
+                        ScaleY="{Binding ElementName=MyWindow, Path=ScaleValue}" />
+        </Grid.LayoutTransform>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            
+            <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            
             <ColumnDefinition Width="10"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="4" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
+        <Label Grid.Row="1" Grid.Column="2" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
 
-        <StackPanel Grid.Column="3" Grid.ColumnSpan="3" Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
             <StackPanel Margin="10">
                 <Label>Current volume:</Label>
                 <Label HorizontalContentAlignment="Center" Content="{Binding CurrentVolume}"></Label>
@@ -69,15 +76,16 @@
             </StackPanel>
         </StackPanel>
 
-        <Slider Grid.Column="3" Grid.ColumnSpan="3" Grid.Row="3" Maximum="100" MaxWidth="500" 
+        <Slider Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" 
+                Maximum="100" MaxWidth="500" VerticalAlignment="Center"
                 Value="{Binding NewMaxVolume}"></Slider>
 
-        <Button Grid.Column="3" Grid.Row="4" Margin="20" 
+        <Button Grid.Column="2" Grid.Row="4" Margin="20" 
                 Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" 
                 Command="{Binding LockVolume}"></Button>
 
-        <Label Grid.Column="4" Grid.Row="5"  Content="{Binding VersionInfo}" 
-               HorizontalContentAlignment="Center"></Label>
+        <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
+               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
     </Grid>
 
 </Window>
