@@ -16,6 +16,15 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _currentVolume, value); }
         }
 
+        private int _maxVolume = 50;
+
+        public int MaxVolume
+        {
+            get { return _maxVolume; }
+            set { SetProperty(ref _maxVolume, value); }
+        }
+
+
         public MainWindowVM(MMDeviceEnumerator enumerator)
         {
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
@@ -27,7 +36,15 @@ namespace QuietTime.ViewModels
 
         private void OnVolumeChange(AudioVolumeNotificationData data)
         {
-            CurrentVolume = data.MasterVolume.ToPercentage();
+            var volume = data.MasterVolume.ToPercentage();
+
+            if (volume > MaxVolume)
+            {
+                float newLevel = (float)MaxVolume / 100;
+                _device.AudioEndpointVolume.MasterVolumeLevelScalar = newLevel;
+            }
+
+            CurrentVolume = volume;
         }
     }
 }
