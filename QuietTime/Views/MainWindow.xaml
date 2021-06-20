@@ -8,6 +8,12 @@
         xmlns:l="clr-namespace:QuietTime.Other"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
+    
+    <Window.Resources>
+        <l:BoolToButtonTextConverter x:Key="buttonConverter" />
+        <l:BoolToColorConverter x:Key="backgroundConverter"/>
+    </Window.Resources>
+    
     <Window.Background>
         <LinearGradientBrush
             StartPoint="0.771,0.907"
@@ -16,12 +22,10 @@
                 Color="#FFFDDDFF"
                 Offset="1" />
             <GradientStop
-                Color="{Binding BackgroundColor}" />
+                Color="{Binding IsLocked, Converter={StaticResource ResourceKey=backgroundConverter}}" />
         </LinearGradientBrush>
     </Window.Background>
-    <Window.Resources>
-        <l:BoolToButtonTextConverter x:Key="buttonConverter" />
-    </Window.Resources>
+    
     <StackPanel>
         <Label>Maximum volume setter program</Label>
         
