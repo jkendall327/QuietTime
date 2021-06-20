@@ -11,11 +11,12 @@ namespace QuietTime.ViewModels
 {
     public class MainWindowVM : ObservableObject
     {
-        readonly MMDevice _device;
         readonly IConfiguration _config;
+        readonly ILogger _log;
+
+        readonly MMDevice _device;
 
         private int _currentVolume;
-
         public int CurrentVolume
         {
             get { return _currentVolume; }
@@ -23,30 +24,22 @@ namespace QuietTime.ViewModels
         }
 
         private int _maxVolume;
-
         public int MaxVolume
         {
             get { return _maxVolume; }
             set { SetProperty(ref _maxVolume, value); }
         }
 
-        private string _versionInfo;
-
         public string VersionInfo
         {
-            get { return _versionInfo; }
-            set { _versionInfo = value; }
+            get
+            {
+                var version = Assembly.GetExecutingAssembly().GetName().Version;
+                DateTime buildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
+
+                return $"v{version}, built {buildDate:g}";
+            }
         }
-
-        private string GetVersionInfo()
-        {
-            var version = Assembly.GetExecutingAssembly().GetName().Version;
-            DateTime buildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
-
-            return $"v{version}, built {buildDate:g}";
-        }
-
-        readonly ILogger _log;
 
         public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log)
         {
@@ -60,13 +53,11 @@ namespace QuietTime.ViewModels
 
             MaxVolume = _config.GetValue<int>("InitialMaxVolume");
 
+            // hook up the audio device
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
 
             CurrentVolume = _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
-
-            VersionInfo = GetVersionInfo();
         }
 
         private void OnVolumeChange(AudioVolumeNotificationData data)
