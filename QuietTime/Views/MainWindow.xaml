@@ -26,33 +26,44 @@
         </LinearGradientBrush>
     </Window.Background>
     
-    <StackPanel>
-        <Label>Maximum volume setter program</Label>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
         
-        <StackPanel Orientation="Horizontal">
+        <Label Grid.Column="2" FontSize="36" FontFamily="Corbel Light">QuietTime</Label>
+        
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
             <Label>Current volume: </Label>
             <Label Content="{Binding CurrentVolume}"></Label>
         </StackPanel>
 
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
             <Label>New max volume:</Label>
             <Label Content="{Binding NewMaxVolume}"></Label>
         </StackPanel>
-        <Slider Maximum="100" MaxWidth="500" Value="{Binding NewMaxVolume}"></Slider>
-        <StackPanel Orientation="Horizontal">
+
+        <StackPanel Grid.Column="3" Grid.Row="1" Orientation="Horizontal">
             <Label>Current max volume:</Label>
             <Label Content="{Binding MaxVolume}"></Label>
         </StackPanel>
-        
-        <Button Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" Command="{Binding LockVolume}" Width="100" HorizontalAlignment="Left"></Button>
-        
-        <StackPanel Orientation="Horizontal">
-            <Label>Version:</Label>
-            <Label Content="{Binding VersionInfo}"></Label>
-        </StackPanel>
-        
-        <tb:TaskbarIcon x:Name="myNotifyIcon" Visibility="Visible" ToolTipText="QuietTime"
-                       MenuActivation="DoubleClick"/>
-    </StackPanel>
+
+        <Slider Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" Maximum="100" MaxWidth="500" Value="{Binding NewMaxVolume}"></Slider>
+
+        <Button Grid.Column="2" Grid.Row="3" Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" Command="{Binding LockVolume}"></Button>
+
+        <Label Grid.Column="3" Grid.Row="4"  Content="{Binding VersionInfo}" HorizontalContentAlignment="Center"></Label>
+    </Grid>
 
 </Window>

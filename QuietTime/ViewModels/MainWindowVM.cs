@@ -63,7 +63,7 @@ namespace QuietTime.ViewModels
                 var version = Assembly.GetExecutingAssembly().GetName().Version;
                 DateTime buildDate = new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime;
 
-                return $"v{version}, built {buildDate:g}";
+                return $"v{version}, built {buildDate:d}";
             }
         }
 
