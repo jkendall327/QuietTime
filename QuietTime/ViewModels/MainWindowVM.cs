@@ -7,6 +7,7 @@ using QuietTime.Other;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Windows.Media;
 
 namespace QuietTime.ViewModels
 {
@@ -22,6 +23,16 @@ namespace QuietTime.ViewModels
         /// Represents the user's audio.
         /// </summary>
         readonly MMDevice _device;
+
+        private Color _backgroundColor;
+        public Color BackgroundColor
+        {
+            get { return _backgroundColor; }
+            set { SetProperty(ref _backgroundColor, value); }
+        }
+
+        private Color RedTint => Color.FromRgb(242, 162, 171);
+        private Color BlueTint => Color.FromRgb(191, 227, 242);
 
         /// <summary>
         /// The current level of the user's volume.
@@ -100,6 +111,8 @@ namespace QuietTime.ViewModels
             _log = log;
             _lockVolume = new(OnLock);
 
+            BackgroundColor = BlueTint;
+
             // hook up events
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
@@ -118,6 +131,7 @@ namespace QuietTime.ViewModels
                 ButtonText = "Lock";
                 IsLocked = false;
                 MaxVolume = 0;
+                BackgroundColor = BlueTint;
 
                 return;
             }
@@ -125,6 +139,7 @@ namespace QuietTime.ViewModels
             IsLocked = true;
             ButtonText = "Unlock";
             MaxVolume = NewMaxVolume;
+            BackgroundColor = RedTint;
         }
 
         /// <summary>
