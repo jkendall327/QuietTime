@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using NAudio.CoreAudioApi;
 using QuietTime.Other;
 
@@ -7,6 +8,7 @@ namespace QuietTime.ViewModels
     public class MainWindowVM : ObservableObject
     {
         readonly MMDevice _device;
+        readonly IConfiguration _config;
 
         private int _currentVolume;
 
@@ -16,7 +18,7 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _currentVolume, value); }
         }
 
-        private int _maxVolume = 50;
+        private int _maxVolume;
 
         public int MaxVolume
         {
@@ -24,9 +26,17 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _maxVolume, value); }
         }
 
-
-        public MainWindowVM(MMDeviceEnumerator enumerator)
+        public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config)
         {
+            _config = config ?? throw new System.ArgumentNullException(nameof(config));
+
+            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
+
+            if (enumerator is null)
+            {
+                throw new System.ArgumentNullException(nameof(enumerator));
+            }
+
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
 
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
