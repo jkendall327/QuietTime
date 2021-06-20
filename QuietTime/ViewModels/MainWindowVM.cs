@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Microsoft.Toolkit.Mvvm.Input;
 using NAudio.CoreAudioApi;
 using QuietTime.Other;
 using System;
@@ -11,25 +12,40 @@ namespace QuietTime.ViewModels
 {
     public class MainWindowVM : ObservableObject
     {
+        #region Fields
+
+        // general services
         readonly IConfiguration _config;
         readonly ILogger _log;
 
+        /// <summary>
+        /// Represents the user's audio.
+        /// </summary>
         readonly MMDevice _device;
 
-        private int _currentVolume;
+        /// <summary>
+        /// The current level of the user's volume.
+        /// </summary>
         public int CurrentVolume
         {
             get { return _currentVolume; }
             set { SetProperty(ref _currentVolume, value); }
         }
+        private int _currentVolume;
 
-        private int _maxVolume;
+        /// <summary>
+        /// The loudest volume currently allowed. No effect if <see cref="IsLocked"/> is false.
+        /// </summary>
         public int MaxVolume
         {
             get { return _maxVolume; }
             set { SetProperty(ref _maxVolume, value); }
         }
+        private int _maxVolume;
 
+        /// <summary>
+        /// Returns the current assembly's version and build date.
+        /// </summary>
         public string VersionInfo
         {
             get
@@ -41,33 +57,79 @@ namespace QuietTime.ViewModels
             }
         }
 
+        /// <summary>
+        /// The text of the lock button.
+        /// </summary>
+        public string ButtonText
+        {
+            get { return _buttonText; }
+            set { SetProperty(ref _buttonText, value); }
+        }
+        private string _buttonText = "Lock";
+
+        /// <summary>
+        /// Whether the user's audio is currently locked.
+        /// </summary>
+        private bool IsLocked { get; set; }
+
+        /// <summary>
+        /// Locks volume at current levels.
+        /// </summary>
+        public RelayCommand LockVolume
+        {
+            get { return _lockVolume; }
+            set { SetProperty(ref _lockVolume, value); }
+        }
+        private RelayCommand _lockVolume;
+
+        #endregion
+
         public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log)
         {
-            _config = config ?? throw new ArgumentNullException(nameof(config));
-            _log = log ?? throw new ArgumentNullException(nameof(log));
+            _config = config;
+            _log = log;
+            _lockVolume = new(OnLock);
 
-            if (enumerator is null)
-            {
-                throw new ArgumentNullException(nameof(enumerator));
-            }
-
-            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
-
-            // hook up the audio device
+            // hook up events
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
 
             CurrentVolume = _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
+            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
         }
 
+        /// <summary>
+        /// Locks or unlocks volume levels when button is clicked.
+        /// </summary>
+        private void OnLock()
+        {
+            if (IsLocked)
+            {
+                ButtonText = "Lock";
+                IsLocked = false;
+                MaxVolume = 0;
+
+                return;
+            }
+
+            IsLocked = true;
+            ButtonText = "Unlock";
+            MaxVolume = CurrentVolume;
+        }
+
+        /// <summary>
+        /// Actually clamps the volume when volume-change event triggers.
+        /// </summary>
         private void OnVolumeChange(AudioVolumeNotificationData data)
         {
-            _log.LogInformation("Volume change");
+            if (!IsLocked) return;
 
             var volume = data.MasterVolume.ToPercentage();
 
             if (volume > MaxVolume)
             {
+                _log.LogInformation($"Volume limit of {MaxVolume} hit.");
+
                 float newLevel = (float)MaxVolume / 100;
                 _device.AudioEndpointVolume.MasterVolumeLevelScalar = newLevel;
             }

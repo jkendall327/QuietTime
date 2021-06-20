@@ -14,12 +14,12 @@
             <Label>Current volume: </Label>
             <Label Content="{Binding CurrentVolume}"></Label>
         </StackPanel>
+        <Slider Maximum="100" MaxWidth="500" Value="{Binding CurrentVolume}"></Slider>
         <StackPanel Orientation="Horizontal">
             <Label>Max volume:</Label>
             <Label Content="{Binding MaxVolume}"></Label>
         </StackPanel>
-        <Slider Maximum="100" MaxWidth="500"  Value="{Binding MaxVolume}"></Slider>
-
+        <Button Content="{Binding ButtonText}" Command="{Binding LockVolume}" Width="100" HorizontalAlignment="Left"></Button>
         <StackPanel Orientation="Horizontal">
             <Label>Version:</Label>
             <Label Content="{Binding VersionInfo}"></Label>
