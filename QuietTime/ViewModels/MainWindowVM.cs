@@ -90,11 +90,20 @@ namespace QuietTime.ViewModels
 
         #endregion
 
+        private RelayCommand _closeApp;
+
+        public RelayCommand CloseApp
+        {
+            get { return _closeApp; }
+            set { SetProperty(ref _closeApp, value); }
+        }
+
         public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log)
         {
             _config = config;
             _log = log;
             _lockVolume = new(OnLock);
+            _closeApp = new RelayCommand(() => Environment.Exit(1));
 
             // hook up events
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);

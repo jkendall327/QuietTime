@@ -1,5 +1,6 @@
 ﻿using QuietTime.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace QuietTime
@@ -75,5 +76,21 @@ namespace QuietTime
         }
 
         #endregion
+
+        // these two methods let the app close to the system tray instead of exiting completely
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = true;
+
+            this.Hide();
+
+            base.OnClosing(e);
+        }
+
+        private void MenuItem_ShowWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Show();
+        }
     }
 }
