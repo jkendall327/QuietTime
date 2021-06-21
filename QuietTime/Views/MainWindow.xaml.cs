@@ -14,6 +14,8 @@ namespace QuietTime
             InitializeComponent();
 
             DataContext = vm;
+
+            TrayIcon.Icon = new("icon.ico");
         }
 
         /*

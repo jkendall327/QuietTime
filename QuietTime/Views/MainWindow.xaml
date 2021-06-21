@@ -86,6 +86,10 @@
 
         <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+
+        <tb:TaskbarIcon x:Name="TrayIcon" ToolTipText="QuietTime">
+            
+        </tb:TaskbarIcon>
     </Grid>
 
 </Window>
