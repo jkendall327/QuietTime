@@ -4,15 +4,25 @@ using System.Collections.Generic;
 
 namespace QuietTime.Models
 {
-    class Schedule : ObservableObject
+    public class Schedule : ObservableObject
     {
         private readonly static List<Schedule> Schedules = new();
 
-        public IEnumerable<Schedule> GetSchedules()
+        public static IEnumerable<Schedule> GetSchedules()
         {
             var list = new List<Schedule>();
             list.AddRange(Schedules);
+
+            list.Add(new Schedule(TimeOnly.Parse("09:00"), TimeOnly.Parse("17:45"), 20, 40));
+            list.Add(new Schedule(TimeOnly.Parse("11:00"), TimeOnly.Parse("15:00"), 10, 50));
+            list.Add(new Schedule(TimeOnly.Parse("03:00"), TimeOnly.Parse("12:00"), 23, 70));
+
             return list;
+        }
+
+        public static void AddSchedule(Schedule schedule)
+        {
+            Schedules.Add(schedule);
         }
 
         private TimeOnly _start;

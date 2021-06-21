@@ -1,4 +1,5 @@
 ﻿using QuietTime.ViewModels;
+using QuietTime.Views;
 using System;
 using System.Windows;
 
@@ -79,6 +80,11 @@ namespace QuietTime
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             await vm.StartScheduler();
+        }
+
+        private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            new ScheduleWindow(new ScheduleWindowVM()).Show();
         }
     }
 }
