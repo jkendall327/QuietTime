@@ -1,4 +1,5 @@
-﻿using QuietTime.ViewModels;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using QuietTime.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Windows;

@@ -103,7 +103,7 @@ namespace QuietTime.ViewModels
             _config = config;
             _log = log;
             _lockVolume = new(OnLock);
-            _closeApp = new RelayCommand(() => Environment.Exit(1));
+            _closeApp = new RelayCommand(() => System.Windows.Application.Current.Shutdown());
 
             // hook up events
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
