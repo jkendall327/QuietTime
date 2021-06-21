@@ -8,6 +8,7 @@ using Quartz.Impl;
 using QuietTime.Models;
 using QuietTime.Other;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -74,13 +75,12 @@ namespace QuietTime.ViewModels
         /// <summary>
         /// Whether the user's audio is currently locked.
         /// </summary>
-        private bool _isLocked;
         public bool IsLocked
         {
             get { return _isLocked; }
             set { SetProperty(ref _isLocked, value); }
         }
-
+        private bool _isLocked;
 
         /// <summary>
         /// Locks volume at current levels.
@@ -92,68 +92,36 @@ namespace QuietTime.ViewModels
         }
         private RelayCommand _lockVolume;
 
+        public SchedulerService Scheduler { get; }
+
         #endregion
 
-        public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log)
+        public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log, SchedulerService scheduler)
         {
+            // assignments
             _config = config;
             _log = log;
-            _lockVolume = new(OnLock);
+            Scheduler = scheduler;
 
-            // hook up events
+            // hook up events/commands
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
+            _lockVolume = new(OnLock);
 
+            // get current volume for UI before any updates
             CurrentVolume = _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
             MaxVolume = _config.GetValue<int>("InitialMaxVolume");
         }
 
-        public async Task StartScheduler()
+        /// <summary>
+        /// Adds a user's schedule to the scheduler.
+        /// </summary>
+        public async Task ScheduleVolumeChangeAsync(Schedule schedule)
         {
-            StdSchedulerFactory factory = new StdSchedulerFactory();
-            IScheduler scheduler = await factory.GetScheduler();
+            Action OnScheduleStart = () => { MaxVolume = schedule.VolumeDuring; IsLocked = true; };
+            Action OnScheduleEnd = () => { MaxVolume = schedule.VolumeAfter; IsLocked = false; };
 
-            await scheduler.Start();
-
-            var userSchedule = new Schedule(TimeOnly.Parse("10:48"), TimeOnly.Parse("15:00"), 20, 40);
-
-            var details = ScheduleToJob(userSchedule);
-
-            await scheduler.ScheduleJob(details.job, details.trigger);
-        }
-
-        private (IJobDetail job, ITrigger trigger) ScheduleToJob(Schedule userSchedule)
-        {
-            var jobdata = new JobDataMap
-            {
-                { "work", new Action(() => { MaxVolume = userSchedule.VolumeDuring; IsLocked = true; }) }
-            };
-
-            IJobDetail job = JobBuilder.Create<ChangeMaxVolumeJob>()
-                .WithIdentity("job1", "group1")
-                .SetJobData(jobdata)
-                .Build();
-
-            ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity("trigger1", "group1")
-                .StartAt(DateTimeOffset.Parse(userSchedule.Start.ToString()))
-                .WithSimpleSchedule(x =>
-                {
-                    x.WithIntervalInHours(24);
-                    x.RepeatForever();
-                })
-                .Build();
-
-            return (job, trigger);
-        }
-
-        private class ChangeMaxVolumeJob : IJob
-        {
-            async Task IJob.Execute(IJobExecutionContext context)
-            {
-                var action = (Action)context.JobDetail.JobDataMap.Get("work");
-                action();
-            }
+            await Scheduler.CreateScheduleAsync(schedule, OnScheduleStart, OnScheduleEnd);
         }
 
         /// <summary>

@@ -77,11 +77,6 @@ namespace QuietTime
 
         #endregion
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
-        {
-            await vm.StartScheduler();
-        }
-
         private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
         {
             new ScheduleWindow(new ScheduleWindowVM()).Show();
