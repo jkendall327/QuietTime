@@ -43,6 +43,16 @@ namespace QuietTime.Models
             return false;
         }
 
+        /// <summary>
+        /// Whether the schedule is currently firing.
+        /// </summary>
+        public bool IsActive 
+        { 
+            get { return _isActive; }
+            set { SetProperty(ref _isActive, value); }
+        }
+        private bool _isActive;
+
         private TimeOnly _start;
         public TimeOnly Start
         {

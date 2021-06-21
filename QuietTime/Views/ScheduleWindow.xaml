@@ -5,63 +5,121 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuietTime.Views" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="ScheduleWindow" Height="450" Width="800">
+        Title="ScheduleWindow" Height="340" Width="800">
+    <Window.Background>
+        <LinearGradientBrush
+            StartPoint="0.771,0.907"
+            EndPoint="0.229,0.093">
+            <GradientStop
+                Color="#FFFDDDFF"
+                Offset="1" />
+            <GradientStop
+                Color="#bea3e0" />
+        </LinearGradientBrush>
+    </Window.Background>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
+            <RowDefinition Height="auto" ></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        
-        <ListView Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2" ItemsSource="{Binding Schedules}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Start: " />
-                        <TextBlock Text="{Binding Path=Start}" />
-                        
-                        <TextBlock Text="End: " />
-                        <TextBlock Text="{Binding Path=End}"/>
 
-                        <TextBlock Text="Volume during: " />
-                        <TextBlock Text="{Binding Path=VolumeDuring}"/>
-                        
-                        <TextBlock Text="Volume after: " />
-                        <TextBlock Text="{Binding Path=VolumeAfter}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListView>
+        <Label Grid.Column="1" Grid.Row="1" FontSize="36" FontFamily="Corbel Light">Schedules</Label>
 
-        <StackPanel Grid.Column="4" Grid.Row="1">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Start time"></Label>
-                <xctk:DateTimeUpDown Value="{Binding Start}" Format="LongTime" Watermark="00:00:00"></xctk:DateTimeUpDown>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="End time"></Label>
-                <xctk:DateTimeUpDown Value="{Binding End}" HorizontalContentAlignment="Right" Format="LongTime" Watermark="00:00:00"></xctk:DateTimeUpDown>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Volume during"></Label>
-                <xctk:UIntegerUpDown Value="{Binding VolumeDuring}" HorizontalAlignment="Right" Watermark="0"></xctk:UIntegerUpDown>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Volume after"></Label>
-                <xctk:UIntegerUpDown Value="{Binding VolumeAfter}" Watermark="0"></xctk:UIntegerUpDown>
+        <StackPanel Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="1" Margin="20 0 20 0">
+            <ListView ItemsSource="{Binding Schedules}">
+                <ListView.Resources>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="HorizontalContentAlignment" Value="Right" />
+                    </Style>
+                    <Style TargetType="{x:Type ListView}">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current schedules">
+                        <GridViewColumn DisplayMemberBinding="{Binding Start}" Header="Start" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding End}" Header="End" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding VolumeDuring}" Header="Volume during" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding VolumeAfter}" Header="Volume after" Width="100"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding IsActive}" Header="Active?"  Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <StackPanel Grid.Column="1" Grid.Row="3" Margin="0 10 0 0" Orientation="Horizontal">
+                
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Margin" Value="5 0 5 0" />
+                        <Setter Property="Padding" Value="5" />
+                    </Style>
+                </StackPanel.Resources>
+                
+                <Button>Activate selected</Button>
+                <Button>Activate all</Button>
+                <Button>Deactivate all</Button>
+                <Button>Delete selected</Button>
             </StackPanel>
         </StackPanel>
 
-        <Button Grid.Column="4" Grid.Row="2" Command="{Binding AddSchedule}" Content="Add schedule"></Button>
-        
+        <Border Grid.Column="1" Grid.Row="2" BorderThickness="2" BorderBrush="Black" Padding="10" CornerRadius="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="{x:Type Label}">
+                        <Setter Property="Margin" Value="0 5 0 5" />
+                        <Setter Property="Grid.Column" Value="0" />
+                    </Style>
+                    <Style TargetType="{x:Type xctk:DateTimeUpDown}">
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                        <Setter Property="Watermark" Value="00:00:00" />
+                        <Setter Property="Format" Value="LongTime" />
+                        <Setter Property="Padding" Value="5" />
+                        <Setter Property="Margin" Value="0 5 0 5" />
+                        <Setter Property="Grid.Column" Value="1" />
+                    </Style>
+                    <Style TargetType="{x:Type xctk:UIntegerUpDown}">
+                        <Setter Property="Margin" Value="0 5 0 5" />
+                        <Setter Property="Grid.Column" Value="1" />
+                        <Setter Property="Watermark" Value="0" />
+                        <Setter Property="Padding" Value="0 0 5 0" />
+                    </Style>
+                </Grid.Resources>
+
+                <Label Grid.Row="0" Content="Start time"></Label>
+                <xctk:DateTimeUpDown Grid.Row="0" Value="{Binding Start}"></xctk:DateTimeUpDown>
+
+                <Label Grid.Row="1" Content="End time"></Label>
+                <xctk:DateTimeUpDown Grid.Row="1" Value="{Binding End}"></xctk:DateTimeUpDown>
+
+                <Label Grid.Row="2" Content="Volume during"></Label>
+                <xctk:UIntegerUpDown Grid.Row="2" Value="{Binding VolumeDuring}"></xctk:UIntegerUpDown>
+
+                <Label Grid.Row="3" Content="Volume after"></Label>
+                <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding VolumeAfter}"></xctk:UIntegerUpDown>
+
+                <Button HorizontalAlignment="Stretch" Margin="0 5 0 0" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" 
+                        Command="{Binding AddSchedule}" Content="Add schedule"></Button>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
