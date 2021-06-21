@@ -3,19 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QuietTime.Views"
+        xmlns:local="clr-namespace:QuietTime.Views" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="ScheduleWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -39,5 +41,27 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListView>
+
+        <StackPanel Grid.Column="4" Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Start time"></Label>
+                <xctk:DateTimeUpDown Value="{Binding Start}" Format="LongTime" Watermark="00:00:00"></xctk:DateTimeUpDown>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="End time"></Label>
+                <xctk:DateTimeUpDown Value="{Binding End}" HorizontalContentAlignment="Right" Format="LongTime" Watermark="00:00:00"></xctk:DateTimeUpDown>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Volume during"></Label>
+                <xctk:UIntegerUpDown Value="{Binding VolumeDuring}" HorizontalAlignment="Right" Watermark="0"></xctk:UIntegerUpDown>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Volume after"></Label>
+                <xctk:UIntegerUpDown Value="{Binding VolumeAfter}" Watermark="0"></xctk:UIntegerUpDown>
+            </StackPanel>
+        </StackPanel>
+
+        <Button Grid.Column="4" Grid.Row="2" Command="{Binding AddSchedule}" Content="Add schedule"></Button>
+        
     </Grid>
 </Window>
