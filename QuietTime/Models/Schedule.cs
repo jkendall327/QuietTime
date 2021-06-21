@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace QuietTime.Models
 {
@@ -22,7 +23,24 @@ namespace QuietTime.Models
 
         public static void AddSchedule(Schedule schedule)
         {
-            Schedules.Add(schedule);
+            if (Schedules.All(x => !Overlaps(x, schedule)))
+            {
+                Schedules.Add(schedule);
+            }
+        }
+
+        private static bool Overlaps(Schedule x, Schedule y)
+        {
+            if (x.Start < y.Start && x.End > y.Start)
+            {
+                return true;
+            }
+            else if (x.Start < y.End && x.End < y.End)
+            {
+                return true;
+            }
+            
+            return false;
         }
 
         private TimeOnly _start;
