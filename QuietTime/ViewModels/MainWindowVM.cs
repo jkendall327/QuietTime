@@ -3,10 +3,14 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using NAudio.CoreAudioApi;
+using Quartz;
+using Quartz.Impl;
+using QuietTime.Models;
 using QuietTime.Other;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace QuietTime.ViewModels
 {
@@ -102,6 +106,54 @@ namespace QuietTime.ViewModels
 
             CurrentVolume = _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
             MaxVolume = _config.GetValue<int>("InitialMaxVolume");
+        }
+
+        public async Task StartScheduler()
+        {
+            StdSchedulerFactory factory = new StdSchedulerFactory();
+            IScheduler scheduler = await factory.GetScheduler();
+
+            await scheduler.Start();
+
+            var userSchedule = new Schedule(TimeOnly.Parse("10:48"), TimeOnly.Parse("15:00"), 20, 40);
+
+            var details = ScheduleToJob(userSchedule);
+
+            await scheduler.ScheduleJob(details.job, details.trigger);
+        }
+
+        private (IJobDetail job, ITrigger trigger) ScheduleToJob(Schedule userSchedule)
+        {
+            var jobdata = new JobDataMap
+            {
+                { "work", new Action(() => { MaxVolume = userSchedule.VolumeDuring; IsLocked = true; }) }
+            };
+
+            IJobDetail job = JobBuilder.Create<ChangeMaxVolumeJob>()
+                .WithIdentity("job1", "group1")
+                .SetJobData(jobdata)
+                .Build();
+
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity("trigger1", "group1")
+                .StartAt(DateTimeOffset.Parse(userSchedule.Start.ToString()))
+                .WithSimpleSchedule(x =>
+                {
+                    x.WithIntervalInHours(24);
+                    x.RepeatForever();
+                })
+                .Build();
+
+            return (job, trigger);
+        }
+
+        private class ChangeMaxVolumeJob : IJob
+        {
+            async Task IJob.Execute(IJobExecutionContext context)
+            {
+                var action = (Action)context.JobDetail.JobDataMap.Get("work");
+                action();
+            }
         }
 
         /// <summary>

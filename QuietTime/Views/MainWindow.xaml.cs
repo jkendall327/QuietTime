@@ -9,11 +9,13 @@ namespace QuietTime
     /// </summary>
     public partial class MainWindow : Window
     {
+        readonly MainWindowVM vm;
         public MainWindow(MainWindowVM vm)
         {
             InitializeComponent();
 
             DataContext = vm;
+            this.vm = vm;
         }
 
         /*
@@ -73,5 +75,10 @@ namespace QuietTime
         }
 
         #endregion
+
+        private async void Button_Click(object sender, RoutedEventArgs e)
+        {
+            await vm.StartScheduler();
+        }
     }
 }

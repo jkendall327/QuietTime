@@ -15,15 +15,15 @@ namespace QuietTime.Models
             return list;
         }
 
-        private DateTime _start;
-        public DateTime Start
+        private TimeOnly _start;
+        public TimeOnly Start
         {
             get { return _start; }
             set { SetProperty(ref _start, value); }
         }
 
-        private DateTime _end;
-        public DateTime End
+        private TimeOnly _end;
+        public TimeOnly End
         {
             get { return _end; }
             set { SetProperty(ref _end, value); }
@@ -45,7 +45,7 @@ namespace QuietTime.Models
             set { SetProperty(ref _volumeAfter, value); }
         }
 
-        public Schedule(DateTime start, DateTime end, int volumeDuring, int volumeAfter)
+        public Schedule(TimeOnly start, TimeOnly end, int volumeDuring, int volumeAfter)
         {
             _start = start;
             _end = end;

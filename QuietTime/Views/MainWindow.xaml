@@ -63,6 +63,7 @@
             <StackPanel Margin="10">
                 <Label>Current volume:</Label>
                 <Label HorizontalContentAlignment="Center" Content="{Binding CurrentVolume}"></Label>
+                <Button Click="Button_Click">CLICK ME</Button>
             </StackPanel>
 
             <StackPanel Margin="10">
