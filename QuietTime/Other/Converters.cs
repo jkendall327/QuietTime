@@ -36,4 +36,19 @@ namespace QuietTime.Other
             throw new NotImplementedException();
         }
     }
+
+    public class DateTimeToTimeOnlyConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            TimeOnly time = (TimeOnly)value;
+            return DateTime.Parse(time.ToString());
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            DateTime time = (DateTime)value;
+            return TimeOnly.FromDateTime(time);
+        }
+    }
 }

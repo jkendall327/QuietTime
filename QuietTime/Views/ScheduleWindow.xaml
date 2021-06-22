@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuietTime.Views" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
+        xmlns:l="clr-namespace:QuietTime.Other"
         Title="ScheduleWindow" Height="340" Width="800">
     <Window.Background>
         <LinearGradientBrush
@@ -17,6 +18,11 @@
                 Color="#bea3e0" />
         </LinearGradientBrush>
     </Window.Background>
+
+    <Window.Resources>
+        <l:DateTimeToTimeOnlyConverter x:Key="timeOnlyToDateTimeConverter" />
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
@@ -107,16 +113,16 @@
                 </Grid.Resources>
 
                 <Label Grid.Row="0" Content="Start time"></Label>
-                <xctk:DateTimeUpDown Grid.Row="0" Value="{Binding Start}"></xctk:DateTimeUpDown>
+                <xctk:DateTimeUpDown Grid.Row="0" Value="{Binding Schedule.Start, Converter={StaticResource timeOnlyToDateTimeConverter}}"></xctk:DateTimeUpDown>
 
                 <Label Grid.Row="1" Content="End time"></Label>
-                <xctk:DateTimeUpDown Grid.Row="1" Value="{Binding End}"></xctk:DateTimeUpDown>
+                <xctk:DateTimeUpDown Grid.Row="1" Value="{Binding Schedule.End, Converter={StaticResource timeOnlyToDateTimeConverter}}"></xctk:DateTimeUpDown>
 
                 <Label Grid.Row="2" Content="Volume during"></Label>
-                <xctk:UIntegerUpDown Grid.Row="2" Value="{Binding VolumeDuring}"></xctk:UIntegerUpDown>
+                <xctk:UIntegerUpDown Grid.Row="2" Value="{Binding Schedule.VolumeDuring}"></xctk:UIntegerUpDown>
 
                 <Label Grid.Row="3" Content="Volume after"></Label>
-                <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding VolumeAfter}"></xctk:UIntegerUpDown>
+                <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding Schedule.VolumeAfter}"></xctk:UIntegerUpDown>
 
                 <Button HorizontalAlignment="Stretch" Margin="0 5 0 0" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" 
                         Command="{Binding AddSchedule}" Content="Add schedule"></Button>

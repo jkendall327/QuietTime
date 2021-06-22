@@ -17,42 +17,25 @@ namespace QuietTime.ViewModels
     {
         public static ObservableCollection<Schedule> Schedules { get; private set; } = new();
 
-        private int _currentIndex;
+        /// <summary>
+        /// Currently-selected index of <see cref="Schedules"/>.
+        /// </summary>
         public int CurrentIndex
         {
             get { return _currentIndex; }
             set { _currentIndex = value; }
         }
+        private int _currentIndex;
 
-        private DateTime _start;
-        public DateTime Start
+        /// <summary>
+        /// Binding object for the UI.
+        /// </summary>
+        public Schedule Schedule
         {
-            get { return _start; }
-            set { SetProperty(ref _start, value); }
+            get { return _schedule; }
+            set { SetProperty(ref _schedule, value); }
         }
-
-        private DateTime _end;
-        public DateTime End
-        {
-            get { return _end; }
-            set { SetProperty(ref _end, value); }
-        }
-
-        private int _volumeDuring;
-
-        public int VolumeDuring
-        {
-            get { return _volumeDuring; }
-            set { SetProperty(ref _volumeDuring, value); }
-        }
-
-        private int _volumeAfter;
-
-        public int VolumeAfter
-        {
-            get { return _volumeAfter; }
-            set { SetProperty(ref _volumeAfter, value); }
-        }
+        private Schedule _schedule = new(TimeOnly.MinValue, TimeOnly.MinValue, 0, 0);
 
         public AsyncRelayCommand AddSchedule { get; set; }
         public AsyncRelayCommand FlipActivation { get; set; }
@@ -72,11 +55,6 @@ namespace QuietTime.ViewModels
             FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
             ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
             Serialize = new AsyncRelayCommand(SerializeSchedules);
-
-            //foreach (var schedule in DeserializeSchedules())
-            //{
-            //    Schedules.Add(schedule);
-            //}
         }
 
         public AsyncRelayCommand Serialize { get; set; }
@@ -116,6 +94,9 @@ namespace QuietTime.ViewModels
             var item = Schedules[CurrentIndex];
 
             item.IsActive = !item.IsActive;
+
+            if (item.Key is null) return;
+
             await _scheduler.FlipScheduleActivation(item.Key);
         }
 
@@ -132,17 +113,17 @@ namespace QuietTime.ViewModels
         private async Task RemoveScheduleAsync()
         {
             var item = Schedules[CurrentIndex];
+
             Schedules.Remove(item);
+
+            if (item.Key is null) return;
+
             await _scheduler.DeleteScheduleAsync(item.Key);
         }
 
         private async Task AddScheduleAsync()
         {
-            var newSchedule = new Schedule(
-                TimeOnly.FromDateTime(Start), 
-                TimeOnly.FromDateTime(End), 
-                VolumeDuring, 
-                VolumeAfter);
+            var newSchedule = new Schedule(_schedule.Start, _schedule.End, _schedule.VolumeDuring, _schedule.VolumeAfter);
 
             if (Schedules.Any(x => x.Overlaps(newSchedule)))
             {

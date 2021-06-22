@@ -9,7 +9,7 @@ namespace QuietTime.Models
 {
     public class Schedule : ObservableObject
     {
-        public JobKey Key;
+        public JobKey? Key;
 
         /// <summary>
         /// Whether the schedule is currently firing.
