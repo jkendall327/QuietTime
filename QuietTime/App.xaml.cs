@@ -5,6 +5,7 @@ using NAudio.CoreAudioApi;
 using Quartz;
 using Quartz.Impl;
 using QuietTime.Other;
+using QuietTime.Services;
 using QuietTime.ViewModels;
 using System.Windows;
 
@@ -41,6 +42,7 @@ namespace QuietTime
 
             // audio
             builder.RegisterInstance(new MMDeviceEnumerator());
+            builder.RegisterType<AudioService>();
 
             // let's go
             builder.Build().Resolve<MainWindow>().Show();

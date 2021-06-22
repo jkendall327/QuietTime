@@ -7,6 +7,7 @@ using Quartz;
 using Quartz.Impl;
 using QuietTime.Models;
 using QuietTime.Other;
+using QuietTime.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,20 +18,6 @@ namespace QuietTime.ViewModels
 {
     public class MainWindowVM : ObservableObject
     {
-        #region Fields
-
-        // general services
-        readonly IConfiguration _config;
-        readonly ILogger _log;
-
-        /// <summary>
-        /// Represents the user's audio.
-        /// </summary>
-        readonly MMDevice _device;
-
-        /// <summary>
-        /// The current level of the user's volume.
-        /// </summary>
         public int CurrentVolume
         {
             get { return _currentVolume; }
@@ -38,9 +25,6 @@ namespace QuietTime.ViewModels
         }
         private int _currentVolume;
 
-        /// <summary>
-        /// The loudest volume currently allowed. No effect if <see cref="IsLocked"/> is false.
-        /// </summary>
         public int MaxVolume
         {
             get { return _maxVolume; }
@@ -48,9 +32,6 @@ namespace QuietTime.ViewModels
         }
         private int _maxVolume;
 
-        /// <summary>
-        /// What <see cref="MaxVolume"/> will be set to when <see cref="OnLock"/> is called.
-        /// </summary>
         public int NewMaxVolume
         {
             get { return _newMaxVolume; }
@@ -58,9 +39,6 @@ namespace QuietTime.ViewModels
         }
         private int _newMaxVolume;
 
-        /// <summary>
-        /// Returns the current assembly's version and build date.
-        /// </summary>
         public string VersionInfo
         {
             get
@@ -72,9 +50,6 @@ namespace QuietTime.ViewModels
             }
         }
 
-        /// <summary>
-        /// Whether the user's audio is currently locked.
-        /// </summary>
         public bool IsLocked
         {
             get { return _isLocked; }
@@ -82,75 +57,29 @@ namespace QuietTime.ViewModels
         }
         private bool _isLocked;
 
-        /// <summary>
-        /// Locks volume at current levels.
-        /// </summary>
-        public RelayCommand LockVolume
-        {
-            get { return _lockVolume; }
-            set { SetProperty(ref _lockVolume, value); }
-        }
-        private RelayCommand _lockVolume;
+        // commands
+        public RelayCommand LockVolume { get; set; }
 
+        // services
         public SchedulerService Scheduler { get; }
+        public AudioService Audio { get; }
 
-        #endregion
-
-        public MainWindowVM(MMDeviceEnumerator enumerator, IConfiguration config, ILogger log, SchedulerService scheduler)
+        public MainWindowVM(SchedulerService scheduler, AudioService audio)
         {
-            // assignments
-            _config = config;
-            _log = log;
             Scheduler = scheduler;
+            Audio = audio;
 
-            // hook up events/commands
-            _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-            _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
-            _lockVolume = new(OnLock);
+            LockVolume = new(() =>
+            {
+                audio.SwitchLock(NewMaxVolume);
+                MaxVolume = NewMaxVolume;
+            });
+
+            Audio.LockStatusChanged += (s, e) => IsLocked = e;
+            Audio.VolumeChanged += (s, e) => CurrentVolume = e;
 
             // get current volume for UI before any updates
-            CurrentVolume = _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
-            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
-        }
-
-        /// <summary>
-        /// Adds a user's schedule to the scheduler.
-        /// </summary>
-        public async Task ScheduleVolumeChangeAsync(Schedule schedule)
-        {
-            Action OnScheduleStart = () => { MaxVolume = schedule.VolumeDuring; IsLocked = true; };
-            Action OnScheduleEnd = () => { MaxVolume = schedule.VolumeAfter; IsLocked = false; };
-
-            await Scheduler.CreateScheduleAsync(schedule, OnScheduleStart, OnScheduleEnd);
-        }
-
-        /// <summary>
-        /// Locks or unlocks volume levels when button is clicked.
-        /// </summary>
-        private void OnLock()
-        {
-            IsLocked = !IsLocked;
-            MaxVolume = IsLocked ? NewMaxVolume : 0;
-        }
-
-        /// <summary>
-        /// Actually clamps the volume when volume-change event triggers.
-        /// </summary>
-        private void OnVolumeChange(AudioVolumeNotificationData data)
-        {
-            if (!IsLocked) return;
-
-            var volume = data.MasterVolume.ToPercentage();
-
-            if (volume > MaxVolume)
-            {
-                _log.LogInformation($"Volume limit of {MaxVolume} hit.");
-
-                float newLevel = (float)MaxVolume / 100;
-                _device.AudioEndpointVolume.MasterVolumeLevelScalar = newLevel;
-            }
-
-            CurrentVolume = volume;
+            CurrentVolume = audio.CurrentVolume;
         }
     }
 }
