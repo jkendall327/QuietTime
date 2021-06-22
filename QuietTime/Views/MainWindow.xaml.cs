@@ -86,7 +86,7 @@ namespace QuietTime
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            e.Cancel = true;
+            e.Cancel = !_traybarClosing;
 
             this.Hide();
 
@@ -96,6 +96,14 @@ namespace QuietTime
         private void MenuItem_ShowWindow_Click(object sender, RoutedEventArgs e)
         {
             this.Show();
+        }
+
+        private bool _traybarClosing = false;
+
+        private void MenuItem_CloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            _traybarClosing = true;
+            Environment.Exit(1);
         }
 
         private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)

@@ -92,11 +92,11 @@
         <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
 
-        <tb:TaskbarIcon x:Name="TrayIcon" ToolTipText="QuietTime">
+        <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" ToolTipText="QuietTime">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Show window" Click="MenuItem_ShowWindow_Click"/>
-                    <MenuItem Header="Exit QuietTime" Command="{Binding CloseApp}"/>
+                    <MenuItem Header="Exit QuietTime" Click="MenuItem_CloseApp_Click"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
