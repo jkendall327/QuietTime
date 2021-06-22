@@ -12,11 +12,13 @@ namespace QuietTime.ViewModels
 {
     public class ScheduleWindowVM : ObservableObject
     {
-        private ObservableCollection<Schedule> _schedules = new();
-        public ObservableCollection<Schedule> Schedules
+        public ObservableCollection<Schedule> Schedules { get; private set; } = new ();
+
+        private int _currentIndex;
+        public int CurrentIndex
         {
-            get { return _schedules; }
-            set { _schedules = value; }
+            get { return _currentIndex; }
+            set { _currentIndex = value; }
         }
 
         private DateTime _start;
@@ -49,16 +51,39 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _volumeAfter, value); }
         }
 
-        private RelayCommand _addSchedule;
-        public RelayCommand AddSchedule
-        {
-            get { return _addSchedule; }
-            set { SetProperty(ref _addSchedule, value); }
-        }
+        public RelayCommand AddSchedule { get; set; }
+        public RelayCommand FlipActivation { get; set; }
+        public RelayCommand ActivateAll { get; set; }
+        public RelayCommand DeactivateAll { get; set; }
+        public RelayCommand DeleteSelected { get; set;}
 
         public ScheduleWindowVM()
         {
-            _addSchedule = new RelayCommand(Add);
+            AddSchedule = new RelayCommand(Add);
+
+            DeleteSelected = new RelayCommand(() => Schedules.Remove(Schedules[CurrentIndex]));
+
+            ActivateAll = new RelayCommand(() =>
+            {
+                foreach (var item in Schedules.Where(x => !x.IsActive))
+                {
+                    item.IsActive = true;
+                }
+            });
+
+            DeactivateAll = new RelayCommand(() =>
+            {
+                foreach (var item in Schedules)
+                {
+                    item.IsActive = false;
+                }
+            });
+
+            FlipActivation = new RelayCommand(() =>
+            {
+                var item = Schedules[CurrentIndex];
+                item.IsActive = !item.IsActive;
+            });
 
             foreach (var item in Schedule.GetSchedules())
             {
@@ -75,12 +100,7 @@ namespace QuietTime.ViewModels
                 VolumeAfter);
 
             Schedule.AddSchedule(schedule);
-
-            Schedules.Clear();
-            foreach (var item in Schedule.GetSchedules())
-            {
-                Schedules.Add(item);
-            }
+            Schedules.Add(schedule);
         }
     }
 }
