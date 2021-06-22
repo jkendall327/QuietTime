@@ -26,12 +26,22 @@ namespace QuietTime.Other
         /// <summary>
         /// Starts the scheduler.
         /// </summary>
-        public async Task StartAsync() => await _scheduler.Start();
+        public async Task StartAsync() 
+        {
+            if (_scheduler.IsStarted) return;
+
+            await _scheduler.Start(); 
+        }
 
         /// <summary>
         /// Place the scheduler on standby. Restart with the <see cref="StartAsync"/> method.
         /// </summary>
-        public async Task StopAsync() => await _scheduler.Standby();
+        public async Task StopAsync()
+        {
+            if (!_scheduler.InStandbyMode) return;
+
+            await _scheduler.Standby();
+        }
 
         private string NewGuid => Guid.NewGuid().ToString();
 
@@ -84,6 +94,42 @@ namespace QuietTime.Other
             _logger.LogInformation(new EventId(3, "Job deleted"), "Job {key} deleted.", key);
             return await _scheduler.DeleteJob(key);
         }
+
+        public async Task PauseSchedule(JobKey key)
+        {
+            await _scheduler.PauseJob(key);
+        }
+
+        public async Task FlipScheduleActivation(JobKey key)
+        {
+            bool anyPaused = await JobHasAnyPausedTriggers(key);
+
+            if (anyPaused)
+            {
+                await _scheduler.ResumeJob(key);
+                return;
+            }
+
+            await _scheduler.PauseJob(key);
+        }
+
+        private async Task<bool> JobHasAnyPausedTriggers(JobKey key)
+        {
+            var triggers = await _scheduler.GetTriggersOfJob(key);
+            var keys = triggers.Select(x => x.Key).ToList();
+
+            bool anyPaused = false;
+
+            foreach (var triggerKey in keys)
+            {
+                anyPaused = await _scheduler.GetTriggerState(triggerKey) == TriggerState.Paused;
+            }
+
+            return anyPaused;
+        }
+
+        public async Task PauseAll() => await _scheduler.PauseAll();
+        public async Task ResumeAll() => await _scheduler.ResumeAll();
 
         private static ITrigger MakeTrigger(string identity, string guid, JobDataMap data, string dateTimeOffset)
         {

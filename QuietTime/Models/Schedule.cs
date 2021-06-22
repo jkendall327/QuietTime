@@ -44,7 +44,7 @@ namespace QuietTime.Models
             return false;
         }
 
-        public JobKey key;
+        public JobKey Key;
 
         /// <summary>
         /// Whether the schedule is currently firing.

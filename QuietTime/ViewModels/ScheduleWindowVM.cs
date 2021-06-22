@@ -52,11 +52,11 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _volumeAfter, value); }
         }
 
-        public RelayCommand AddSchedule { get; set; }
-        public RelayCommand FlipActivation { get; set; }
-        public RelayCommand ActivateAll { get; set; }
-        public RelayCommand DeactivateAll { get; set; }
-        public RelayCommand DeleteSelected { get; set;}
+        public AsyncRelayCommand AddSchedule { get; set; }
+        public AsyncRelayCommand FlipActivation { get; set; }
+        public AsyncRelayCommand ActivateAll { get; set; }
+        public AsyncRelayCommand DeactivateAll { get; set; }
+        public AsyncRelayCommand DeleteSelected { get; set;}
 
         private readonly SchedulerService _scheduler;
 
@@ -64,44 +64,53 @@ namespace QuietTime.ViewModels
         {
             _scheduler = scheduler;
 
-            CreateCommands();
+            AddSchedule = new AsyncRelayCommand(AddItemSync);
+            DeleteSelected = new AsyncRelayCommand(RemoveItemAsync);
+            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
+            FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
+            ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
 
             foreach (var item in Schedule.GetSchedules())
             {
                 Schedules.Add(item);
             }
         }
-
-        private void CreateCommands()
+        private async Task ActivateAllAsync()
         {
-            AddSchedule = new RelayCommand(async () => await Add());
-
-            DeleteSelected = new RelayCommand(() => Schedules.Remove(Schedules[CurrentIndex]));
-
-            ActivateAll = new RelayCommand(() =>
+            foreach (var item in Schedules.Where(x => !x.IsActive))
             {
-                foreach (var item in Schedules.Where(x => !x.IsActive))
-                {
-                    item.IsActive = true;
-                }
-            });
+                item.IsActive = true;
+            }
 
-            DeactivateAll = new RelayCommand(() =>
-            {
-                foreach (var item in Schedules)
-                {
-                    item.IsActive = false;
-                }
-            });
-
-            FlipActivation = new RelayCommand(() =>
-            {
-                var item = Schedules[CurrentIndex];
-                item.IsActive = !item.IsActive;
-            });
+            await _scheduler.ResumeAll();
         }
 
-        private async Task Add()
+        private async Task FlipActivationAsync()
+        {
+            var item = Schedules[CurrentIndex];
+
+            item.IsActive = !item.IsActive;
+            await _scheduler.FlipScheduleActivation(item.Key);
+        }
+
+        private async Task DeactivateAllAsync()
+        {
+            foreach (var item in Schedules)
+            {
+                item.IsActive = false;
+            }
+
+            await _scheduler.PauseAll();
+        }
+
+        private async Task RemoveItemAsync()
+        {
+            var item = Schedules[CurrentIndex];
+            Schedules.Remove(item);
+            await _scheduler.DeleteScheduleAsync(item.Key);
+        }
+
+        private async Task AddItemSync()
         {
             var schedule = new Schedule(
                 TimeOnly.FromDateTime(Start), 
@@ -110,10 +119,8 @@ namespace QuietTime.ViewModels
                 VolumeAfter);
 
             Schedule.AddSchedule(schedule);
-
             Schedules.Add(schedule);
-
-            schedule.key = await _scheduler.CreateScheduleAsync(schedule);
+            schedule.Key = await _scheduler.CreateScheduleAsync(schedule);
         }
     }
 }
