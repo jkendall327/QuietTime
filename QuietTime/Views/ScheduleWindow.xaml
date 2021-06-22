@@ -34,7 +34,7 @@
         <Label Grid.Column="1" Grid.Row="1" FontSize="36" FontFamily="Corbel Light">Schedules</Label>
 
         <StackPanel Grid.Column="2" Grid.Row="2" Grid.ColumnSpan="1" Margin="20 0 20 0">
-            <ListView ItemsSource="{Binding Schedules}">
+            <ListView MaxHeight="150" ItemsSource="{Binding Schedules}">
                 <ListView.Resources>
                     <Style TargetType="{x:Type ListViewItem}">
                         <Setter Property="HorizontalContentAlignment" Value="Right" />
