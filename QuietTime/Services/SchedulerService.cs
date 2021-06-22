@@ -154,6 +154,9 @@ namespace QuietTime.Other
         {
             async Task IJob.Execute(IJobExecutionContext context)
             {
+                // TODO: figure out why this is needed/not needed!
+                await Task.Delay(1);
+
                 // retrieve the action we set on job creation
                 var action = (Action)context.Trigger.JobDataMap.Get("work");
                 action?.Invoke();
