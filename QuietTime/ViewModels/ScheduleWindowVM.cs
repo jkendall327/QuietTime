@@ -13,7 +13,7 @@ namespace QuietTime.ViewModels
 {
     public class ScheduleWindowVM : ObservableObject
     {
-        public ObservableCollection<Schedule> Schedules { get; private set; } = new ();
+        public static ObservableCollection<Schedule> Schedules { get; private set; } = new();
 
         private int _currentIndex;
         public int CurrentIndex
@@ -64,16 +64,20 @@ namespace QuietTime.ViewModels
         {
             _scheduler = scheduler;
 
-            AddSchedule = new AsyncRelayCommand(AddItemSync);
-            DeleteSelected = new AsyncRelayCommand(RemoveItemAsync);
+            AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
+            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
             DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
             FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
             ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
 
-            foreach (var item in Schedule.GetSchedules())
+#if DEBUG
+            Schedules = new()
             {
-                Schedules.Add(item);
-            }
+                new Schedule(TimeOnly.Parse("09:00"), TimeOnly.Parse("17:45"), 20, 40),
+                new Schedule(TimeOnly.Parse("11:00"), TimeOnly.Parse("15:00"), 10, 50),
+                new Schedule(TimeOnly.Parse("03:00"), TimeOnly.Parse("12:00"), 23, 70),
+            };
+#endif
         }
         private async Task ActivateAllAsync()
         {
@@ -103,24 +107,29 @@ namespace QuietTime.ViewModels
             await _scheduler.PauseAll();
         }
 
-        private async Task RemoveItemAsync()
+        private async Task RemoveScheduleAsync()
         {
             var item = Schedules[CurrentIndex];
             Schedules.Remove(item);
             await _scheduler.DeleteScheduleAsync(item.Key);
         }
 
-        private async Task AddItemSync()
+        private async Task AddScheduleAsync()
         {
-            var schedule = new Schedule(
+            var newSchedule = new Schedule(
                 TimeOnly.FromDateTime(Start), 
                 TimeOnly.FromDateTime(End), 
                 VolumeDuring, 
                 VolumeAfter);
 
-            Schedule.AddSchedule(schedule);
-            Schedules.Add(schedule);
-            schedule.Key = await _scheduler.CreateScheduleAsync(schedule);
+            if (Schedules.Any(x => x.Overlaps(newSchedule)))
+            {
+                return;
+            }
+
+            Schedules.Add(newSchedule);
+            Schedules.Add(newSchedule);
+            newSchedule.Key = await _scheduler.CreateScheduleAsync(newSchedule);
         }
     }
 }
