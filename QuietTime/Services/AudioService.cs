@@ -63,7 +63,7 @@ namespace QuietTime.Services
         public void SwitchLock(int newMaxVolume)
         {
             IsLocked = !IsLocked;
-            MaxVolume = newMaxVolume;
+            MaxVolume = Math.Clamp(newMaxVolume, 0, 100);
 
             _log.LogInformation(new EventId(4, "Max volume changed"), "Max volume changed to {max}", MaxVolume);
 

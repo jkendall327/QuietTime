@@ -109,6 +109,7 @@ namespace QuietTime.Other
         public async Task<bool> DeleteScheduleAsync(JobKey key)
         {
             _logger.LogInformation(new EventId(3, "Job deleted"), "Job {key} deleted.", key);
+            _audio.SwitchLock(100);
 
             return await _scheduler.DeleteJob(key);
         }
