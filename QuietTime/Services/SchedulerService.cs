@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
+using Quartz.Impl.Matchers;
 using QuietTime.Models;
 using QuietTime.Services;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace QuietTime.Other
 {
@@ -67,8 +69,8 @@ namespace QuietTime.Other
                 .Build();
 
             // each trigger has its own jobdatamap, letting us schedule multiple effects for the same job
-            ITrigger startTrigger = MakeTrigger(NewGuid, groupGUID, first, userSchedule.Start.ToString());
-            ITrigger endTrigger = MakeTrigger(NewGuid, groupGUID, second, userSchedule.End.ToString());
+            ITrigger startTrigger = MakeTrigger(NewGuid, groupGUID, first, userSchedule.Start.ToString(), userSchedule.VolumeDuring);
+            ITrigger endTrigger = MakeTrigger(NewGuid, groupGUID, second, userSchedule.End.ToString(), userSchedule.VolumeAfter);
 
             _logger.LogInformation(
                 new EventId(1, "Job creation"), 
@@ -84,6 +86,21 @@ namespace QuietTime.Other
             return job.Key;
         }
 
+        private static ITrigger MakeTrigger(string identity, string guid, JobDataMap data, string dateTimeOffset, int volume)
+        {
+            return TriggerBuilder.Create()
+                .WithIdentity(identity, guid)
+                .UsingJobData(data)
+                .StartAt(DateTimeOffset.Parse(dateTimeOffset))
+                .WithSimpleSchedule(x =>
+                {
+                    x.WithIntervalInHours(24);
+                    x.RepeatForever();
+                })
+                .WithDescription($"Set max volume to {volume}.")
+                .Build();
+        }
+
         /// <summary>
         /// Deletes a schedule permanently.
         /// </summary>
@@ -92,6 +109,7 @@ namespace QuietTime.Other
         public async Task<bool> DeleteScheduleAsync(JobKey key)
         {
             _logger.LogInformation(new EventId(3, "Job deleted"), "Job {key} deleted.", key);
+
             return await _scheduler.DeleteJob(key);
         }
 
@@ -131,35 +149,20 @@ namespace QuietTime.Other
         public async Task PauseAll() => await _scheduler.PauseAll();
         public async Task ResumeAll() => await _scheduler.ResumeAll();
 
-        private static ITrigger MakeTrigger(string identity, string guid, JobDataMap data, string dateTimeOffset)
-        {
-            return TriggerBuilder.Create()
-                .WithIdentity(identity, guid)
-                .UsingJobData(data)
-                .StartAt(DateTimeOffset.Parse(dateTimeOffset))
-                .WithSimpleSchedule(x =>
-                {
-                    x.WithIntervalInHours(24);
-                    x.RepeatForever();
-                })
-                .Build();
-        }
-
         private class ChangeMaxVolumeJob : IJob
         {
             async Task IJob.Execute(IJobExecutionContext context)
             {
-                await Task.Delay(0);
-
                 // retrieve the action we set on job creation
                 var action = (Action)context.Trigger.JobDataMap.Get("work");
                 action?.Invoke();
 
                 var logger = (ILogger)context.Trigger.JobDataMap.Get("logger");
+
                 logger?.LogInformation(
                     new EventId(2, "Job performed"),
-                    "Job {jobKey} ran for trigger {triggerKey}.",
-                    context.JobDetail.Key, context.Trigger.Key);
+                    "Job {jobKey} ran for trigger {triggerKey}. Trigger description: {description}.",
+                    context.JobDetail.Key, context.Trigger.Key, context.Trigger.Description);
             }
         }
     }

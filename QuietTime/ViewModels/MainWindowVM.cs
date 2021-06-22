@@ -60,15 +60,12 @@ namespace QuietTime.ViewModels
         // commands
         public RelayCommand LockVolume { get; set; }
 
-        // services
-        public SchedulerService Scheduler { get; }
         public AudioService Audio { get; }
 
-        public MainWindowVM(ILogger<MainWindowVM> logger, SchedulerService scheduler, AudioService audio)
+        public MainWindowVM(ILogger<MainWindowVM> logger, AudioService audio)
         {
             logger.LogInformation(new EventId(0, "Startup"), "App booted succesfully.");
 
-            Scheduler = scheduler;
             Audio = audio;
 
             LockVolume = new(() =>
