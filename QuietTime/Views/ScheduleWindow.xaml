@@ -67,6 +67,7 @@
                 <Button Command="{Binding ActivateAll}">Activate all</Button>
                 <Button Command="{Binding DeactivateAll}">Deactivate all</Button>
                 <Button Command="{Binding DeleteSelected}">Delete selected</Button>
+                <Button Command="{Binding Serialize}">Save DEBUG</Button>
             </StackPanel>
         </StackPanel>
 

@@ -5,8 +5,10 @@ using QuietTime.Other;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace QuietTime.ViewModels
@@ -69,6 +71,12 @@ namespace QuietTime.ViewModels
             DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
             FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
             ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
+            Serialize = new AsyncRelayCommand(SerializeSchedules);
+
+            if (Environment.)
+            {
+
+            }
 
 #if DEBUG
             Schedules = new()
@@ -78,7 +86,34 @@ namespace QuietTime.ViewModels
                 new Schedule(TimeOnly.Parse("03:00"), TimeOnly.Parse("12:00"), 23, 70),
             };
 #endif
+            foreach (var schedule in DeserializeSchedules())
+            {
+                Schedules.Add(schedule);
+            }
         }
+
+        public AsyncRelayCommand Serialize { get; set; }
+
+        private IEnumerable<Schedule> DeserializeSchedules()
+        {
+            if (!File.Exists("test.json"))
+            {
+                return Enumerable.Empty<Schedule>();
+            }
+
+            return JsonSerializer.Deserialize<ObservableCollection<Schedule>>(File.ReadAllText("test.json")) ?? Enumerable.Empty<Schedule>();
+        }
+
+        private async Task SerializeSchedules()
+        {
+            using var fs = new FileStream("test.json", FileMode.OpenOrCreate);
+
+            await JsonSerializer.SerializeAsync<ObservableCollection<Schedule>>(fs, Schedules, new JsonSerializerOptions()
+            {
+                WriteIndented = true
+            });
+        }
+
         private async Task ActivateAllAsync()
         {
             foreach (var item in Schedules.Where(x => !x.IsActive))
