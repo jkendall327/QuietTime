@@ -13,10 +13,10 @@ namespace QuietTime.Other
     public class SchedulerService
     {
         private readonly IScheduler _scheduler;
-        private readonly ILogger _logger;
+        private readonly ILogger<SchedulerService> _logger;
         private readonly AudioService _audio;
 
-        public SchedulerService(IScheduler scheduler, ILogger logger, AudioService audio)
+        public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio)
         {
             _scheduler = scheduler;
             _logger = logger;

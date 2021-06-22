@@ -33,7 +33,9 @@ namespace QuietTime
                 x.AddDebug();
                 x.AddFile(config.GetSection("Logging"));
             });
-            builder.RegisterInstance(factory.CreateLogger("test"));
+
+            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
+            builder.RegisterInstance(factory);
 
             // scheduling
             StdSchedulerFactory schedulerFactory = new();

@@ -14,13 +14,13 @@ namespace QuietTime.Services
     public class AudioService
     {
         private readonly IConfiguration _config;
-        private readonly ILogger _log;
+        private readonly ILogger<AudioService> _log;
         private readonly MMDevice _device;
 
         public event EventHandler<bool>? LockStatusChanged;
         public event EventHandler<int>? VolumeChanged;
 
-        public AudioService(IConfiguration config, ILogger log, MMDeviceEnumerator enumerator)
+        public AudioService(IConfiguration config, ILogger<AudioService> log, MMDeviceEnumerator enumerator)
         {
             _config = config;
             _log = log;
@@ -51,7 +51,7 @@ namespace QuietTime.Services
         {
             if (CurrentVolume <= MaxVolume || !IsLocked) return;
             
-            _log.LogInformation($"Volume limit of {MaxVolume} hit.");
+            _log.LogInformation(new EventId(5, "Volume limit hit"), "Volume limit of {MaxVolume} hit.", MaxVolume);
 
             float newLevel = (float)MaxVolume / 100;
             _device.AudioEndpointVolume.MasterVolumeLevelScalar = newLevel;
@@ -64,6 +64,8 @@ namespace QuietTime.Services
         {
             IsLocked = !IsLocked;
             MaxVolume = newMaxVolume;
+
+            _log.LogInformation(new EventId(4, "Max volume changed"), "Max volume changed to {max}", MaxVolume);
 
             if (IsLocked)
             {

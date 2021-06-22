@@ -64,8 +64,10 @@ namespace QuietTime.ViewModels
         public SchedulerService Scheduler { get; }
         public AudioService Audio { get; }
 
-        public MainWindowVM(SchedulerService scheduler, AudioService audio)
+        public MainWindowVM(ILogger<MainWindowVM> logger, SchedulerService scheduler, AudioService audio)
         {
+            logger.LogInformation(new EventId(0, "Startup"), "App booted succesfully.");
+
             Scheduler = scheduler;
             Audio = audio;
 
