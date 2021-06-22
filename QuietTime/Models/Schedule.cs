@@ -1,4 +1,5 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Quartz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,8 @@ namespace QuietTime.Models
             
             return false;
         }
+
+        public JobKey key;
 
         /// <summary>
         /// Whether the schedule is currently firing.

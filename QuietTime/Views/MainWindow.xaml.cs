@@ -10,13 +10,14 @@ namespace QuietTime
     /// </summary>
     public partial class MainWindow : Window
     {
-        readonly MainWindowVM vm;
-        public MainWindow(MainWindowVM vm)
+        readonly ScheduleWindowVM svm;
+
+        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm)
         {
             InitializeComponent();
 
             DataContext = vm;
-            this.vm = vm;
+            this.svm = svm;
         }
 
         /*
@@ -79,7 +80,7 @@ namespace QuietTime
 
         private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
         {
-            new ScheduleWindow(new ScheduleWindowVM()).Show();
+            new ScheduleWindow(svm).Show();
         }
     }
 }

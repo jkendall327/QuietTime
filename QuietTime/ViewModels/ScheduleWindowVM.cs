@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using QuietTime.Models;
+using QuietTime.Other;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -57,9 +58,23 @@ namespace QuietTime.ViewModels
         public RelayCommand DeactivateAll { get; set; }
         public RelayCommand DeleteSelected { get; set;}
 
-        public ScheduleWindowVM()
+        private readonly SchedulerService _scheduler;
+
+        public ScheduleWindowVM(SchedulerService scheduler)
         {
-            AddSchedule = new RelayCommand(Add);
+            _scheduler = scheduler;
+
+            CreateCommands();
+
+            foreach (var item in Schedule.GetSchedules())
+            {
+                Schedules.Add(item);
+            }
+        }
+
+        private void CreateCommands()
+        {
+            AddSchedule = new RelayCommand(async () => await Add());
 
             DeleteSelected = new RelayCommand(() => Schedules.Remove(Schedules[CurrentIndex]));
 
@@ -84,14 +99,9 @@ namespace QuietTime.ViewModels
                 var item = Schedules[CurrentIndex];
                 item.IsActive = !item.IsActive;
             });
-
-            foreach (var item in Schedule.GetSchedules())
-            {
-                Schedules.Add(item);
-            }
         }
 
-        private void Add()
+        private async Task Add()
         {
             var schedule = new Schedule(
                 TimeOnly.FromDateTime(Start), 
@@ -100,7 +110,10 @@ namespace QuietTime.ViewModels
                 VolumeAfter);
 
             Schedule.AddSchedule(schedule);
+
             Schedules.Add(schedule);
+
+            schedule.key = await _scheduler.CreateScheduleAsync(schedule);
         }
     }
 }

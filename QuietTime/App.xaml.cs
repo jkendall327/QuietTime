@@ -19,6 +19,7 @@ namespace QuietTime
 
             // windows
             builder.RegisterType<MainWindowVM>();
+            builder.RegisterType<ScheduleWindowVM>();
             builder.RegisterType<MainWindow>();
 
             // configuration

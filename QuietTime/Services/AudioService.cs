@@ -16,16 +16,14 @@ namespace QuietTime.Services
         private readonly IConfiguration _config;
         private readonly ILogger _log;
         private readonly MMDevice _device;
-        private readonly SchedulerService _scheduler;
 
         public event EventHandler<bool>? LockStatusChanged;
         public event EventHandler<int>? VolumeChanged;
 
-        public AudioService(IConfiguration config, ILogger log, MMDeviceEnumerator enumerator, SchedulerService scheduler)
+        public AudioService(IConfiguration config, ILogger log, MMDeviceEnumerator enumerator)
         {
             _config = config;
             _log = log;
-            _scheduler = scheduler;
 
             // get audio device
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
