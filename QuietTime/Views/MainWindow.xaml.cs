@@ -1,6 +1,8 @@
-﻿using QuietTime.ViewModels;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using QuietTime.ViewModels;
 using QuietTime.Views;
 using System;
+using System.ComponentModel;
 using System.Windows;
 
 namespace QuietTime
@@ -17,6 +19,8 @@ namespace QuietTime
             InitializeComponent();
 
             DataContext = vm;
+
+            TrayIcon.Icon = new("icon.ico");
             this.svm = svm;
         }
 
@@ -77,6 +81,22 @@ namespace QuietTime
         }
 
         #endregion
+
+        // these two methods let the app close to the system tray instead of exiting completely
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = true;
+
+            this.Hide();
+
+            base.OnClosing(e);
+        }
+
+        private void MenuItem_ShowWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Show();
+        }
 
         private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
         {
