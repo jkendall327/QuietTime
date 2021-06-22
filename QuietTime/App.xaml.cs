@@ -38,6 +38,8 @@ namespace QuietTime
             // scheduling
             StdSchedulerFactory schedulerFactory = new();
             IScheduler scheduler = await schedulerFactory.GetScheduler();
+            await scheduler.Start();
+
             builder.RegisterInstance(scheduler);
             builder.RegisterType<SchedulerService>();
 
