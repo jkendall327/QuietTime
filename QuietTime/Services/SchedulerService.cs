@@ -60,29 +60,21 @@ namespace QuietTime.Other
         /// <returns>A <see cref="JobKey"/> for uniquely identifying this schedule.</returns>
         public async Task<JobKey> CreateScheduleAsync(Schedule userSchedule)
         {
-            // create job data that's called later to actually change the volume
-            var OnStart = new Action(() => _audio.SwitchLock(userSchedule.VolumeDuring));
-            var OnEnd = new Action(() => _audio.SwitchLock(userSchedule.VolumeAfter));
-            var first = new JobDataMap { { "work", OnStart } };
-            var second = new JobDataMap { { "work", OnEnd } };
-
-            if (_logger is not null)
-            {
-                second.Put("logger", _logger);
-                second.Put("logger", _logger);
-            }
-
+            // groupGUID is given to the job and both triggers, jobIdentity is just for the job
             var groupGUID = NewGuid;
             var jobIdentity = NewGuid;
+
+            var jobData = new JobDataMap() { { ChangeMaxVolumeJob.AudioServiceKey, _audio } };
 
             // create job
             IJobDetail job = JobBuilder.Create<ChangeMaxVolumeJob>()
                 .WithIdentity(jobIdentity, groupGUID)
+                .UsingJobData(jobData)
                 .Build();
 
             // each trigger has its own jobdatamap, letting us schedule multiple effects for the same job
-            ITrigger startTrigger = MakeTrigger(NewGuid, groupGUID, first, userSchedule.Start.ToString(), userSchedule.VolumeDuring);
-            ITrigger endTrigger = MakeTrigger(NewGuid, groupGUID, second, userSchedule.End.ToString(), userSchedule.VolumeAfter);
+            ITrigger startTrigger = MakeTrigger(groupGUID, userSchedule.Start.ToString(), userSchedule.VolumeDuring);
+            ITrigger endTrigger = MakeTrigger(groupGUID, userSchedule.End.ToString(), userSchedule.VolumeAfter);
 
             _logger.LogInformation(
                 new EventId(1, "Job creation"),
@@ -98,11 +90,15 @@ namespace QuietTime.Other
             return job.Key;
         }
 
-        private static ITrigger MakeTrigger(string identity, string guid, JobDataMap data, string dateTimeOffset, int volume)
+        private ITrigger MakeTrigger(string guid, string dateTimeOffset, int volume)
         {
+            var triggerData = new JobDataMap() 
+                { { ChangeMaxVolumeJob.VolumeKey, volume }, 
+                { ChangeMaxVolumeJob.LoggerKey, _logger } };
+
             return TriggerBuilder.Create()
-                .WithIdentity(identity, guid)
-                .UsingJobData(data)
+                .WithIdentity(NewGuid, guid)
+                .UsingJobData(triggerData)
                 .StartAt(DateTimeOffset.Parse(dateTimeOffset))
                 .WithSimpleSchedule(x =>
                 {
@@ -180,16 +176,22 @@ namespace QuietTime.Other
 
         private class ChangeMaxVolumeJob : IJob
         {
+            // these just provide strongly-typed access to key-value pairs
+            public const string AudioServiceKey = "audioService";
+            public const string VolumeKey = "volume";
+            public const string LoggerKey = "logger";
+
             async Task IJob.Execute(IJobExecutionContext context)
             {
                 // TODO: figure out why this is needed/not needed!
                 await Task.Delay(1);
 
-                // retrieve the action we set on job creation
-                var action = (Action)context.Trigger.JobDataMap.Get("work");
-                action?.Invoke();
+                var audioService = (AudioService)context.MergedJobDataMap.Get(AudioServiceKey);
+                var volume = (int)context.Trigger.JobDataMap.Get(VolumeKey);
 
-                var logger = (ILogger)context.Trigger.JobDataMap.Get("logger");
+                audioService.SwitchLock(volume);
+
+                var logger = (ILogger)context.Trigger.JobDataMap.Get(LoggerKey);
 
                 logger?.LogInformation(
                     new EventId(2, "Job performed"),
