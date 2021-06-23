@@ -1,0 +1,352 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>QuietTime</name>
+    </assembly>
+    <members>
+        <member name="T:QuietTime.App">
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:QuietTime.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:QuietTime.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:QuietTime.Models.Schedule">
+            <summary>
+            Represents a a period during which the system audio will be capped to a specific volume.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.Key">
+            <summary>
+            Uniquely identifies this schedule in the scheduling system.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.IsActive">
+            <summary>
+            Whether the schedule is currently firing.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.Start">
+            <summary>
+            When this schedule will start.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.End">
+            <summary>
+            When this schedule will end.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.Length">
+            <summary>
+            The total duration of this schedule.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.VolumeDuring">
+            <summary>
+            The maximum volume allowed while this schedule is active.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Models.Schedule.VolumeAfter">
+            <summary>
+            What the maximum volume will be set to when this schedule ends.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Models.Schedule.#ctor(System.TimeOnly,System.TimeOnly,System.Int32,System.Int32)">
+            <summary>
+            Creates a new schedule.
+            </summary>
+            <param name="start">When the schedule will start.</param>
+            <param name="end">When the schedule will end.</param>
+            <param name="volumeDuring">The maximum volume allowed while this schedule is active.</param>
+            <param name="volumeAfter">What the maximum volume will be set to when this schedule ends.</param>
+        </member>
+        <member name="T:QuietTime.Other.BoolToButtonTextConverter">
+            <summary>
+            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into text for the button on the main screen.
+            </summary>
+        </member>
+        <member name="T:QuietTime.Other.BoolToColorConverter">
+            <summary>
+            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into colours for the main screen background.
+            </summary>
+        </member>
+        <member name="T:QuietTime.Other.DateTimeToTimeOnlyConverter">
+            <summary>
+            Converts between a <see cref="T:System.DateTime"/> and a <see cref="T:System.TimeOnly"/> for integrating a <see cref="T:QuietTime.Models.Schedule"/> with the date-picker tool on the Schedule page.
+            </summary>
+        </member>
+        <member name="T:QuietTime.Other.SchedulerService">
+            <summary>
+            Encapsulates queueing up a <see cref="T:QuietTime.Models.Schedule"/> for later execution. Wrapper to Quartz.NET.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.#ctor(Quartz.IScheduler,Microsoft.Extensions.Logging.ILogger{QuietTime.Other.SchedulerService},QuietTime.Services.AudioService)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.Other.SchedulerService"/>.
+            </summary>
+            <param name="scheduler">The core link to Quartz.NET.</param>
+            <param name="logger">Logging service for this class.</param>
+            <param name="audio">Used to actually clamp system volume when jobs fire.</param>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.StartAsync">
+            <summary>
+            Starts the scheduler.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.StopAsync">
+            <summary>
+            Place the scheduler on standby. Restart with the <see cref="M:QuietTime.Other.SchedulerService.StartAsync"/> method.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.CreateScheduleAsync(QuietTime.Models.Schedule)">
+            <summary>
+            Gives a user's schedule to the scheduler for later execution.
+            </summary>
+            <param name="userSchedule">The times and volumes to be executed later.</param>
+            <returns>A <see cref="T:Quartz.JobKey"/> for uniquely identifying this schedule.</returns>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.DeleteScheduleAsync(Quartz.JobKey)">
+            <summary>
+            Deletes a schedule permanently.
+            </summary>
+            <param name="key">The unique key of the job to be deletes.</param>
+            <returns>true if the schedule was found and deleted succesfully.</returns>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.PauseSchedule(Quartz.JobKey)">
+            <summary>
+            Pauses the firing of a specific schedule.
+            </summary>
+            <param name="key">The unique <see cref="T:Quartz.JobKey"/> of the schedule to be paused.</param>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.FlipScheduleActivation(Quartz.JobKey)">
+            <summary>
+            Activates paused schedules and pauses activated schedules.
+            </summary>
+            <param name="key">The unique <see cref="T:Quartz.JobKey"/> of the schedule to be paused.</param>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.PauseAll">
+            <summary>
+            Pauses all schedules.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Other.SchedulerService.ResumeAll">
+            <summary>
+            Activates all schedules.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:QuietTime.Services.AudioService">
+            <summary>
+            Encapsulates manipulation of system audio through the NAudio library.
+            </summary>
+        </member>
+        <member name="E:QuietTime.Services.AudioService.LockStatusChanged">
+            <summary>
+            Fires when <see cref="P:QuietTime.Services.AudioService.IsLocked"/> changes. The boolean value represents whether system audio is currently locked.
+            </summary>
+        </member>
+        <member name="E:QuietTime.Services.AudioService.VolumeChanged">
+            <summary>
+            Fires when <see cref="P:QuietTime.Services.AudioService.CurrentVolume"/> changes. The int represents the new volume as a percentage.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.Services.AudioService"/>.
+            </summary>
+            <param name="config">Program configuration.</param>
+            <param name="log">Logging framework for this class.</param>
+            <param name="enumerator">NAudio link that provides access to system audio.</param>
+        </member>
+        <member name="P:QuietTime.Services.AudioService.CurrentVolume">
+            <summary>
+            The system's current volume, as a percentage.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Services.AudioService.SwitchLock(System.Int32)">
+            <summary>
+            Locks the maximum allowed volume.
+            </summary>
+        </member>
+        <member name="T:QuietTime.ViewModels.MainWindowVM">
+            <summary>
+            A viewmodel for the main window.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.CurrentVolume">
+            <summary>
+            The system's current volume.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.MaxVolume">
+            <summary>
+            The current volume limit.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume">
+            <summary>
+            What <see cref="P:QuietTime.ViewModels.MainWindowVM.MaxVolume"/> will be set to when volume levels are locked.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.VersionInfo">
+            <summary>
+            The version and build time of the program.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.IsLocked">
+            <summary>
+            Whether system audio is capped at <see cref="P:QuietTime.ViewModels.MainWindowVM.MaxVolume"/>.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.LockVolume">
+            <summary>
+            Encapsulates locking the system volume.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.Audio">
+            <summary>
+            Used for getting system information on current audio levels and requesting volume locks.
+            </summary>
+        </member>
+        <member name="M:QuietTime.ViewModels.MainWindowVM.#ctor(Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.MainWindowVM},QuietTime.Services.AudioService)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.ViewModels.MainWindowVM"/>.
+            </summary>
+            <param name="logger">Logging framework for this class.</param>
+            <param name="audio">Link to underlying audio infrastructure.</param>
+        </member>
+        <member name="T:QuietTime.ViewModels.ScheduleWindowVM">
+            <summary>
+            Viewmodel for <see cref="T:QuietTime.Views.ScheduleWindow"/>.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules">
+            <summary>
+            The user's current schedules, both active and inactive.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.CurrentIndex">
+            <summary>
+            Currently-selected index of <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules"/>.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.Schedule">
+            <summary>
+            Binding object for the UI.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.AddSchedule">
+            <summary>
+            Creates an initially-inactive schedule.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.FlipActivation">
+            <summary>
+            Pauses active schedules and activates paused schedules.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.ActivateAll">
+            <summary>
+            Activates all schedules.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.DeactivateAll">
+            <summary>
+            Deactivates all schedules.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.DeleteSelected">
+            <summary>
+            Deletes the schedule indicated by the <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.CurrentIndex"/>.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.ScheduleWindowVM.Serialize">
+            <summary>
+            Serializes the current contents of <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules"/> to JSON.
+            </summary>
+        </member>
+        <member name="M:QuietTime.ViewModels.ScheduleWindowVM.#ctor(QuietTime.Other.SchedulerService)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.ViewModels.ScheduleWindowVM"/>.
+            </summary>
+            <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
+        </member>
+        <member name="T:QuietTime.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.MainWindow"/>.
+            </summary>
+            <param name="vm">The viewmodel for this window.</param>
+            <param name="svm">The viewmodel for the <see cref="T:QuietTime.Views.ScheduleWindow"/> that can be opened from this window.</param>
+        </member>
+        <member name="M:QuietTime.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:QuietTime.Views.ScheduleWindow">
+            <summary>
+            Interaction logic for ScheduleWindow.xaml
+            </summary>
+            <summary>
+            ScheduleWindow
+            </summary>
+        </member>
+        <member name="M:QuietTime.Views.ScheduleWindow.#ctor(QuietTime.ViewModels.ScheduleWindowVM)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.Views.ScheduleWindow"/>.
+            </summary>
+            <param name="vm">The viewmodel for this window.</param>
+        </member>
+        <member name="M:QuietTime.Views.ScheduleWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -7,6 +7,9 @@ using System.Windows;
 
 namespace QuietTime
 {
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -14,6 +17,11 @@ namespace QuietTime
     {
         readonly ScheduleWindowVM svm;
 
+        /// <summary>
+        /// Creates a new <see cref="MainWindow"/>.
+        /// </summary>
+        /// <param name="vm">The viewmodel for this window.</param>
+        /// <param name="svm">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
         public MainWindow(MainWindowVM vm, ScheduleWindowVM svm)
         {
             InitializeComponent();
@@ -111,4 +119,7 @@ namespace QuietTime
             new ScheduleWindow(svm).Show();
         }
     }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 }

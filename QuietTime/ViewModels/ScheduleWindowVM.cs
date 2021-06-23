@@ -13,8 +13,14 @@ using System.Threading.Tasks;
 
 namespace QuietTime.ViewModels
 {
+    /// <summary>
+    /// Viewmodel for <see cref="QuietTime.Views.ScheduleWindow"/>.
+    /// </summary>
     public class ScheduleWindowVM : ObservableObject
     {
+        /// <summary>
+        /// The user's current schedules, both active and inactive.
+        /// </summary>
         public static ObservableCollection<Schedule> Schedules { get; private set; } = new();
 
         /// <summary>
@@ -37,14 +43,42 @@ namespace QuietTime.ViewModels
         }
         private Schedule _schedule = new(TimeOnly.MinValue, TimeOnly.MinValue, 0, 0);
 
+        /// <summary>
+        /// Creates an initially-inactive schedule.
+        /// </summary>
         public AsyncRelayCommand AddSchedule { get; set; }
+
+        /// <summary>
+        /// Pauses active schedules and activates paused schedules.
+        /// </summary>
         public AsyncRelayCommand FlipActivation { get; set; }
+
+        /// <summary>
+        /// Activates all schedules.
+        /// </summary>
         public AsyncRelayCommand ActivateAll { get; set; }
+
+        /// <summary>
+        /// Deactivates all schedules.
+        /// </summary>
         public AsyncRelayCommand DeactivateAll { get; set; }
+
+        /// <summary>
+        /// Deletes the schedule indicated by the <see cref="CurrentIndex"/>.
+        /// </summary>
         public AsyncRelayCommand DeleteSelected { get; set;}
+
+        /// <summary>
+        /// Serializes the current contents of <see cref="Schedules"/> to JSON.
+        /// </summary>
+        public AsyncRelayCommand Serialize { get; set; }
 
         private readonly SchedulerService _scheduler;
 
+        /// <summary>
+        /// Creates a new <see cref="ScheduleWindowVM"/>.
+        /// </summary>
+        /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         public ScheduleWindowVM(SchedulerService scheduler)
         {
             _scheduler = scheduler;
@@ -56,8 +90,6 @@ namespace QuietTime.ViewModels
             ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
             Serialize = new AsyncRelayCommand(SerializeSchedules);
         }
-
-        public AsyncRelayCommand Serialize { get; set; }
 
         private IEnumerable<Schedule> DeserializeSchedules()
         {

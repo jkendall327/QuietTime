@@ -11,15 +11,31 @@ using System.Threading.Tasks;
 
 namespace QuietTime.Services
 {
+    /// <summary>
+    /// Encapsulates manipulation of system audio through the NAudio library.
+    /// </summary>
     public class AudioService
     {
         private readonly IConfiguration _config;
         private readonly ILogger<AudioService> _log;
         private readonly MMDevice _device;
 
+        /// <summary>
+        /// Fires when <see cref="IsLocked"/> changes. The boolean value represents whether system audio is currently locked.
+        /// </summary>
         public event EventHandler<bool>? LockStatusChanged;
+
+        /// <summary>
+        /// Fires when <see cref="CurrentVolume"/> changes. The int represents the new volume as a percentage.
+        /// </summary>
         public event EventHandler<int>? VolumeChanged;
 
+        /// <summary>
+        /// Creates a new <see cref="AudioService"/>.
+        /// </summary>
+        /// <param name="config">Program configuration.</param>
+        /// <param name="log">Logging framework for this class.</param>
+        /// <param name="enumerator">NAudio link that provides access to system audio.</param>
         public AudioService(IConfiguration config, ILogger<AudioService> log, MMDeviceEnumerator enumerator)
         {
             _config = config;
@@ -33,6 +49,9 @@ namespace QuietTime.Services
             MaxVolume = _config.GetValue<int>("InitialMaxVolume");
         }
 
+        /// <summary>
+        /// The system's current volume, as a percentage.
+        /// </summary>
         public int CurrentVolume => _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
 
         private int MaxVolume { get; set; }

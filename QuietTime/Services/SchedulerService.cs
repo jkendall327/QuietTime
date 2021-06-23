@@ -12,12 +12,21 @@ using System.Windows.Forms;
 
 namespace QuietTime.Other
 {
+    /// <summary>
+    /// Encapsulates queueing up a <see cref="Schedule"/> for later execution. Wrapper to Quartz.NET.
+    /// </summary>
     public class SchedulerService
     {
         private readonly IScheduler _scheduler;
         private readonly ILogger<SchedulerService> _logger;
         private readonly AudioService _audio;
 
+        /// <summary>
+        /// Creates a new <see cref="SchedulerService"/>.
+        /// </summary>
+        /// <param name="scheduler">The core link to Quartz.NET.</param>
+        /// <param name="logger">Logging service for this class.</param>
+        /// <param name="audio">Used to actually clamp system volume when jobs fire.</param>
         public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio)
         {
             _scheduler = scheduler;
@@ -57,8 +66,14 @@ namespace QuietTime.Other
             // create job data that's called later to actually change the volume
             var OnStart = new Action(() => _audio.SwitchLock(userSchedule.VolumeDuring));
             var OnEnd = new Action(() => _audio.SwitchLock(userSchedule.VolumeAfter));
-            var first = new JobDataMap {{ "work", OnStart }, { "logger", _logger } };
-            var second = new JobDataMap {{ "work", OnEnd }, { "logger", _logger } };
+            var first = new JobDataMap {{ "work", OnStart }};
+            var second = new JobDataMap {{ "work", OnEnd }};
+
+            if (_logger is not null)
+            {
+                second.Put("logger", _logger);
+                second.Put("logger", _logger);
+            }
 
             var groupGUID = NewGuid;
             var jobIdentity = NewGuid;
@@ -114,11 +129,19 @@ namespace QuietTime.Other
             return await _scheduler.DeleteJob(key);
         }
 
+        /// <summary>
+        /// Pauses the firing of a specific schedule.
+        /// </summary>
+        /// <param name="key">The unique <see cref="JobKey"/> of the schedule to be paused.</param>
         public async Task PauseSchedule(JobKey key)
         {
             await _scheduler.PauseJob(key);
         }
 
+        /// <summary>
+        /// Activates paused schedules and pauses activated schedules.
+        /// </summary>
+        /// <param name="key">The unique <see cref="JobKey"/> of the schedule to be paused.</param>
         public async Task FlipScheduleActivation(JobKey key)
         {
             bool anyPaused = await JobHasAnyPausedTriggers(key);
@@ -147,7 +170,15 @@ namespace QuietTime.Other
             return anyPaused;
         }
 
+        /// <summary>
+        /// Pauses all schedules.
+        /// </summary>
         public async Task PauseAll() => await _scheduler.PauseAll();
+
+        /// <summary>
+        /// Activates all schedules.
+        /// </summary>
+        /// <returns></returns>
         public async Task ResumeAll() => await _scheduler.ResumeAll();
 
         private class ChangeMaxVolumeJob : IJob

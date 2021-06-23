@@ -20,6 +20,10 @@ namespace QuietTime.Views
     /// </summary>
     public partial class ScheduleWindow : Window
     {
+        /// <summary>
+        /// Creates a new <see cref="ScheduleWindow"/>.
+        /// </summary>
+        /// <param name="vm">The viewmodel for this window.</param>
         public ScheduleWindow(ScheduleWindowVM vm)
         {
             InitializeComponent();
