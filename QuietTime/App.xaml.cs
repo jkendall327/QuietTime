@@ -1,5 +1,5 @@
-﻿using Autofac;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
 using Quartz;
@@ -19,52 +19,58 @@ namespace QuietTime
     {
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            var builder = new ContainerBuilder();
-
-            // windows
-            builder.RegisterType<MainWindowVM>();
-            builder.RegisterType<ScheduleWindowVM>();
-            builder.RegisterType<MainWindow>();
+            var services = new ServiceCollection();
 
             // configuration
-            IConfiguration config = new ConfigurationBuilder().AddJsonFile("config.json").Build();
-            builder.RegisterInstance(config);
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("config.json", optional: false)
+                .Build();
+
+            services.Configure<Settings>(configuration.GetSection("Settings"));
 
             // logging
-            var factory = LoggerFactory.Create(x =>
+            services.AddLogging(builder =>
             {
-                x.AddConsole();
-                x.AddDebug();
-                x.AddFile(config.GetSection("Logging"));
+                builder.AddConsole();
+                builder.AddDebug();
+                builder.AddFile(configuration.GetSection("Logging"));
             });
 
-            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
-            builder.RegisterInstance(factory);
+            // register windows
+            services.AddTransient<MainWindow>();
+            services.AddTransient<MainWindowVM>();
+            services.AddTransient<ScheduleWindowVM>();
 
-            // scheduling
+            // scheduler
             StdSchedulerFactory schedulerFactory = new();
             IScheduler scheduler = await schedulerFactory.GetScheduler();
             await scheduler.Start();
 
-            builder.RegisterInstance(scheduler);
-            builder.RegisterType<SchedulerService>();
+            services.AddSingleton<IScheduler>(scheduler);
+            services.AddTransient<SchedulerService>();
 
             // audio
-            builder.RegisterInstance(new MMDeviceEnumerator());
-            builder.RegisterType<AudioService>();
+            services.AddTransient<MMDeviceEnumerator>();
+            services.AddTransient<AudioService>();
+
+            // create service provider
+            var serviceProvider = services.BuildServiceProvider();
 
             // let's go
-            builder.Build().Resolve<MainWindow>().Show();
+            serviceProvider.GetService<MainWindow>()!.Show();
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            MessageBox.Show("A serious error has occured and the program must now close. The next window will show details of the error that you can send to the developer.", "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            string message = "A serious error has occured and the program must now close. The next window will show details of the error that you can send to the developer.";
+
+            MessageBox.Show(message, "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
             MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 
-            var message = new List<string>() { DateTime.Now.ToString("G"), e.Exception.Message };
+            var exceptionMessage = new List<string>() { DateTime.Now.ToString("G"), e.Exception.Message };
 
-            File.AppendAllLines("error.log", message);
+            File.AppendAllLines("error.log", exceptionMessage);
         }
     }
 }

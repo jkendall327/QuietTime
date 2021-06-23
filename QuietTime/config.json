@@ -1,6 +1,8 @@
 {
-  "InitialMaxVolume": 50,
-  "SerializedDataFilename":  "schedules.json",
+  "Settings": {
+    "InitialMaxVolume": 50,
+    "SerializedDataFilename": "schedules.json"
+  },
   "Logging": {
     "LogLevel": {
       "Default": "Debug",

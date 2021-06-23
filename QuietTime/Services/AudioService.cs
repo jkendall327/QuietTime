@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NAudio.CoreAudioApi;
 using QuietTime.Other;
 using System;
@@ -11,7 +12,6 @@ namespace QuietTime.Services
     /// </summary>
     public class AudioService
     {
-        private readonly IConfiguration _config;
         private readonly ILogger<AudioService> _log;
         private readonly MMDevice _device;
 
@@ -31,9 +31,8 @@ namespace QuietTime.Services
         /// <param name="config">Program configuration.</param>
         /// <param name="log">Logging framework for this class.</param>
         /// <param name="enumerator">NAudio link that provides access to system audio.</param>
-        public AudioService(IConfiguration config, ILogger<AudioService> log, MMDeviceEnumerator enumerator)
+        public AudioService(IOptions<Settings> config, ILogger<AudioService> log, MMDeviceEnumerator enumerator)
         {
-            _config = config;
             _log = log;
 
             // get audio device
@@ -41,7 +40,7 @@ namespace QuietTime.Services
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
 
             // this probably doesn't need to exist
-            MaxVolume = _config.GetValue<int>("InitialMaxVolume");
+            MaxVolume = config.Value.InitialMaxVolume;
         }
 
         /// <summary>

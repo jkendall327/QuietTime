@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using QuietTime.Models;
@@ -75,7 +76,7 @@ namespace QuietTime.ViewModels
         public AsyncRelayCommand Serialize { get; set; }
 
         private readonly SchedulerService _scheduler;
-        private readonly IConfiguration _config;
+        private readonly Settings _config;
         private readonly ILogger<ScheduleWindowVM> _logger;
 
         /// <summary>
@@ -84,10 +85,10 @@ namespace QuietTime.ViewModels
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         /// <param name="config">Application configuration.</param>
         /// <param name="logger">Logging framework for this class.</param>
-        public ScheduleWindowVM(SchedulerService scheduler, IConfiguration config, ILogger<ScheduleWindowVM> logger)
+        public ScheduleWindowVM(SchedulerService scheduler, IOptions<Settings> config, ILogger<ScheduleWindowVM> logger)
         {
             _scheduler = scheduler;
-            _config = config;
+            _config = config.Value;
             _logger = logger;
 
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
@@ -105,7 +106,7 @@ namespace QuietTime.ViewModels
 
         private IEnumerable<Schedule> DeserializeSchedules()
         {
-            var filepath = _config.GetValue<string>("SerializedDataFilename");
+            var filepath = _config.SerializedDataFilename;
 
             try
             {
@@ -122,7 +123,8 @@ namespace QuietTime.ViewModels
             }
             catch (FileNotFoundException ex)
             {
-                _logger.LogError(EventIds.DeserializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
+                 _logger.LogError(EventIds.DeserializationError, ex, "File {filepath} loaded from app config file was not found.", filepath);
+
                 return Enumerable.Empty<Schedule>();
             }
             catch (ArgumentNullException ex)
@@ -144,7 +146,7 @@ namespace QuietTime.ViewModels
 
         private async Task SerializeSchedules()
         {
-            var filepath = _config.GetValue<string>("SerializedDataFilename");
+            var filepath = _config.SerializedDataFilename;
 
             try
             {

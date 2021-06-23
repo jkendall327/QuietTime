@@ -83,6 +83,71 @@
             Converts between a <see cref="T:System.DateTime"/> and a <see cref="T:System.TimeOnly"/> for integrating a <see cref="T:QuietTime.Models.Schedule"/> with the date-picker tool on the Schedule page.
             </summary>
         </member>
+        <member name="T:QuietTime.Other.EventIds">
+            <summary>
+            Provides strongly-typed access to <see cref="T:Microsoft.Extensions.Logging.EventId"/> instances for logging.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AppStartup">
+            <summary>
+            Used when the application first starts.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.JobCreated">
+            <summary>
+            Used when a <see cref="T:QuietTime.Models.Schedule"/> is added to the scheduler.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.JobPerformed">
+            <summary>
+            Used when a <see cref="T:QuietTime.Models.Schedule"/> is performed by the scheduler.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.JobDeleted">
+            <summary>
+            Used when a <see cref="T:QuietTime.Models.Schedule"/> is deleted from the scheduler.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.MaxVolumeChanged">
+            <summary>
+            Used when the max volume limit is changed in the <see cref="T:QuietTime.Services.AudioService"/>.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.VolumeLimitHit">
+            <summary>
+            Used when the volume limit is hit in the <see cref="T:QuietTime.Services.AudioService"/>.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AppClosing">
+            <summary>
+            Used when the app exits.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AppClosingCancelled">
+            <summary>
+            Used when the app is closed by the user but returns to the system tray instead.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.DeserializationError">
+            <summary>
+            Used when deserializing a user's schedules fails.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.DeserializationSuccess">
+            <summary>
+            Used when deserializing a user's schedules succeeds.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.SerializationError">
+            <summary>
+            Used when serializing a user's schedules fails.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.SerializationSuccess">
+            <summary>
+            Used when serializing a user's schedules succeeds.
+            </summary>
+        </member>
         <member name="T:QuietTime.Other.SchedulerService">
             <summary>
             Encapsulates queueing up a <see cref="T:QuietTime.Models.Schedule"/> for later execution. Wrapper to Quartz.NET.
@@ -143,6 +208,21 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:QuietTime.Settings">
+            <summary>
+            Provides strongly-typed program settings.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Settings.InitialMaxVolume">
+            <summary>
+            Max volume when opening program.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Settings.SerializedDataFilename">
+            <summary>
+            Filename for user's serialized schedules.
+            </summary>
+        </member>
         <member name="T:QuietTime.Services.AudioService">
             <summary>
             Encapsulates manipulation of system audio through the NAudio library.
@@ -158,7 +238,7 @@
             Fires when <see cref="P:QuietTime.Services.AudioService.CurrentVolume"/> changes. The int represents the new volume as a percentage.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator)">
+        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator)">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.AudioService"/>.
             </summary>
@@ -273,11 +353,13 @@
             Serializes the current contents of <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules"/> to JSON.
             </summary>
         </member>
-        <member name="M:QuietTime.ViewModels.ScheduleWindowVM.#ctor(QuietTime.Other.SchedulerService)">
+        <member name="M:QuietTime.ViewModels.ScheduleWindowVM.#ctor(QuietTime.Other.SchedulerService,Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.ScheduleWindowVM})">
             <summary>
             Creates a new <see cref="T:QuietTime.ViewModels.ScheduleWindowVM"/>.
             </summary>
             <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
+            <param name="config">Application configuration.</param>
+            <param name="logger">Logging framework for this class.</param>
         </member>
         <member name="T:QuietTime.MainWindow">
             <summary>
@@ -287,12 +369,13 @@
             MainWindow
             </summary>
         </member>
-        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM)">
+        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM,Microsoft.Extensions.Logging.ILogger{QuietTime.MainWindow})">
             <summary>
             Creates a new <see cref="T:QuietTime.MainWindow"/>.
             </summary>
             <param name="vm">The viewmodel for this window.</param>
             <param name="svm">The viewmodel for the <see cref="T:QuietTime.Views.ScheduleWindow"/> that can be opened from this window.</param>
+            <param name="logger">Logging framework for this class.</param>
         </member>
         <member name="M:QuietTime.MainWindow.InitializeComponent">
             <summary>
