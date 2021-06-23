@@ -24,6 +24,11 @@
             Represents a a period during which the system audio will be capped to a specific volume.
             </summary>
         </member>
+        <member name="P:QuietTime.Models.Schedule.MinValues">
+            <summary>
+            A <see cref="T:QuietTime.Models.Schedule"/> set to all minimum values.
+            </summary>
+        </member>
         <member name="P:QuietTime.Models.Schedule.Key">
             <summary>
             Uniquely identifies this schedule in the scheduling system.

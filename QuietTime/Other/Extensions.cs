@@ -1,4 +1,5 @@
 ﻿using QuietTime.Models;
+using System;
 
 namespace QuietTime.Other
 {
@@ -6,22 +7,17 @@ namespace QuietTime.Other
     {
         internal static int ToPercentage(this float val)
         {
+            val = Math.Clamp(val, 0, 1);
+
             val *= 100;
             return (int)val;
         }
 
-        public static bool Overlaps(this Schedule x, Schedule y)
+        internal static bool Overlaps(this Schedule x, Schedule y)
         {
-            if (x.Start < y.Start && x.End > y.Start)
-            {
-                return true;
-            }
-            else if (x.Start < y.End && x.End < y.End)
-            {
-                return true;
-            }
+            if (x is null || y is null) return false;
 
-            return false;
+            return x.Start <= y.End && y.Start <= x.Start;
         }
     }
 }

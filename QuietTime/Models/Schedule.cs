@@ -10,6 +10,12 @@ namespace QuietTime.Models
     public class Schedule : ObservableObject
     {
         /// <summary>
+        /// A <see cref="Schedule"/> set to all minimum values.
+        /// </summary>
+        public static Schedule MinValues 
+            => new Schedule(TimeOnly.MinValue, TimeOnly.MinValue, 0, 0);
+
+        /// <summary>
         /// Uniquely identifies this schedule in the scheduling system.
         /// </summary>
         public JobKey? Key { get; set; }
