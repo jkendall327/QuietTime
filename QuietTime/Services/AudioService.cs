@@ -65,7 +65,7 @@ namespace QuietTime.Services
         {
             if (CurrentVolume <= MaxVolume || !IsLocked) return;
 
-            _log.LogInformation(new EventId(5, "Volume limit hit"), "Volume limit of {MaxVolume} hit.", MaxVolume);
+            _log.LogInformation(EventIds.VolumeLimitHit, "Volume limit of {MaxVolume} hit.", MaxVolume);
 
             float newLevel = (float)MaxVolume / 100;
             _device.AudioEndpointVolume.MasterVolumeLevelScalar = newLevel;
@@ -79,7 +79,7 @@ namespace QuietTime.Services
             IsLocked = !IsLocked;
             MaxVolume = Math.Clamp(newMaxVolume, 0, 100);
 
-            _log.LogInformation(new EventId(4, "Max volume changed"), "Max volume changed to {max}", MaxVolume);
+            _log.LogInformation(EventIds.MaxVolumeChanged, "Max volume changed to {max}", MaxVolume);
 
             if (IsLocked)
             {

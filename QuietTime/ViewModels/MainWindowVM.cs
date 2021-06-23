@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Other;
 using QuietTime.Services;
 using System;
 using System.IO;
@@ -84,7 +85,7 @@ namespace QuietTime.ViewModels
         /// <param name="audio">Link to underlying audio infrastructure.</param>
         public MainWindowVM(ILogger<MainWindowVM> logger, AudioService audio)
         {
-            logger.LogInformation(new EventId(0, "Startup"), "App booted succesfully.");
+            logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
 
             Audio = audio;
 

@@ -77,7 +77,7 @@ namespace QuietTime.Other
             ITrigger endTrigger = MakeTrigger(groupGUID, userSchedule.End.ToString(), userSchedule.VolumeAfter);
 
             _logger.LogInformation(
-                new EventId(1, "Job creation"),
+                EventIds.JobCreated,
                 "Job scheduled: GUID {job}, " +
                 "with group ID {group}" +
                 "starting {start} " +
@@ -116,7 +116,7 @@ namespace QuietTime.Other
         /// <returns>true if the schedule was found and deleted succesfully.</returns>
         public async Task<bool> DeleteScheduleAsync(JobKey key)
         {
-            _logger.LogInformation(new EventId(3, "Job deleted"), "Job {key} deleted.", key);
+            _logger.LogInformation(EventIds.JobDeleted, "Job {key} deleted.", key);
             _audio.SwitchLock(100);
 
             return await _scheduler.DeleteJob(key);
@@ -193,8 +193,7 @@ namespace QuietTime.Other
 
                 var logger = (ILogger)context.Trigger.JobDataMap.Get(LoggerKey);
 
-                logger?.LogInformation(
-                    new EventId(2, "Job performed"),
+                logger?.LogInformation(EventIds.JobPerformed,
                     "Job {jobKey} ran for trigger {triggerKey}. Trigger description: {description}.",
                     context.JobDetail.Key, context.Trigger.Key, context.Trigger.Description);
             }

@@ -1,4 +1,6 @@
-﻿using QuietTime.ViewModels;
+﻿using Microsoft.Extensions.Logging;
+using QuietTime.Other;
+using QuietTime.ViewModels;
 using QuietTime.Views;
 using System;
 using System.ComponentModel;
@@ -14,6 +16,7 @@ namespace QuietTime
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly ILogger<MainWindow> _logger;
         readonly ScheduleWindowVM svm;
 
         /// <summary>
@@ -21,7 +24,8 @@ namespace QuietTime
         /// </summary>
         /// <param name="vm">The viewmodel for this window.</param>
         /// <param name="svm">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
-        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm)
+        /// <param name="logger">Logging framework for this class.</param>
+        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger)
         {
             InitializeComponent();
 
@@ -29,6 +33,7 @@ namespace QuietTime
 
             TrayIcon.Icon = new("icon.ico");
             this.svm = svm;
+            _logger = logger;
         }
 
         /*
@@ -94,6 +99,15 @@ namespace QuietTime
         protected override void OnClosing(CancelEventArgs e)
         {
             e.Cancel = !_traybarClosing;
+
+            if (e.Cancel)
+            {
+                _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
+            }
+            else
+            {
+                _logger.LogInformation(EventIds.AppClosing, "App closed.");
+            }
 
             this.Hide();
 
