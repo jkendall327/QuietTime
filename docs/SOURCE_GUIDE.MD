@@ -34,3 +34,5 @@ The code-behind to the App.xaml file is where the dependency injection container
 The Converters class provides ways for WPF to intelligently bind to values for a more interesting UI. For example, the background of the main screen changes colour when the volume is locked. This is achieved through a BoolToButtonTextConverter in this class.
 
 The Extensions class contains static extension methods that had no home elsewhere.
+
+The EventIds class is a convenient way to add extra information to log files.
