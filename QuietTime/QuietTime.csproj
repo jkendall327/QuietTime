@@ -7,6 +7,11 @@
     <Nullable>enable</Nullable>
     <Version>0.0.1</Version>
     <ApplicationIcon>audio-tool-in-silence.ico</ApplicationIcon>
+    <PackageProjectUrl>https://github.com/jkendall327/QuietTime</PackageProjectUrl>
+    <Description>Like f.lux for your ears, QuietTime lets you cap your computer's maximum volume either on-command or according to schedules that you create.</Description>
+    <Copyright>MIT License</Copyright>
+    <RepositoryUrl>https://github.com/jkendall327/QuietTime</RepositoryUrl>
+    <PackageTags>audio, wpf, mvvm, mit, productivity, well-being, health</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
