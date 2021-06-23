@@ -9,7 +9,7 @@
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
-        Title="MainWindow" Name="MyWindow" MinWidth="800" MinHeight="500">
+        Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500">
     
     <Window.Resources>
         <l:BoolToButtonTextConverter x:Key="buttonConverter" />
