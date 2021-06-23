@@ -1,14 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
-using Quartz.Impl.Matchers;
 using QuietTime.Models;
 using QuietTime.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace QuietTime.Other
 {
@@ -37,11 +34,11 @@ namespace QuietTime.Other
         /// <summary>
         /// Starts the scheduler.
         /// </summary>
-        public async Task StartAsync() 
+        public async Task StartAsync()
         {
             if (_scheduler.IsStarted) return;
 
-            await _scheduler.Start(); 
+            await _scheduler.Start();
         }
 
         /// <summary>
@@ -66,8 +63,8 @@ namespace QuietTime.Other
             // create job data that's called later to actually change the volume
             var OnStart = new Action(() => _audio.SwitchLock(userSchedule.VolumeDuring));
             var OnEnd = new Action(() => _audio.SwitchLock(userSchedule.VolumeAfter));
-            var first = new JobDataMap {{ "work", OnStart }};
-            var second = new JobDataMap {{ "work", OnEnd }};
+            var first = new JobDataMap { { "work", OnStart } };
+            var second = new JobDataMap { { "work", OnEnd } };
 
             if (_logger is not null)
             {
@@ -88,7 +85,7 @@ namespace QuietTime.Other
             ITrigger endTrigger = MakeTrigger(NewGuid, groupGUID, second, userSchedule.End.ToString(), userSchedule.VolumeAfter);
 
             _logger.LogInformation(
-                new EventId(1, "Job creation"), 
+                new EventId(1, "Job creation"),
                 "Job scheduled: GUID {job}, " +
                 "with group ID {group}" +
                 "starting {start} " +

@@ -1,9 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Quartz;
-using QuietTime.Other;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace QuietTime.Models
 {
@@ -20,8 +17,8 @@ namespace QuietTime.Models
         /// <summary>
         /// Whether the schedule is currently firing.
         /// </summary>
-        public bool IsActive 
-        { 
+        public bool IsActive
+        {
             get { return _isActive; }
             set { SetProperty(ref _isActive, value); }
         }

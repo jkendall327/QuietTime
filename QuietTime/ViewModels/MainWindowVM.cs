@@ -1,19 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using NAudio.CoreAudioApi;
-using Quartz;
-using Quartz.Impl;
-using QuietTime.Models;
-using QuietTime.Other;
 using QuietTime.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace QuietTime.ViewModels
 {

@@ -1,13 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
 using NAudio.CoreAudioApi;
 using QuietTime.Other;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuietTime.Services
 {
@@ -69,7 +64,7 @@ namespace QuietTime.Services
         private void ClampAudio()
         {
             if (CurrentVolume <= MaxVolume || !IsLocked) return;
-            
+
             _log.LogInformation(new EventId(5, "Volume limit hit"), "Volume limit of {MaxVolume} hit.", MaxVolume);
 
             float newLevel = (float)MaxVolume / 100;

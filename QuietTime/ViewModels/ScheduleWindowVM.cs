@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -66,7 +65,7 @@ namespace QuietTime.ViewModels
         /// <summary>
         /// Deletes the schedule indicated by the <see cref="CurrentIndex"/>.
         /// </summary>
-        public AsyncRelayCommand DeleteSelected { get; set;}
+        public AsyncRelayCommand DeleteSelected { get; set; }
 
         /// <summary>
         /// Serializes the current contents of <see cref="Schedules"/> to JSON.
