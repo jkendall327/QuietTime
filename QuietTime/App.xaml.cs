@@ -7,7 +7,11 @@ using Quartz.Impl;
 using QuietTime.Other;
 using QuietTime.Services;
 using QuietTime.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace QuietTime
 {
@@ -51,6 +55,16 @@ namespace QuietTime
 
             // let's go
             builder.Build().Resolve<MainWindow>().Show();
+        }
+
+        private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show("A serious error has occured and the program must now close. The next window will show details of the error that you can send to the developer.", "Unhandled exception", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+            var message = new List<string>() { DateTime.Now.ToString("G"), e.Exception.Message };
+
+            File.AppendAllLines("error.log", message);
         }
     }
 }
