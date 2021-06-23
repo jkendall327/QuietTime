@@ -24,7 +24,7 @@ namespace QuietTime
             // configuration
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config.json", optional: false)
+                .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
             services.Configure<Settings>(configuration.GetSection("Settings"));
