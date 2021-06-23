@@ -53,5 +53,25 @@ namespace QuietTime.Other
         /// Used when the app is closed by the user but returns to the system tray instead.
         /// </summary>
         public static readonly EventId AppClosingCancelled = new(7, "App close cancelled");
+
+        /// <summary>
+        /// Used when deserializing a user's schedules fails.
+        /// </summary>
+        public static readonly EventId DeserializationError = new(8, "Deserialization error");
+
+        /// <summary>
+        /// Used when deserializing a user's schedules succeeds.
+        /// </summary>
+        public static readonly EventId DeserializationSuccess = new(9, "Deserialization success");
+
+        /// <summary>
+        /// Used when serializing a user's schedules fails.
+        /// </summary>
+        public static readonly EventId SerializationError = new(10, "Deserialization error");
+
+        /// <summary>
+        /// Used when serializing a user's schedules succeeds.
+        /// </summary>
+        public static readonly EventId SerializationSuccess = new(11, "Deserialization success");
     }
 }

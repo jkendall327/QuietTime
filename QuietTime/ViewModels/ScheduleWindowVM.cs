@@ -1,4 +1,6 @@
-﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using QuietTime.Models;
 using QuietTime.Other;
@@ -73,14 +75,20 @@ namespace QuietTime.ViewModels
         public AsyncRelayCommand Serialize { get; set; }
 
         private readonly SchedulerService _scheduler;
+        private readonly IConfiguration _config;
+        private readonly ILogger<ScheduleWindowVM> _logger;
 
         /// <summary>
         /// Creates a new <see cref="ScheduleWindowVM"/>.
         /// </summary>
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
-        public ScheduleWindowVM(SchedulerService scheduler)
+        /// <param name="config">Application configuration.</param>
+        /// <param name="logger">Logging framework for this class.</param>
+        public ScheduleWindowVM(SchedulerService scheduler, IConfiguration config, ILogger<ScheduleWindowVM> logger)
         {
             _scheduler = scheduler;
+            _config = config;
+            _logger = logger;
 
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
             DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
@@ -88,26 +96,75 @@ namespace QuietTime.ViewModels
             FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
             ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
             Serialize = new AsyncRelayCommand(SerializeSchedules);
+
+            foreach (var schedule in DeserializeSchedules())
+            {
+                Schedules.Add(schedule);
+            }
         }
 
         private IEnumerable<Schedule> DeserializeSchedules()
         {
-            if (!File.Exists("test.json"))
+            var filepath = _config.GetValue<string>("SerializedDataFilename");
+
+            try
             {
+                var result = JsonSerializer.Deserialize<ObservableCollection<Schedule>>(File.ReadAllText(filepath));
+
+                if (result is null)
+                {
+                    _logger.LogError(EventIds.DeserializationError, "File {file} was null on deserialization.", filepath);
+                    return Enumerable.Empty<Schedule>();
+                }
+
+                _logger.LogInformation(EventIds.DeserializationSuccess, "File {file} deserialized succesfully.", filepath);
+                return result;
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.LogError(EventIds.DeserializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
                 return Enumerable.Empty<Schedule>();
             }
-
-            return JsonSerializer.Deserialize<ObservableCollection<Schedule>>(File.ReadAllText("test.json")) ?? Enumerable.Empty<Schedule>();
+            catch (ArgumentNullException ex)
+            {
+                _logger.LogError(EventIds.DeserializationError, ex, "Argument was null when deserializing {file}.", filepath);
+                return Enumerable.Empty<Schedule>();
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError(EventIds.DeserializationError, ex, "Improper JSON detected while deserializing {file}.", filepath);
+                return Enumerable.Empty<Schedule>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(EventIds.DeserializationError, ex, "Exception while loading or deserializing {file}.", filepath);
+                return Enumerable.Empty<Schedule>();
+            }
         }
 
         private async Task SerializeSchedules()
         {
-            using var fs = new FileStream("test.json", FileMode.OpenOrCreate);
+            var filepath = _config.GetValue<string>("SerializedDataFilename");
 
-            await JsonSerializer.SerializeAsync<ObservableCollection<Schedule>>(fs, Schedules, new JsonSerializerOptions()
+            try
             {
-                WriteIndented = true
-            });
+                using var fs = new FileStream(filepath, FileMode.OpenOrCreate);
+
+                await JsonSerializer.SerializeAsync<ObservableCollection<Schedule>>(fs, Schedules, new JsonSerializerOptions()
+                {
+                    WriteIndented = true
+                });
+
+                _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
+            }
+            catch (FileNotFoundException ex)
+            {
+                _logger.LogError(EventIds.SerializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(EventIds.SerializationError, ex, "Exception when deserializing {file}.", filepath);
+            }
         }
 
         private async Task ActivateAllAsync()
