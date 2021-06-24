@@ -34,6 +34,11 @@
             Uniquely identifies this schedule in the scheduling system.
             </summary>
         </member>
+        <member name="M:QuietTime.Models.Schedule.SetKey(Quartz.JobKey)">
+            <summary>
+            Sets the <see cref="P:QuietTime.Models.Schedule.Key"/> of this Schedule.
+            </summary>
+        </member>
         <member name="P:QuietTime.Models.Schedule.IsActive">
             <summary>
             Whether the schedule is currently firing.

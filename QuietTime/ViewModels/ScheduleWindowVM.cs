@@ -156,7 +156,10 @@ namespace QuietTime.ViewModels
 
             Schedules.Add(newSchedule);
 
-            newSchedule.Key = await _scheduler.CreateScheduleAsync(newSchedule);
+            var newJobKey = await _scheduler.CreateScheduleAsync(newSchedule);
+            
+            newSchedule.SetKey(newJobKey);
+            newSchedule.IsActive = true;
         }
     }
 }
