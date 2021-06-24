@@ -41,7 +41,8 @@ namespace QuietTime.Services
         {
             try
             {
-                var result = JsonSerializer.Deserialize<ObservableCollection<Schedule>>(File.ReadAllText(filepath));
+                string json = File.ReadAllText(filepath);
+                var result = JsonSerializer.Deserialize<IEnumerable<ScheduleDTO>>(json);
 
                 if (result is null)
                 {
@@ -50,11 +51,12 @@ namespace QuietTime.Services
                 }
 
                 _logger.LogInformation(EventIds.DeserializationSuccess, "File {file} deserialized succesfully.", filepath);
-                return result;
+
+                return result.Select(r => r.ToSchedule());
             }
             catch (FileNotFoundException ex)
             {
-                _logger.LogError(EventIds.DeserializationError, ex, "File {filepath} loaded from app config file was not found.", filepath);
+                _logger.LogError(EventIds.DeserializationError, ex, "File {filepath} was not found.", filepath);
 
                 return Enumerable.Empty<Schedule>();
             }
@@ -77,11 +79,13 @@ namespace QuietTime.Services
 
         internal async Task SerializeSchedulesAsync(ObservableCollection<Schedule> schedules)
         {
+            var dtos = schedules.Select(s => new ScheduleDTO(s));
+
             try
             {
                 using var fs = new FileStream(filepath, FileMode.OpenOrCreate);
 
-                await JsonSerializer.SerializeAsync<ObservableCollection<Schedule>>(fs, schedules, new JsonSerializerOptions()
+                await JsonSerializer.SerializeAsync<IEnumerable<ScheduleDTO>>(fs, dtos, new JsonSerializerOptions()
                 {
                     WriteIndented = true
                 });

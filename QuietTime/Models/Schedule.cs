@@ -1,7 +1,6 @@
 ﻿using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Quartz;
 using System;
-using System.Text.Json.Serialization;
 
 namespace QuietTime.Models
 {
@@ -19,29 +18,7 @@ namespace QuietTime.Models
         /// <summary>
         /// Uniquely identifies this schedule in the scheduling system.
         /// </summary>
-        [JsonIgnore]
-        public JobKey? Key { get; private set; }
-
-        // We have to do this nonsense of splitting up the key because JobKey doesn't serialize
-
-        /// <summary>
-        /// The group of the schedule's <see cref="Key"/>. Only used for serialization; you can ignore this.
-        /// </summary>
-        public string? KeyGroup { get; private set; }
-
-        /// <summary>
-        /// The name of the schedule's <see cref="Key"/>. Only used for serialization; you can ignore this.
-        /// </summary>
-        public string? KeyName { get; private set; }
-
-        /// <summary>
-        /// Sets the <see cref="Key"/> of this Schedule.
-        /// </summary>
-        public void SetKey(JobKey Key)
-        {
-            KeyGroup = Key.Group;
-            KeyName = Key.Name;
-        }
+        public JobKey? Key { get; set; }
 
         /// <summary>
         /// Whether the schedule is currently firing.
@@ -111,11 +88,6 @@ namespace QuietTime.Models
             _end = end;
             _volumeDuring = volumeDuring;
             _volumeAfter = volumeAfter;
-
-            if (KeyName is not null && KeyGroup is not null)
-            {
-                var key = new JobKey(KeyName, KeyGroup);
-            }
         }
     }
 }
