@@ -21,6 +21,33 @@ namespace QuietTime.ViewModels
     /// </summary>
     public class ScheduleWindowVM : ObservableObject
     {
+        private readonly SchedulerService _scheduler;
+        private readonly SerializerService _serializer;
+
+        /// <summary>
+        /// Creates a new <see cref="ScheduleWindowVM"/>.
+        /// </summary>
+        /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
+        /// <param name="serializer">Handles serialization of user's schedules.</param>
+        public ScheduleWindowVM(SchedulerService scheduler, SerializerService serializer)
+        {
+            _scheduler = scheduler;
+            _serializer = serializer;
+
+            AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
+            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
+            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
+            FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
+            ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
+
+            Serialize = new AsyncRelayCommand(() => _serializer.SerializeSchedulesAsync(Schedules));
+
+            foreach (var schedule in _serializer.DeserializeSchedules())
+            {
+                Schedules.Add(schedule);
+            }
+        }
+
         /// <summary>
         /// The user's current schedules, both active and inactive.
         /// </summary>
@@ -75,106 +102,6 @@ namespace QuietTime.ViewModels
         /// Serializes the current contents of <see cref="Schedules"/> to JSON.
         /// </summary>
         public AsyncRelayCommand Serialize { get; set; }
-
-        private readonly SchedulerService _scheduler;
-        private readonly Settings _config;
-        private readonly ILogger<ScheduleWindowVM> _logger;
-        private readonly NotificationService _notifications;
-
-        /// <summary>
-        /// Creates a new <see cref="ScheduleWindowVM"/>.
-        /// </summary>
-        /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
-        /// <param name="config">Application configuration.</param>
-        /// <param name="logger">Logging framework for this class.</param>
-        /// <param name="notifications">Notification service for this class.</param>
-        public ScheduleWindowVM(SchedulerService scheduler, IOptions<Settings> config, ILogger<ScheduleWindowVM> logger, NotificationService notifications)
-        {
-            _scheduler = scheduler;
-            _config = config.Value;
-            _logger = logger;
-            _notifications = notifications;
-
-            AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
-            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
-            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
-            FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
-            ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
-            Serialize = new AsyncRelayCommand(SerializeSchedules);
-
-            foreach (var schedule in DeserializeSchedules())
-            {
-                Schedules.Add(schedule);
-            }
-        }
-
-        private IEnumerable<Schedule> DeserializeSchedules()
-        {
-            var filepath = _config.SerializedDataFilename;
-
-            try
-            {
-                var result = JsonSerializer.Deserialize<ObservableCollection<Schedule>>(File.ReadAllText(filepath));
-
-                if (result is null)
-                {
-                    _logger.LogError(EventIds.DeserializationError, "File {file} was null on deserialization.", filepath);
-                    return Enumerable.Empty<Schedule>();
-                }
-
-                _logger.LogInformation(EventIds.DeserializationSuccess, "File {file} deserialized succesfully.", filepath);
-                return result;
-            }
-            catch (FileNotFoundException ex)
-            {
-                 _logger.LogError(EventIds.DeserializationError, ex, "File {filepath} loaded from app config file was not found.", filepath);
-
-                return Enumerable.Empty<Schedule>();
-            }
-            catch (ArgumentNullException ex)
-            {
-                _logger.LogError(EventIds.DeserializationError, ex, "Argument was null when deserializing {file}.", filepath);
-                return Enumerable.Empty<Schedule>();
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(EventIds.DeserializationError, ex, "Improper JSON detected while deserializing {file}.", filepath);
-                return Enumerable.Empty<Schedule>();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(EventIds.DeserializationError, ex, "Exception while loading or deserializing {file}.", filepath);
-                return Enumerable.Empty<Schedule>();
-            }
-        }
-
-        private async Task SerializeSchedules()
-        {
-            var filepath = _config.SerializedDataFilename;
-
-            try
-            {
-                using var fs = new FileStream(filepath, FileMode.OpenOrCreate);
-
-                await JsonSerializer.SerializeAsync<ObservableCollection<Schedule>>(fs, Schedules, new JsonSerializerOptions()
-                {
-                    WriteIndented = true
-                });
-
-                _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
-                _notifications.SendNotification("Success", "Your schedules have been succesfully saved.", NotificationService.MessageLevel.Information);
-            }
-            catch (FileNotFoundException ex)
-            {
-                _logger.LogError(EventIds.SerializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", NotificationService.MessageLevel.Information);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(EventIds.SerializationError, ex, "Exception when deserializing {file}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", NotificationService.MessageLevel.Information);
-            }
-        }
 
         private async Task ActivateAllAsync()
         {

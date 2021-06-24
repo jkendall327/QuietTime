@@ -59,6 +59,9 @@ namespace QuietTime
             services.AddTransient<MMDeviceEnumerator>();
             services.AddTransient<AudioService>();
 
+            // serialization
+            services.AddTransient<SerializerService>();
+
             // create service provider
             var serviceProvider = services.BuildServiceProvider();
 

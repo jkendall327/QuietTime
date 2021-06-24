@@ -305,6 +305,19 @@
             <param name="message">The content of the message.</param>
             <param name="level">Indicates the relative importance of the message.</param>
         </member>
+        <member name="T:QuietTime.Services.SerializerService">
+            <summary>
+            Encapsulates serializing a user's schedules.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Services.SerializerService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.SerializerService},QuietTime.Services.NotificationService)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.Services.SerializerService"/>.
+            </summary>
+            <param name="config">Program configuration for this class.</param>
+            <param name="logger">Logging framework for this class.</param>
+            <param name="notifications">Notification service for this class.</param>
+        </member>
         <member name="T:QuietTime.ViewModels.MainWindowVM">
             <summary>
             A viewmodel for the main window.
@@ -357,6 +370,13 @@
             Viewmodel for <see cref="T:QuietTime.Views.ScheduleWindow"/>.
             </summary>
         </member>
+        <member name="M:QuietTime.ViewModels.ScheduleWindowVM.#ctor(QuietTime.Other.SchedulerService,QuietTime.Services.SerializerService)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.ViewModels.ScheduleWindowVM"/>.
+            </summary>
+            <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
+            <param name="serializer">Handles serialization of user's schedules.</param>
+        </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules">
             <summary>
             The user's current schedules, both active and inactive.
@@ -401,15 +421,6 @@
             <summary>
             Serializes the current contents of <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules"/> to JSON.
             </summary>
-        </member>
-        <member name="M:QuietTime.ViewModels.ScheduleWindowVM.#ctor(QuietTime.Other.SchedulerService,Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.ScheduleWindowVM},QuietTime.Services.NotificationService)">
-            <summary>
-            Creates a new <see cref="T:QuietTime.ViewModels.ScheduleWindowVM"/>.
-            </summary>
-            <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
-            <param name="config">Application configuration.</param>
-            <param name="logger">Logging framework for this class.</param>
-            <param name="notifications">Notification service for this class.</param>
         </member>
         <member name="T:QuietTime.MainWindow">
             <summary>
