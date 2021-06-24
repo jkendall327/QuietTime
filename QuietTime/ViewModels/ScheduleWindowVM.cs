@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using QuietTime.Models;
 using QuietTime.Other;
+using QuietTime.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -78,6 +79,7 @@ namespace QuietTime.ViewModels
         private readonly SchedulerService _scheduler;
         private readonly Settings _config;
         private readonly ILogger<ScheduleWindowVM> _logger;
+        private readonly NotificationService _notifications;
 
         /// <summary>
         /// Creates a new <see cref="ScheduleWindowVM"/>.
@@ -85,11 +87,13 @@ namespace QuietTime.ViewModels
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         /// <param name="config">Application configuration.</param>
         /// <param name="logger">Logging framework for this class.</param>
-        public ScheduleWindowVM(SchedulerService scheduler, IOptions<Settings> config, ILogger<ScheduleWindowVM> logger)
+        /// <param name="notifications">Notification service for this class.</param>
+        public ScheduleWindowVM(SchedulerService scheduler, IOptions<Settings> config, ILogger<ScheduleWindowVM> logger, NotificationService notifications)
         {
             _scheduler = scheduler;
             _config = config.Value;
             _logger = logger;
+            _notifications = notifications;
 
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
             DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
@@ -158,14 +162,17 @@ namespace QuietTime.ViewModels
                 });
 
                 _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
+                _notifications.SendNotification("Success", "Your schedules have been succesfully saved.", NotificationService.MessageLevel.Information);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.LogError(EventIds.SerializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
+                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", NotificationService.MessageLevel.Information);
             }
             catch (Exception ex)
             {
                 _logger.LogError(EventIds.SerializationError, ex, "Exception when deserializing {file}.", filepath);
+                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", NotificationService.MessageLevel.Information);
             }
         }
 

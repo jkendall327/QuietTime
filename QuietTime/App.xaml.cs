@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
@@ -49,6 +50,10 @@ namespace QuietTime
 
             services.AddSingleton<IScheduler>(scheduler);
             services.AddTransient<SchedulerService>();
+
+            // notifications
+            services.AddTransient<NotificationService>();
+            services.AddSingleton<TaskbarIcon>();
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();

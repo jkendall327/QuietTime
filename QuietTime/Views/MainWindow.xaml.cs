@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using QuietTime.Other;
+using QuietTime.Services;
 using QuietTime.ViewModels;
 using QuietTime.Views;
 using System;
@@ -17,7 +18,8 @@ namespace QuietTime
     public partial class MainWindow : Window
     {
         private readonly ILogger<MainWindow> _logger;
-        readonly ScheduleWindowVM svm;
+        private readonly ScheduleWindowVM svm;
+        private readonly NotificationService _notifications;
 
         /// <summary>
         /// Creates a new <see cref="MainWindow"/>.
@@ -25,7 +27,8 @@ namespace QuietTime
         /// <param name="vm">The viewmodel for this window.</param>
         /// <param name="svm">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
         /// <param name="logger">Logging framework for this class.</param>
-        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger)
+        /// <param name="notifications">Notification service for this class.</param>
+        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger, NotificationService notifications)
         {
             InitializeComponent();
 
@@ -34,6 +37,7 @@ namespace QuietTime
             TrayIcon.Icon = new("icon.ico");
             this.svm = svm;
             _logger = logger;
+            _notifications = notifications;
         }
 
         /*
@@ -94,14 +98,16 @@ namespace QuietTime
 
         #endregion
 
-        // these two methods let the app close to the system tray instead of exiting completely
-
         protected override void OnClosing(CancelEventArgs e)
         {
             e.Cancel = !_traybarClosing;
 
             if (e.Cancel)
             {
+                _notifications.SendNotification("Window closed",
+                    "QuietTime is still running in the system tray. You can open the main window or close the app completely from there.",
+                    NotificationService.MessageLevel.Information);
+
                 _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
             }
             else
