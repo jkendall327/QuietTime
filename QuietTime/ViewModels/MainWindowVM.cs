@@ -97,6 +97,7 @@ namespace QuietTime.ViewModels
 
             Audio.LockStatusChanged += (s, e) => IsLocked = e;
             Audio.VolumeChanged += (s, e) => CurrentVolume = e;
+            Audio.MaxVolumeChanged += (s, e) => MaxVolume = e;
 
             // get current volume for UI before any updates
             CurrentVolume = audio.CurrentVolume;

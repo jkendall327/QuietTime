@@ -26,6 +26,11 @@ namespace QuietTime.Services
         public event EventHandler<int>? VolumeChanged;
 
         /// <summary>
+        /// Fires when <see cref="MaxVolume"/> changes. The int represents the new max volume as a percentage.
+        /// </summary>
+        public event EventHandler<int>? MaxVolumeChanged;
+
+        /// <summary>
         /// Creates a new <see cref="AudioService"/>.
         /// </summary>
         /// <param name="config">Program configuration.</param>
@@ -86,6 +91,7 @@ namespace QuietTime.Services
             }
 
             LockStatusChanged?.Invoke(this, IsLocked);
+            MaxVolumeChanged?.Invoke(this, MaxVolume);
         }
     }
 }

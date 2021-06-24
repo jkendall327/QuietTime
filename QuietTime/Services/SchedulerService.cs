@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace QuietTime.Other
 {
@@ -67,10 +69,11 @@ namespace QuietTime.Other
             var groupGUID = NewGuid;
             var jobIdentity = NewGuid;
 
-            var jobData = new JobDataMap() 
-            { 
+            var jobData = new JobDataMap()
+            {
                 { ChangeMaxVolumeJob.AudioServiceKey, _audio },
-                { ChangeMaxVolumeJob.NotificationServiceKey, _notificationService } 
+                { ChangeMaxVolumeJob.NotificationServiceKey, _notificationService },
+                { ChangeMaxVolumeJob.DispatcherKey, Application.Current.Dispatcher }
             };
 
             // create job
@@ -99,10 +102,10 @@ namespace QuietTime.Other
 
         private ITrigger MakeTrigger(string guid, string dateTimeOffset, int volume)
         {
-            var triggerData = new JobDataMap() 
-            { 
-                { ChangeMaxVolumeJob.VolumeKey, volume }, 
-                { ChangeMaxVolumeJob.LoggerKey, _logger } 
+            var triggerData = new JobDataMap()
+            {
+                { ChangeMaxVolumeJob.VolumeKey, volume },
+                { ChangeMaxVolumeJob.LoggerKey, _logger }
             };
 
             return TriggerBuilder.Create()
@@ -190,6 +193,7 @@ namespace QuietTime.Other
             public const string VolumeKey = "volume";
             public const string LoggerKey = "logger";
             public const string NotificationServiceKey = "notifications";
+            public const string DispatcherKey = "dispatcher";
 
             async Task IJob.Execute(IJobExecutionContext context)
             {
@@ -202,10 +206,16 @@ namespace QuietTime.Other
                 audioService.SwitchLock(volume);
 
                 var notificationService = (NotificationService)context.MergedJobDataMap.Get(NotificationServiceKey);
-                notificationService?.SendNotification
-                    ("Volume changed", 
-                    $"Your maximum volume has been set to {volume}.", 
-                    NotificationService.MessageLevel.Information);
+
+                var dispatcher = (Dispatcher)context.MergedJobDataMap.Get(DispatcherKey);
+
+                dispatcher?.Invoke(() =>
+                {
+                    notificationService?.SendNotification
+                        ("Volume changed",
+                        $"Your maximum volume has been set to {volume}.",
+                        NotificationService.MessageLevel.Information);
+                });
 
                 var logger = (ILogger)context.Trigger.JobDataMap.Get(LoggerKey);
 
