@@ -105,7 +105,7 @@ namespace QuietTime
             if (e.Cancel)
             {
                 _notifications.SendNotification("Window closed",
-                    "QuietTime is still running in the system tray. You can open the main window or close the app completely from there.",
+                    "QuietTime is still running in the system tray. You can re-open the main window or close the app completely from there.",
                     NotificationService.MessageLevel.Information);
 
                 _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
@@ -130,7 +130,7 @@ namespace QuietTime
         private void MenuItem_CloseApp_Click(object sender, RoutedEventArgs e)
         {
             _traybarClosing = true;
-            Environment.Exit(1);
+            this.Close();
         }
 
         private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
