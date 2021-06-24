@@ -57,7 +57,7 @@ namespace QuietTime
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();
-            services.AddTransient<AudioService>();
+            services.AddSingleton<AudioService>();
 
             // serialization
             services.AddTransient<SerializerService>();

@@ -183,7 +183,6 @@ namespace QuietTime.Other
         /// <summary>
         /// Activates all schedules.
         /// </summary>
-        /// <returns></returns>
         public async Task ResumeAll() => await _scheduler.ResumeAll();
 
         private class ChangeMaxVolumeJob : IJob
@@ -202,13 +201,13 @@ namespace QuietTime.Other
 
                 var audioService = (AudioService)context.MergedJobDataMap.Get(AudioServiceKey);
                 var volume = (int)context.Trigger.JobDataMap.Get(VolumeKey);
-
-                audioService.SwitchLock(volume);
+                audioService?.SwitchLock(volume);
 
                 var notificationService = (NotificationService)context.MergedJobDataMap.Get(NotificationServiceKey);
 
+                // have to this because quartz.net fires jobs from another thread
+                // and wpf monopolises access to the UI thread -- I think, anyway 
                 var dispatcher = (Dispatcher)context.MergedJobDataMap.Get(DispatcherKey);
-
                 dispatcher?.Invoke(() =>
                 {
                     notificationService?.SendNotification
@@ -220,7 +219,7 @@ namespace QuietTime.Other
                 var logger = (ILogger)context.Trigger.JobDataMap.Get(LoggerKey);
 
                 logger?.LogInformation(EventIds.JobPerformed,
-                    "Job {jobKey} ran for trigger {triggerKey}. Trigger description: {description}.",
+                    "Job {jobKey} ran for trigger {triggerKey}. Trigger description: {description}",
                     context.JobDetail.Key, context.Trigger.Key, context.Trigger.Description);
             }
         }
