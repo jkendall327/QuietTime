@@ -21,6 +21,7 @@ namespace QuietTime.Services
         public NotificationService(TaskbarIcon tray)
         {
             _tray = tray;
+            _tray.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         /// <summary>
@@ -57,6 +58,8 @@ namespace QuietTime.Services
         /// <param name="level">Indicates the relative importance of the message.</param>
         public void SendNotification(string title, string message, MessageLevel level)
         {
+            _tray.Visibility = System.Windows.Visibility.Visible;
+
             BalloonIcon icon = level switch
             {
                 MessageLevel.None => BalloonIcon.None,
@@ -67,6 +70,8 @@ namespace QuietTime.Services
             };
 
             _tray.ShowBalloonTip(title, message, BalloonIcon.None);
+
+            _tray.Visibility = System.Windows.Visibility.Collapsed;
         }
     }
 }
