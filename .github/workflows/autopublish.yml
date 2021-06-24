@@ -1,0 +1,46 @@
+name: autopublish
+
+on:
+  push:
+    branches: [ release ]
+
+jobs:
+
+  build:
+
+    runs-on: windows-latest  # For a list of available runner types, refer to
+                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+
+    env:
+      Solution_Name: QuietTime.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
+      Test_Project_Path: QuietTime\QuietTime.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    # Execute all unit tests in the solution
+    - name: Execute unit tests
+      run: dotnet test
+      
+   # Publish
+    - name: Publish to single file
+      run: dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true
+
+    - name: upload artifact
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: .\bin\Debug\net6.0-windows\win-x64\publish\quiettime.zip
+        asset_name: quiettime.zip
+        asset_content_type: application/zip
