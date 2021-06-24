@@ -158,13 +158,14 @@
             Encapsulates queueing up a <see cref="T:QuietTime.Models.Schedule"/> for later execution. Wrapper to Quartz.NET.
             </summary>
         </member>
-        <member name="M:QuietTime.Other.SchedulerService.#ctor(Quartz.IScheduler,Microsoft.Extensions.Logging.ILogger{QuietTime.Other.SchedulerService},QuietTime.Services.AudioService)">
+        <member name="M:QuietTime.Other.SchedulerService.#ctor(Quartz.IScheduler,Microsoft.Extensions.Logging.ILogger{QuietTime.Other.SchedulerService},QuietTime.Services.AudioService,QuietTime.Services.NotificationService)">
             <summary>
             Creates a new <see cref="T:QuietTime.Other.SchedulerService"/>.
             </summary>
             <param name="scheduler">The core link to Quartz.NET.</param>
             <param name="logger">Logging service for this class.</param>
             <param name="audio">Used to actually clamp system volume when jobs fire.</param>
+            <param name="notificationService">Notification service for this class.</param>
         </member>
         <member name="M:QuietTime.Other.SchedulerService.StartAsync">
             <summary>

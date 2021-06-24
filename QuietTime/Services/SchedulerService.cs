@@ -17,6 +17,7 @@ namespace QuietTime.Other
         private readonly IScheduler _scheduler;
         private readonly ILogger<SchedulerService> _logger;
         private readonly AudioService _audio;
+        private readonly NotificationService _notificationService;
 
         /// <summary>
         /// Creates a new <see cref="SchedulerService"/>.
@@ -24,11 +25,13 @@ namespace QuietTime.Other
         /// <param name="scheduler">The core link to Quartz.NET.</param>
         /// <param name="logger">Logging service for this class.</param>
         /// <param name="audio">Used to actually clamp system volume when jobs fire.</param>
-        public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio)
+        /// <param name="notificationService">Notification service for this class.</param>
+        public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio, NotificationService notificationService)
         {
             _scheduler = scheduler;
             _logger = logger;
             _audio = audio;
+            _notificationService = notificationService;
         }
 
         /// <summary>
@@ -64,7 +67,11 @@ namespace QuietTime.Other
             var groupGUID = NewGuid;
             var jobIdentity = NewGuid;
 
-            var jobData = new JobDataMap() { { ChangeMaxVolumeJob.AudioServiceKey, _audio } };
+            var jobData = new JobDataMap() 
+            { 
+                { ChangeMaxVolumeJob.AudioServiceKey, _audio },
+                { ChangeMaxVolumeJob.NotificationServiceKey, _notificationService } 
+            };
 
             // create job
             IJobDetail job = JobBuilder.Create<ChangeMaxVolumeJob>()
@@ -93,8 +100,10 @@ namespace QuietTime.Other
         private ITrigger MakeTrigger(string guid, string dateTimeOffset, int volume)
         {
             var triggerData = new JobDataMap() 
-                { { ChangeMaxVolumeJob.VolumeKey, volume }, 
-                { ChangeMaxVolumeJob.LoggerKey, _logger } };
+            { 
+                { ChangeMaxVolumeJob.VolumeKey, volume }, 
+                { ChangeMaxVolumeJob.LoggerKey, _logger } 
+            };
 
             return TriggerBuilder.Create()
                 .WithIdentity(NewGuid, guid)
@@ -180,6 +189,7 @@ namespace QuietTime.Other
             public const string AudioServiceKey = "audioService";
             public const string VolumeKey = "volume";
             public const string LoggerKey = "logger";
+            public const string NotificationServiceKey = "notifications";
 
             async Task IJob.Execute(IJobExecutionContext context)
             {
@@ -190,6 +200,12 @@ namespace QuietTime.Other
                 var volume = (int)context.Trigger.JobDataMap.Get(VolumeKey);
 
                 audioService.SwitchLock(volume);
+
+                var notificationService = (NotificationService)context.MergedJobDataMap.Get(NotificationServiceKey);
+                notificationService?.SendNotification
+                    ("Volume changed", 
+                    $"Your maximum volume has been set to {volume}.", 
+                    NotificationService.MessageLevel.Information);
 
                 var logger = (ILogger)context.Trigger.JobDataMap.Get(LoggerKey);
 
