@@ -28,7 +28,7 @@ namespace QuietTime
             // let's go
             var main = serviceProvider.GetService<MainWindow>()!;
 
-            if (e.Args[0] != "--minimized")
+            if (e.Args.Length == 0 || e.Args[0] != "--minimized")
             {
                 main.Show();
             }
@@ -56,6 +56,7 @@ namespace QuietTime
             services.AddTransient<MainWindow>();
             services.AddTransient<MainWindowVM>();
             services.AddTransient<ScheduleWindowVM>();
+            services.AddTransient<SettingsWindowVM>();
 
             // scheduler
             StdSchedulerFactory schedulerFactory = new();

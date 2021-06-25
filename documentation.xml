@@ -153,6 +153,21 @@
             Used when serializing a user's schedules succeeds.
             </summary>
         </member>
+        <member name="F:QuietTime.Other.EventIds.AutomaticStartupAdded">
+            <summary>
+            Used when user makes QuietTime load on sign-in.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AutomaticStartupRemoved">
+            <summary>
+            Used when user stops QuietTime loading on sign-in.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AutomaticStartupFailure">
+            <summary>
+            Used when stopping QuietTime from starting on sign-in fails..
+            </summary>
+        </member>
         <member name="T:QuietTime.Other.SchedulerService">
             <summary>
             Encapsulates queueing up a <see cref="T:QuietTime.Models.Schedule"/> for later execution. Wrapper to Quartz.NET.
@@ -427,6 +442,33 @@
             Serializes the current contents of <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules"/> to JSON.
             </summary>
         </member>
+        <member name="T:QuietTime.ViewModels.SettingsWindowVM">
+            <summary>
+            Viewmodel for a settings window.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.SettingsWindowVM.LaunchOnStartup">
+            <summary>
+            Whether QuietTime automatically launches when the user signs in.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.SettingsWindowVM.LaunchMinimized">
+            <summary>
+            Whether QuietTime will launch minimized in the system tray.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.SettingsWindowVM.SwitchLaunchOptions">
+            <summary>
+            Either creates or delete the shortcut in the user's startup folder.
+            </summary>
+        </member>
+        <member name="M:QuietTime.ViewModels.SettingsWindowVM.#ctor(QuietTime.Services.NotificationService,Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.SettingsWindowVM})">
+            <summary>
+            Creates a new <see cref="T:QuietTime.ViewModels.SettingsWindowVM"/>.
+            </summary>
+            <param name="notifications">Notification service for this class.</param>
+            <param name="logger">Logging service for this class.</param>
+        </member>
         <member name="T:QuietTime.MainWindow">
             <summary>
             Interaction logic for MainWindow.xaml
@@ -435,7 +477,7 @@
             MainWindow
             </summary>
         </member>
-        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM,Microsoft.Extensions.Logging.ILogger{QuietTime.MainWindow},QuietTime.Services.NotificationService)">
+        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM,Microsoft.Extensions.Logging.ILogger{QuietTime.MainWindow},QuietTime.Services.NotificationService,QuietTime.ViewModels.SettingsWindowVM)">
             <summary>
             Creates a new <see cref="T:QuietTime.MainWindow"/>.
             </summary>
@@ -464,6 +506,19 @@
             <param name="vm">The viewmodel for this window.</param>
         </member>
         <member name="M:QuietTime.Views.ScheduleWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:QuietTime.Views.SettingsWindow">
+            <summary>
+            Interaction logic for SettingsWindow.xaml
+            </summary>
+            <summary>
+            SettingsWindow
+            </summary>
+        </member>
+        <member name="M:QuietTime.Views.SettingsWindow.InitializeComponent">
             <summary>
             InitializeComponent
             </summary>

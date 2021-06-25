@@ -19,6 +19,7 @@ namespace QuietTime
     {
         private readonly ILogger<MainWindow> _logger;
         private readonly ScheduleWindowVM svm;
+        private readonly SettingsWindowVM _settingsVM;
         private readonly NotificationService _notifications;
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace QuietTime
         /// <param name="svm">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
-        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger, NotificationService notifications)
+        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger, NotificationService notifications, SettingsWindowVM settingsVM)
         {
             InitializeComponent();
 
@@ -38,6 +39,7 @@ namespace QuietTime
             this.svm = svm;
             _logger = logger;
             _notifications = notifications;
+            _settingsVM = settingsVM;
         }
 
         /*
@@ -136,6 +138,11 @@ namespace QuietTime
         private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
         {
             new ScheduleWindow(svm).Show();
+        }
+
+        private void Button_OpenSettings_Click(object sender, RoutedEventArgs e)
+        {
+            new SettingsWindow(_settingsVM).Show();
         }
     }
 
