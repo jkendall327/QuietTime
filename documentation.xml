@@ -243,6 +243,11 @@
             Filename for user's serialized schedules.
             </summary>
         </member>
+        <member name="P:QuietTime.Settings.NotificationsEnabled">
+            <summary>
+            Whether toast notifications should be enabled.
+            </summary>
+        </member>
         <member name="T:QuietTime.Services.AudioService">
             <summary>
             Encapsulates manipulation of system audio through the NAudio library.
@@ -286,7 +291,7 @@
             Encapsulates sending notifications to the user.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.NotificationService.#ctor(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon)">
+        <member name="M:QuietTime.Services.NotificationService.#ctor(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon,Microsoft.Extensions.Options.IOptions{QuietTime.Settings})">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.NotificationService"/>.
             </summary>

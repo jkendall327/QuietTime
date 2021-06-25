@@ -18,6 +18,11 @@ namespace QuietTime
         /// Filename for user's serialized schedules.
         /// </summary>
         public string SerializedDataFilename { get; set; }
+
+        /// <summary>
+        /// Whether toast notifications should be enabled.
+        /// </summary>
+        public bool NotificationsEnabled { get; set; }
     }
 }
 
