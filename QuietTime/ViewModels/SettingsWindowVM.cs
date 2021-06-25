@@ -1,17 +1,11 @@
-﻿using CSharpLib;
-using IWshRuntimeLibrary;
+﻿using IWshRuntimeLibrary;
 using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
 using QuietTime.Other;
 using QuietTime.Services;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using File = System.IO.File;
 
 namespace QuietTime.ViewModels
@@ -132,7 +126,6 @@ namespace QuietTime.ViewModels
                     "An error ocurred when deleting QuietTime's shortcut. You can try again or delete the shortcut manually to stop the program from automatically starting. Enter 'shell:startup' in Windows Explorer to find it.",
                     NotificationService.MessageLevel.Error);
             }
-
         }
     }
 }
