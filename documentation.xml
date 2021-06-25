@@ -485,6 +485,7 @@
             <param name="svm">The viewmodel for the <see cref="T:QuietTime.Views.ScheduleWindow"/> that can be opened from this window.</param>
             <param name="logger">Logging framework for this class.</param>
             <param name="notifications">Notification service for this class.</param>
+            <param name="settingsVM">Viewmodel for the <see cref="T:QuietTime.Views.SettingsWindow"/> that can be opened from this window.</param>
         </member>
         <member name="M:QuietTime.MainWindow.InitializeComponent">
             <summary>

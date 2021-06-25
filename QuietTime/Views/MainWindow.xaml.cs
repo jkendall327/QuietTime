@@ -18,34 +18,42 @@ namespace QuietTime
     public partial class MainWindow : Window
     {
         private readonly ILogger<MainWindow> _logger;
-        private readonly ScheduleWindowVM svm;
-        private readonly SettingsWindowVM _settingsVM;
         private readonly NotificationService _notifications;
 
         /// <summary>
         /// Creates a new <see cref="MainWindow"/>.
         /// </summary>
-        /// <param name="vm">The viewmodel for this window.</param>
-        /// <param name="svm">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
+        /// <param name="viewModel">The viewmodel for this window.</param>
+        /// <param name="schedulesViewModel">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
-        /// <param name="settingsVM">Viewmodel for the <see cref="SettingsWindow"/> that can be opened from this window.</param>
-        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger, NotificationService notifications, SettingsWindowVM settingsVM)
+        /// <param name="settingsViewModel">Viewmodel for the <see cref="SettingsWindow"/> that can be opened from this window.</param>
+        public MainWindow(MainWindowVM viewModel, ScheduleWindowVM schedulesViewModel, ILogger<MainWindow> logger, NotificationService notifications, SettingsWindowVM settingsViewModel)
         {
             InitializeComponent();
 
-            DataContext = vm;
+            DataContext = viewModel;
 
             TrayIcon.Icon = new("icon.ico");
-            this.svm = svm;
             _logger = logger;
             _notifications = notifications;
-            _settingsVM = settingsVM;
+
+            // open windows
+            ScheduleWindowButton.Click += (s, e) => new ScheduleWindow(schedulesViewModel).Show();
+            SettingsWindowButton.Click += (s, e) => new SettingsWindow(settingsViewModel).Show();
+
+            // tray icon menus
+            ShowWindowMenu.Click += (s, e) => this.Show();
+            CloseAppMenu.Click += (s, e) =>
+            {
+                _traybarClosing = true;
+                this.Close();
+            };
         }
 
-        // these all make the UI auto-scale when the window resizes
+        // make the UI auto-scale when the window resizes
         private static readonly ScaleValueHelper<MainWindow> _scaleHelper = new();
-        public readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
+        private readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
 
         private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -58,7 +66,8 @@ namespace QuietTime
             set => SetValue(ScaleValueProperty, value);
         }
 
-        // so we close to system tray by default
+        // close to system tray by default
+        private bool _traybarClosing = false;
 
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -80,31 +89,6 @@ namespace QuietTime
             this.Hide();
 
             base.OnClosing(e);
-        }
-
-        private void MenuItem_ShowWindow_Click(object sender, RoutedEventArgs e)
-        {
-            this.Show();
-        }
-
-        private bool _traybarClosing = false;
-
-        private void MenuItem_CloseApp_Click(object sender, RoutedEventArgs e)
-        {
-            _traybarClosing = true;
-            this.Close();
-        }
-
-        // opening other windows
-
-        private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
-        {
-            new ScheduleWindow(svm).Show();
-        }
-
-        private void Button_OpenSettings_Click(object sender, RoutedEventArgs e)
-        {
-            new SettingsWindow(_settingsVM).Show();
         }
     }
 

@@ -82,14 +82,13 @@
                 Maximum="100" MaxWidth="500" VerticalAlignment="Center"
                 Value="{Binding NewMaxVolume}"></Slider>
 
-        <Button Grid.Column="1" Grid.Row="4" Margin="20" Content="Add schedule" Click="Button_AddSchedule_Click">
-        </Button>
-        
+        <Button x:Name="ScheduleWindowButton" Grid.Column="1" Grid.Row="4" Margin="20" Content="Add schedule"/>
+
         <Button Grid.Column="2" Grid.Row="4" Margin="20" 
                 Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" 
                 Command="{Binding LockVolume}"></Button>
 
-        <Button Grid.Column="3" Grid.Row="4" Margin="20" Content="Open settings" Click="Button_OpenSettings_Click"></Button>
+        <Button x:Name="SettingsWindowButton" Grid.Column="3" Grid.Row="4" Margin="20" Content="Open settings"></Button>
 
         <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
@@ -97,8 +96,8 @@
         <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" ToolTipText="QuietTime">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Show window" Click="MenuItem_ShowWindow_Click"/>
-                    <MenuItem Header="Exit QuietTime" Click="MenuItem_CloseApp_Click"/>
+                    <MenuItem Name="ShowWindowMenu" Header="Show window"/>
+                    <MenuItem Name="CloseAppMenu" Header="Exit QuietTime"/>
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
