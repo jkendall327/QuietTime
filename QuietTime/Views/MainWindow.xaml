@@ -17,7 +17,13 @@
     </Window.Resources>
 
     <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
-    
+
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control"
+                    Key="L"
+                    Command="{Binding LockVolume}" />
+    </Window.InputBindings>
+
     <Window.Background>
         <LinearGradientBrush
             StartPoint="0.771,0.907"
