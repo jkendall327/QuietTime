@@ -212,7 +212,6 @@
             <summary>
             Activates all schedules.
             </summary>
-            <returns></returns>
         </member>
         <member name="T:QuietTime.Settings">
             <summary>

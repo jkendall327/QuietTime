@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "QuietTime": {
+      "commandName": "Project",
+      "commandLineArgs": "--minimized"
+    }
+  }
+}
