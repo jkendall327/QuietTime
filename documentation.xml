@@ -263,7 +263,7 @@
             Fires when <see cref="P:QuietTime.Services.AudioService.MaxVolume"/> changes. The int represents the new max volume as a percentage.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator)">
+        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator,QuietTime.Services.NotificationService)">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.AudioService"/>.
             </summary>
@@ -409,7 +409,7 @@
         </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.AddSchedule">
             <summary>
-            Creates an initially-inactive schedule.
+            Creates a schedule.
             </summary>
         </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.FlipActivation">
