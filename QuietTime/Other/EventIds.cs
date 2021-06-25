@@ -88,7 +88,5 @@ namespace QuietTime.Other
         /// Used when stopping QuietTime from starting on sign-in fails..
         /// </summary>
         public static readonly EventId AutomaticStartupFailure = new(14, "Start-up removal failure");
-
-
     }
 }
