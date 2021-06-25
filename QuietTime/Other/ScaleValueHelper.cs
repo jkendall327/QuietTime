@@ -22,7 +22,7 @@ namespace QuietTime.Other
                             new PropertyChangedCallback(OnScaleValueChanged),
                             new CoerceValueCallback(OnCoerceScaleValue));
 
-            return DependencyProperty.Register("ScaleValue", typeof(double), typeof(MainWindow), metadata);
+            return DependencyProperty.Register("ScaleValue", typeof(double), typeof(T), metadata);
         }
 
         private void OnScaleValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
@@ -55,7 +55,5 @@ namespace QuietTime.Other
 
             return Math.Max(0.1, value);
         }
-
-
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuietTime.Views" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         xmlns:l="clr-namespace:QuietTime.Other"
-        Title="ScheduleWindow" Height="340" Width="800">
+        Title="Schedule Window" Name="MyScheduleWindow" MinWidth="1000" MinHeight="500">
     <Window.Background>
         <LinearGradientBrush
             StartPoint="0.771,0.907"
@@ -19,11 +19,22 @@
         </LinearGradientBrush>
     </Window.Background>
 
+    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
+
     <Window.Resources>
         <l:DateTimeToTimeOnlyConverter x:Key="timeOnlyToDateTimeConverter" />
     </Window.Resources>
 
-    <Grid>
+    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="ApplicationScaleTransform"
+                        CenterX="0"
+                        CenterY="0"
+                        ScaleX="{Binding ElementName=MyScheduleWindow, Path=ScaleValue}"
+                        ScaleY="{Binding ElementName=MyScheduleWindow, Path=ScaleValue}" />
+        </Grid.LayoutTransform>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition Height="auto" ></RowDefinition>
