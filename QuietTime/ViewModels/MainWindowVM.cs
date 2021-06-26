@@ -74,9 +74,14 @@ namespace QuietTime.ViewModels
         public RelayCommand LockVolume { get; set; }
 
         /// <summary>
-        /// Used for getting system information on current audio levels and requesting volume locks.
+        /// Increases <see cref="NewMaxVolume"/> by 5.
         /// </summary>
-        public AudioService Audio { get; }
+        public RelayCommand IncreaseVolume { get; set; }
+
+        /// <summary>
+        /// Decreases <see cref="NewMaxVolume"/> by 5.
+        /// </summary>
+        public RelayCommand DecreaseVolume { get; set; }
 
         /// <summary>
         /// Creates a new <see cref="MainWindowVM"/>.
@@ -87,7 +92,8 @@ namespace QuietTime.ViewModels
         {
             logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
 
-            Audio = audio;
+            IncreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(5));
+            DecreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(-5));
 
             LockVolume = new(() =>
             {
@@ -95,12 +101,18 @@ namespace QuietTime.ViewModels
                 MaxVolume = NewMaxVolume;
             });
 
-            Audio.LockStatusChanged += (s, e) => IsLocked = e;
-            Audio.VolumeChanged += (s, e) => CurrentVolume = e;
-            Audio.MaxVolumeChanged += (s, e) => MaxVolume = e;
+            audio.LockStatusChanged += (s, e) => IsLocked = e;
+            audio.VolumeChanged += (s, e) => CurrentVolume = e;
+            audio.MaxVolumeChanged += (s, e) => MaxVolume = e;
 
             // get current volume for UI before any updates
             CurrentVolume = audio.CurrentVolume;
+        }
+
+        public void ChangeNewMaxVolume(int amount)
+        {
+            NewMaxVolume += amount;
+            NewMaxVolume = Math.Clamp(NewMaxVolume, 0, 100);
         }
     }
 }

@@ -39,6 +39,12 @@ namespace QuietTime.Services
 
         internal IEnumerable<Schedule> DeserializeSchedules()
         {
+            if (!File.Exists(filepath))
+            {
+                _logger.LogError(EventIds.DeserializationError, "Schedules file {filepath} was not found.", filepath);
+                return Enumerable.Empty<Schedule>();
+            }
+
             try
             {
                 string json = File.ReadAllText(filepath);
@@ -50,14 +56,13 @@ namespace QuietTime.Services
                     return Enumerable.Empty<Schedule>();
                 }
 
-                _logger.LogInformation(EventIds.DeserializationSuccess, "File {file} deserialized succesfully.", filepath);
+                _logger.LogInformation(EventIds.DeserializationSuccess, "File {file} deserialized successfully.", filepath);
 
                 return result.Select(r => r.ToSchedule());
             }
             catch (FileNotFoundException ex)
             {
                 _logger.LogError(EventIds.DeserializationError, ex, "File {filepath} was not found.", filepath);
-
                 return Enumerable.Empty<Schedule>();
             }
             catch (ArgumentNullException ex)
@@ -91,7 +96,7 @@ namespace QuietTime.Services
                 });
 
                 _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
-                _notifications.SendNotification("Success", "Your schedules have been succesfully saved.", NotificationService.MessageLevel.Information);
+                _notifications.SendNotification("Success", "Your schedules have been successfully saved.", NotificationService.MessageLevel.Information);
             }
             catch (FileNotFoundException ex)
             {

@@ -71,10 +71,10 @@ namespace QuietTime.ViewModels
             get { return _schedule; }
             set { SetProperty(ref _schedule, value); }
         }
-        private Schedule _schedule = new(TimeOnly.MinValue, TimeOnly.MinValue, 0, 0);
+        private Schedule _schedule = Schedule.MinValues;
 
         /// <summary>
-        /// Creates an initially-inactive schedule.
+        /// Creates a schedule.
         /// </summary>
         public AsyncRelayCommand AddSchedule { get; set; }
 

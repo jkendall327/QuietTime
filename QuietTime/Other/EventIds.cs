@@ -67,11 +67,26 @@ namespace QuietTime.Other
         /// <summary>
         /// Used when serializing a user's schedules fails.
         /// </summary>
-        public static readonly EventId SerializationError = new(10, "Deserialization error");
+        public static readonly EventId SerializationError = new(10, "Serialization error");
 
         /// <summary>
         /// Used when serializing a user's schedules succeeds.
         /// </summary>
-        public static readonly EventId SerializationSuccess = new(11, "Deserialization success");
+        public static readonly EventId SerializationSuccess = new(11, "Serialization success");
+
+        /// <summary>
+        /// Used when user makes QuietTime load on sign-in.
+        /// </summary>
+        public static readonly EventId AutomaticStartupAdded = new(12, "Auto-start added");
+
+        /// <summary>
+        /// Used when user stops QuietTime loading on sign-in.
+        /// </summary>
+        public static readonly EventId AutomaticStartupRemoved = new(13, "Auto-start removed");
+
+        /// <summary>
+        /// Used when stopping QuietTime from starting on sign-in fails..
+        /// </summary>
+        public static readonly EventId AutomaticStartupFailure = new(14, "Start-up removal failure");
     }
 }

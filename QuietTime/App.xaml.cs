@@ -11,6 +11,7 @@ using QuietTime.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -22,6 +23,19 @@ namespace QuietTime
         {
             var services = new ServiceCollection();
 
+            ServiceProvider serviceProvider = await ConfigureServices(services);
+
+            // let's go
+            var main = serviceProvider.GetService<MainWindow>()!;
+
+            if (e.Args.Length == 0 || e.Args[0] != "--minimized")
+            {
+                main.Show();
+            }
+        }
+
+        private static async Task<ServiceProvider> ConfigureServices(ServiceCollection services)
+        {
             // configuration
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -42,6 +56,7 @@ namespace QuietTime
             services.AddTransient<MainWindow>();
             services.AddTransient<MainWindowVM>();
             services.AddTransient<ScheduleWindowVM>();
+            services.AddTransient<SettingsWindowVM>();
 
             // scheduler
             StdSchedulerFactory schedulerFactory = new();
@@ -63,10 +78,7 @@ namespace QuietTime
             services.AddTransient<SerializerService>();
 
             // create service provider
-            var serviceProvider = services.BuildServiceProvider();
-
-            // let's go
-            serviceProvider.GetService<MainWindow>()!.Show();
+            return services.BuildServiceProvider();
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

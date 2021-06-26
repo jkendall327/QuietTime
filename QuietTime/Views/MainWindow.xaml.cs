@@ -4,7 +4,9 @@ using QuietTime.Services;
 using QuietTime.ViewModels;
 using QuietTime.Views;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 
 namespace QuietTime
@@ -17,77 +19,64 @@ namespace QuietTime
     /// </summary>
     public partial class MainWindow : Window
     {
+        // services
         private readonly ILogger<MainWindow> _logger;
-        private readonly ScheduleWindowVM svm;
         private readonly NotificationService _notifications;
+
+        MainWindowVM vm;
+
+        // we have these variables just so we can close all windows when main window closes
+        ScheduleWindow? _schedules;
+        SettingsWindow? _settings;
 
         /// <summary>
         /// Creates a new <see cref="MainWindow"/>.
         /// </summary>
-        /// <param name="vm">The viewmodel for this window.</param>
-        /// <param name="svm">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
+        /// <param name="viewModel">The viewmodel for this window.</param>
+        /// <param name="schedulesViewModel">The viewmodel for the <see cref="ScheduleWindow"/> that can be opened from this window.</param>
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
-        public MainWindow(MainWindowVM vm, ScheduleWindowVM svm, ILogger<MainWindow> logger, NotificationService notifications)
+        /// <param name="settingsViewModel">Viewmodel for the <see cref="SettingsWindow"/> that can be opened from this window.</param>
+        public MainWindow(MainWindowVM viewModel, ScheduleWindowVM schedulesViewModel, ILogger<MainWindow> logger, NotificationService notifications, SettingsWindowVM settingsViewModel)
         {
             InitializeComponent();
 
-            DataContext = vm;
+            vm = viewModel;
+            DataContext = viewModel;
 
             TrayIcon.Icon = new("icon.ico");
-            this.svm = svm;
             _logger = logger;
             _notifications = notifications;
+
+            // open windows
+            ScheduleWindowButton.Click += (s, e) =>
+            {
+                _schedules = new ScheduleWindow(schedulesViewModel);
+                _schedules.Show();
+            };
+
+            SettingsWindowButton.Click += (s, e) =>
+            {
+                _settings = new SettingsWindow(settingsViewModel);
+                _settings.Show();
+            };
+
+            // tray icon menus
+            ShowWindowMenu.Click += (s, e) => this.Show();
+            CloseAppMenu.Click += (s, e) =>
+            {
+                _traybarClosing = true;
+                this.Close();
+            };
         }
 
-        /*
-         * Source for scaling UI: https://www.inchoatethoughts.com/scaling-your-user-interface-in-a-wpf-application
-         * I don't fully understand this, I'm not sure I want to fully understand this, but it seems to work OK.
-         */
+        // make the UI auto-scale when the window resizes
+        private static readonly ScaleValueHelper<MainWindow> _scaleHelper = new();
+        private readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
 
         private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CalculateScale();
-        }
-
-        private void CalculateScale()
-        {
-            double yScale = ActualHeight / 400.0d;
-            double xScale = ActualWidth / 500.0d;
-            double value = Math.Min(xScale, yScale);
-            ScaleValue = (double)OnCoerceScaleValue(MainGrid, value);
-        }
-
-        #region ScaleValue Depdency Property
-
-        public static readonly DependencyProperty ScaleValueProperty = DependencyProperty.Register(
-            "ScaleValue", typeof(double), typeof(MainWindow),
-            new UIPropertyMetadata(
-                1.0,
-                new PropertyChangedCallback(OnScaleValueChanged),
-                new CoerceValueCallback(OnCoerceScaleValue)));
-
-        private static object OnCoerceScaleValue(DependencyObject o, object value)
-        {
-            if (o is MainWindow mainWindow)
-            {
-                return mainWindow.OnCoerceScaleValue((double)value);
-            }
-
-            return value;
-        }
-
-        private static void OnScaleValueChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
-        protected virtual double OnCoerceScaleValue(double value)
-        {
-            if (double.IsNaN(value))
-                return 1.0d;
-
-            return Math.Max(0.1, value);
+            ScaleValue = _scaleHelper.CalculateScale(ActualHeight, ActualWidth, MainGrid);
         }
 
         public double ScaleValue
@@ -96,7 +85,8 @@ namespace QuietTime
             set => SetValue(ScaleValueProperty, value);
         }
 
-        #endregion
+        // close to system tray by default
+        private bool _traybarClosing = false;
 
         protected override void OnClosing(CancelEventArgs e)
         {
@@ -105,13 +95,17 @@ namespace QuietTime
             if (e.Cancel)
             {
                 _notifications.SendNotification("Window closed",
-                    "QuietTime is still running in the system tray. You can re-open the main window or close the app completely from there.",
+                    "QuietTime is still running in the system tray. You can open the main window or close the app completely from there.",
                     NotificationService.MessageLevel.Information);
 
                 _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
             }
             else
             {
+                // app won't exit if other windows are open
+                _settings?.Close();
+                _schedules?.Close();
+
                 _logger.LogInformation(EventIds.AppClosing, "App closed.");
             }
 
@@ -120,22 +114,10 @@ namespace QuietTime
             base.OnClosing(e);
         }
 
-        private void MenuItem_ShowWindow_Click(object sender, RoutedEventArgs e)
+        // enable mousewheel scrolling for audio slider
+        private void MyWindow_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            this.Show();
-        }
-
-        private bool _traybarClosing = false;
-
-        private void MenuItem_CloseApp_Click(object sender, RoutedEventArgs e)
-        {
-            _traybarClosing = true;
-            this.Close();
-        }
-
-        private void Button_AddSchedule_Click(object sender, RoutedEventArgs e)
-        {
-            new ScheduleWindow(svm).Show();
+            vm.ChangeNewMaxVolume(e.Delta / 10);
         }
     }
 

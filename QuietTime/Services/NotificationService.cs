@@ -1,4 +1,5 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +14,16 @@ namespace QuietTime.Services
     public class NotificationService
     {
         private readonly TaskbarIcon _tray;
+        private readonly Settings _settings;
 
         /// <summary>
         /// Creates a new <see cref="NotificationService"/>.
         /// </summary>
         /// <param name="tray"></param>
-        public NotificationService(TaskbarIcon tray)
+        public NotificationService(TaskbarIcon tray, IOptions<Settings> settings)
         {
+            _settings = settings.Value;
+
             _tray = tray;
             _tray.Visibility = System.Windows.Visibility.Collapsed;
         }
@@ -58,6 +62,8 @@ namespace QuietTime.Services
         /// <param name="level">Indicates the relative importance of the message.</param>
         public void SendNotification(string title, string message, MessageLevel level)
         {
+            if (!_settings.NotificationsEnabled) return;
+
             _tray.Visibility = System.Windows.Visibility.Visible;
 
             BalloonIcon icon = level switch

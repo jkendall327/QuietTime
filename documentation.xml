@@ -73,16 +73,6 @@
             <param name="volumeDuring">The maximum volume allowed while this schedule is active.</param>
             <param name="volumeAfter">What the maximum volume will be set to when this schedule ends.</param>
         </member>
-        <member name="T:QuietTime.Other.BoolToButtonTextConverter">
-            <summary>
-            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into text for the button on the main screen.
-            </summary>
-        </member>
-        <member name="T:QuietTime.Other.BoolToColorConverter">
-            <summary>
-            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into colours for the main screen background.
-            </summary>
-        </member>
         <member name="T:QuietTime.Other.DateTimeToTimeOnlyConverter">
             <summary>
             Converts between a <see cref="T:System.DateTime"/> and a <see cref="T:System.TimeOnly"/> for integrating a <see cref="T:QuietTime.Models.Schedule"/> with the date-picker tool on the Schedule page.
@@ -153,6 +143,21 @@
             Used when serializing a user's schedules succeeds.
             </summary>
         </member>
+        <member name="F:QuietTime.Other.EventIds.AutomaticStartupAdded">
+            <summary>
+            Used when user makes QuietTime load on sign-in.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AutomaticStartupRemoved">
+            <summary>
+            Used when user stops QuietTime loading on sign-in.
+            </summary>
+        </member>
+        <member name="F:QuietTime.Other.EventIds.AutomaticStartupFailure">
+            <summary>
+            Used when stopping QuietTime from starting on sign-in fails..
+            </summary>
+        </member>
         <member name="T:QuietTime.Other.SchedulerService">
             <summary>
             Encapsulates queueing up a <see cref="T:QuietTime.Models.Schedule"/> for later execution. Wrapper to Quartz.NET.
@@ -212,7 +217,6 @@
             <summary>
             Activates all schedules.
             </summary>
-            <returns></returns>
         </member>
         <member name="T:QuietTime.Settings">
             <summary>
@@ -227,6 +231,11 @@
         <member name="P:QuietTime.Settings.SerializedDataFilename">
             <summary>
             Filename for user's serialized schedules.
+            </summary>
+        </member>
+        <member name="P:QuietTime.Settings.NotificationsEnabled">
+            <summary>
+            Whether toast notifications should be enabled.
             </summary>
         </member>
         <member name="T:QuietTime.Services.AudioService">
@@ -249,7 +258,7 @@
             Fires when <see cref="P:QuietTime.Services.AudioService.MaxVolume"/> changes. The int represents the new max volume as a percentage.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator)">
+        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator,QuietTime.Services.NotificationService)">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.AudioService"/>.
             </summary>
@@ -272,7 +281,7 @@
             Encapsulates sending notifications to the user.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.NotificationService.#ctor(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon)">
+        <member name="M:QuietTime.Services.NotificationService.#ctor(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon,Microsoft.Extensions.Options.IOptions{QuietTime.Settings})">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.NotificationService"/>.
             </summary>
@@ -359,9 +368,14 @@
             Encapsulates locking the system volume.
             </summary>
         </member>
-        <member name="P:QuietTime.ViewModels.MainWindowVM.Audio">
+        <member name="P:QuietTime.ViewModels.MainWindowVM.IncreaseVolume">
             <summary>
-            Used for getting system information on current audio levels and requesting volume locks.
+            Increases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.DecreaseVolume">
+            <summary>
+            Decreases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
             </summary>
         </member>
         <member name="M:QuietTime.ViewModels.MainWindowVM.#ctor(Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.MainWindowVM},QuietTime.Services.AudioService)">
@@ -400,7 +414,7 @@
         </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.AddSchedule">
             <summary>
-            Creates an initially-inactive schedule.
+            Creates a schedule.
             </summary>
         </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.FlipActivation">
@@ -428,6 +442,33 @@
             Serializes the current contents of <see cref="P:QuietTime.ViewModels.ScheduleWindowVM.Schedules"/> to JSON.
             </summary>
         </member>
+        <member name="T:QuietTime.ViewModels.SettingsWindowVM">
+            <summary>
+            Viewmodel for a settings window.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.SettingsWindowVM.LaunchOnStartup">
+            <summary>
+            Whether QuietTime automatically launches when the user signs in.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.SettingsWindowVM.LaunchMinimized">
+            <summary>
+            Whether QuietTime will launch minimized in the system tray.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.SettingsWindowVM.SwitchLaunchOptions">
+            <summary>
+            Either creates or delete the shortcut in the user's startup folder.
+            </summary>
+        </member>
+        <member name="M:QuietTime.ViewModels.SettingsWindowVM.#ctor(QuietTime.Services.NotificationService,Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.SettingsWindowVM})">
+            <summary>
+            Creates a new <see cref="T:QuietTime.ViewModels.SettingsWindowVM"/>.
+            </summary>
+            <param name="notifications">Notification service for this class.</param>
+            <param name="logger">Logging service for this class.</param>
+        </member>
         <member name="T:QuietTime.MainWindow">
             <summary>
             Interaction logic for MainWindow.xaml
@@ -436,14 +477,15 @@
             MainWindow
             </summary>
         </member>
-        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM,Microsoft.Extensions.Logging.ILogger{QuietTime.MainWindow},QuietTime.Services.NotificationService)">
+        <member name="M:QuietTime.MainWindow.#ctor(QuietTime.ViewModels.MainWindowVM,QuietTime.ViewModels.ScheduleWindowVM,Microsoft.Extensions.Logging.ILogger{QuietTime.MainWindow},QuietTime.Services.NotificationService,QuietTime.ViewModels.SettingsWindowVM)">
             <summary>
             Creates a new <see cref="T:QuietTime.MainWindow"/>.
             </summary>
-            <param name="vm">The viewmodel for this window.</param>
-            <param name="svm">The viewmodel for the <see cref="T:QuietTime.Views.ScheduleWindow"/> that can be opened from this window.</param>
+            <param name="viewModel">The viewmodel for this window.</param>
+            <param name="schedulesViewModel">The viewmodel for the <see cref="T:QuietTime.Views.ScheduleWindow"/> that can be opened from this window.</param>
             <param name="logger">Logging framework for this class.</param>
             <param name="notifications">Notification service for this class.</param>
+            <param name="settingsViewModel">Viewmodel for the <see cref="T:QuietTime.Views.SettingsWindow"/> that can be opened from this window.</param>
         </member>
         <member name="M:QuietTime.MainWindow.InitializeComponent">
             <summary>
@@ -469,34 +511,17 @@
             InitializeComponent
             </summary>
         </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+        <member name="T:QuietTime.Views.SettingsWindow">
             <summary>
-            GeneratedInternalTypeHelper
+            Interaction logic for SettingsWindow.xaml
+            </summary>
+            <summary>
+            SettingsWindow
             </summary>
         </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+        <member name="M:QuietTime.Views.SettingsWindow.InitializeComponent">
             <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
+            InitializeComponent
             </summary>
         </member>
     </members>
