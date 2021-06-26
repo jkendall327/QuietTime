@@ -109,7 +109,7 @@ namespace QuietTime.ViewModels
             CurrentVolume = audio.CurrentVolume;
         }
 
-        private void ChangeNewMaxVolume(int amount)
+        public void ChangeNewMaxVolume(int amount)
         {
             NewMaxVolume += amount;
             NewMaxVolume = Math.Clamp(NewMaxVolume, 0, 100);

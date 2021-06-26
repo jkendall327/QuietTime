@@ -378,6 +378,16 @@
             Encapsulates locking the system volume.
             </summary>
         </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.IncreaseVolume">
+            <summary>
+            Increases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.DecreaseVolume">
+            <summary>
+            Decreases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
+            </summary>
+        </member>
         <member name="M:QuietTime.ViewModels.MainWindowVM.#ctor(Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.MainWindowVM},QuietTime.Services.AudioService)">
             <summary>
             Creates a new <see cref="T:QuietTime.ViewModels.MainWindowVM"/>.
