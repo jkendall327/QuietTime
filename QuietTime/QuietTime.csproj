@@ -16,7 +16,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\Users\Jack\source\repos\QuietTime\documentation.xml</DocumentationFile>
-    <NoWarn>1701;1702;NU1701</NoWarn>
+    <NoWarn>1701;1702;NU1701;CA1822</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
