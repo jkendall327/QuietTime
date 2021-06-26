@@ -7,9 +7,18 @@
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
-        Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500">
+        Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500" PreviewMouseWheel="MyWindow_PreviewMouseWheel">
+   
 
-    <!-- these brushes and the Style section change the background color when the volume locks -->
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control" Key="L" Command="{Binding LockVolume}" />
+        
+        <KeyBinding Key="Up" Command="{Binding IncreaseVolume}"/>
+        <KeyBinding Key="Right" Command="{Binding IncreaseVolume}"/>
+        <KeyBinding Key="Down" Command="{Binding DecreaseVolume}"/>
+        <KeyBinding Key="Left" Command="{Binding DecreaseVolume}"/>
+    </Window.InputBindings>
+
     <Window.Resources>
         <LinearGradientBrush x:Key="Unlocked" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
             <GradientStop
@@ -18,8 +27,9 @@
             <GradientStop
                 Color="#bfe3f2" />
         </LinearGradientBrush>
-
-        <LinearGradientBrush x:Key="Locked" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
+        <LinearGradientBrush x:Key="Locked"
+            StartPoint="0.771,0.907"
+            EndPoint="0.229,0.093">
             <GradientStop
                 Color="#FFFDDDFF"
                 Offset="1" />
@@ -40,11 +50,10 @@
             </Style.Triggers>
         </Style>
     </Window.Style>
-    
+
     <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
 
     <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
-
         <!-- resize window automatically-->
         <Grid.LayoutTransform>
             <ScaleTransform x:Name="ApplicationScaleTransform"
