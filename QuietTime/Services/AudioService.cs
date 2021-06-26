@@ -13,6 +13,7 @@ namespace QuietTime.Services
     public class AudioService
     {
         private readonly ILogger<AudioService> _log;
+        private readonly NotificationService _notificationService;
         private readonly MMDevice _device;
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace QuietTime.Services
         /// <param name="config">Program configuration.</param>
         /// <param name="log">Logging framework for this class.</param>
         /// <param name="enumerator">NAudio link that provides access to system audio.</param>
-        public AudioService(IOptions<Settings> config, ILogger<AudioService> log, MMDeviceEnumerator enumerator)
+        public AudioService(IOptions<Settings> config, ILogger<AudioService> log, MMDeviceEnumerator enumerator, NotificationService notificationService)
         {
             _log = log;
 
@@ -46,6 +47,7 @@ namespace QuietTime.Services
 
             // this probably doesn't need to exist
             MaxVolume = config.Value.InitialMaxVolume;
+            _notificationService = notificationService;
         }
 
         /// <summary>
@@ -84,6 +86,11 @@ namespace QuietTime.Services
             MaxVolume = Math.Clamp(newMaxVolume, 0, 100);
 
             _log.LogInformation(EventIds.MaxVolumeChanged, "Max volume changed to {max}", MaxVolume);
+
+            _notificationService.SendNotification(
+                "Max volume changed", 
+                $"Your maximum volume has been set to {MaxVolume}.", 
+                NotificationService.MessageLevel.Information);
 
             if (IsLocked)
             {

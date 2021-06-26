@@ -3,35 +3,58 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QuietTime"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        xmlns:l="clr-namespace:QuietTime.Other" 
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
-        Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500">
-    
-    <Window.Resources>
-        <l:BoolToButtonTextConverter x:Key="buttonConverter" />
-        <l:BoolToColorConverter x:Key="backgroundConverter"/>
-    </Window.Resources>
+        Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500" PreviewMouseWheel="MyWindow_PreviewMouseWheel">
+   
 
-    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
-    
-    <Window.Background>
-        <LinearGradientBrush
+    <Window.InputBindings>
+        <KeyBinding Modifiers="Control" Key="L" Command="{Binding LockVolume}" />
+        
+        <KeyBinding Key="Up" Command="{Binding IncreaseVolume}"/>
+        <KeyBinding Key="Right" Command="{Binding IncreaseVolume}"/>
+        <KeyBinding Key="Down" Command="{Binding DecreaseVolume}"/>
+        <KeyBinding Key="Left" Command="{Binding DecreaseVolume}"/>
+    </Window.InputBindings>
+
+    <Window.Resources>
+        <LinearGradientBrush x:Key="Unlocked" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
+            <GradientStop
+                Color="#FFFDDDFF"
+                Offset="1" />
+            <GradientStop
+                Color="#bfe3f2" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="Locked"
             StartPoint="0.771,0.907"
             EndPoint="0.229,0.093">
             <GradientStop
                 Color="#FFFDDDFF"
                 Offset="1" />
             <GradientStop
-                Color="{Binding IsLocked, Converter={StaticResource ResourceKey=backgroundConverter}}" />
+                Color="#f2a2ab" />
         </LinearGradientBrush>
-    </Window.Background>
-    
-    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+    </Window.Resources>
 
+    <Window.Style>
+        <Style TargetType="Window">
+            <Style.Triggers >
+                <DataTrigger Binding="{Binding IsLocked}" Value="true">
+                    <Setter Property="Background" Value="{StaticResource Locked}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsLocked}" Value="false">
+                    <Setter Property="Background" Value="{StaticResource Unlocked}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Style>
+
+    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
+
+    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
+        <!-- resize window automatically-->
         <Grid.LayoutTransform>
             <ScaleTransform x:Name="ApplicationScaleTransform"
                         CenterX="0"
@@ -51,11 +74,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
+            
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            
             <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -85,14 +110,27 @@
         <Button x:Name="ScheduleWindowButton" Grid.Column="1" Grid.Row="4" Margin="20" Content="Add schedule"/>
 
         <Button Grid.Column="2" Grid.Row="4" Margin="20" 
-                Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" 
-                Command="{Binding LockVolume}"></Button>
+                Command="{Binding LockVolume}">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLocked}" Value="true">
+                            <Setter Property="Content" Value="Unlock"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLocked}" Value="false">
+                            <Setter Property="Content" Value="Lock"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
         <Button x:Name="SettingsWindowButton" Grid.Column="3" Grid.Row="4" Margin="20" Content="Open settings"></Button>
 
         <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
 
+        <!-- the system tray icon, not visible in the window itself-->
         <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" ToolTipText="QuietTime">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>

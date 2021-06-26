@@ -23,6 +23,8 @@ namespace QuietTime
         private readonly ILogger<MainWindow> _logger;
         private readonly NotificationService _notifications;
 
+        MainWindowVM vm;
+
         // we have these variables just so we can close all windows when main window closes
         ScheduleWindow? _schedules;
         SettingsWindow? _settings;
@@ -39,6 +41,7 @@ namespace QuietTime
         {
             InitializeComponent();
 
+            vm = viewModel;
             DataContext = viewModel;
 
             TrayIcon.Icon = new("icon.ico");
@@ -109,6 +112,12 @@ namespace QuietTime
             this.Hide();
 
             base.OnClosing(e);
+        }
+
+        // enable mousewheel scrolling for audio slider
+        private void MyWindow_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            vm.ChangeNewMaxVolume(e.Delta / 10);
         }
     }
 

@@ -73,16 +73,6 @@
             <param name="volumeDuring">The maximum volume allowed while this schedule is active.</param>
             <param name="volumeAfter">What the maximum volume will be set to when this schedule ends.</param>
         </member>
-        <member name="T:QuietTime.Other.BoolToButtonTextConverter">
-            <summary>
-            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into text for the button on the main screen.
-            </summary>
-        </member>
-        <member name="T:QuietTime.Other.BoolToColorConverter">
-            <summary>
-            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into colours for the main screen background.
-            </summary>
-        </member>
         <member name="T:QuietTime.Other.DateTimeToTimeOnlyConverter">
             <summary>
             Converts between a <see cref="T:System.DateTime"/> and a <see cref="T:System.TimeOnly"/> for integrating a <see cref="T:QuietTime.Models.Schedule"/> with the date-picker tool on the Schedule page.
@@ -243,6 +233,11 @@
             Filename for user's serialized schedules.
             </summary>
         </member>
+        <member name="P:QuietTime.Settings.NotificationsEnabled">
+            <summary>
+            Whether toast notifications should be enabled.
+            </summary>
+        </member>
         <member name="T:QuietTime.Services.AudioService">
             <summary>
             Encapsulates manipulation of system audio through the NAudio library.
@@ -263,7 +258,7 @@
             Fires when <see cref="P:QuietTime.Services.AudioService.MaxVolume"/> changes. The int represents the new max volume as a percentage.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator)">
+        <member name="M:QuietTime.Services.AudioService.#ctor(Microsoft.Extensions.Options.IOptions{QuietTime.Settings},Microsoft.Extensions.Logging.ILogger{QuietTime.Services.AudioService},NAudio.CoreAudioApi.MMDeviceEnumerator,QuietTime.Services.NotificationService)">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.AudioService"/>.
             </summary>
@@ -286,7 +281,7 @@
             Encapsulates sending notifications to the user.
             </summary>
         </member>
-        <member name="M:QuietTime.Services.NotificationService.#ctor(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon)">
+        <member name="M:QuietTime.Services.NotificationService.#ctor(Hardcodet.Wpf.TaskbarNotification.TaskbarIcon,Microsoft.Extensions.Options.IOptions{QuietTime.Settings})">
             <summary>
             Creates a new <see cref="T:QuietTime.Services.NotificationService"/>.
             </summary>
@@ -371,6 +366,16 @@
         <member name="P:QuietTime.ViewModels.MainWindowVM.LockVolume">
             <summary>
             Encapsulates locking the system volume.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.IncreaseVolume">
+            <summary>
+            Increases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
+            </summary>
+        </member>
+        <member name="P:QuietTime.ViewModels.MainWindowVM.DecreaseVolume">
+            <summary>
+            Decreases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
             </summary>
         </member>
         <member name="M:QuietTime.ViewModels.MainWindowVM.#ctor(Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.MainWindowVM},QuietTime.Services.AudioService)">
@@ -517,36 +522,6 @@
         <member name="M:QuietTime.Views.SettingsWindow.InitializeComponent">
             <summary>
             InitializeComponent
-            </summary>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
             </summary>
         </member>
     </members>
