@@ -5,6 +5,7 @@ using QuietTime.ViewModels;
 using QuietTime.Views;
 using System;
 using System.ComponentModel;
+using System.IO;
 using System.Windows;
 
 namespace QuietTime
@@ -36,10 +37,10 @@ namespace QuietTime
 
             vm = viewModel;
             DataContext = viewModel;
-
-            TrayIcon.Icon = new("icon.ico");
             _logger = logger;
             _notifications = notifications;
+
+            TrayIcon.Icon = new(Path.Combine("Resources", "icon.ico"));
 
             // open windows
             ScheduleWindowButton.Click += (s, e) => new ScheduleWindow(schedulesViewModel).Show();

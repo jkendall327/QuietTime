@@ -6,7 +6,7 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <Version>0.0.1</Version>
-    <ApplicationIcon>audio-tool-in-silence.ico</ApplicationIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageProjectUrl>https://github.com/jkendall327/QuietTime</PackageProjectUrl>
     <Description>Like f.lux for your ears, QuietTime lets you cap your computer's maximum volume either on-command or according to schedules that you create.</Description>
     <Copyright>MIT License</Copyright>
@@ -56,7 +56,7 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="icon.ico">
+    <None Update="Resources\icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
