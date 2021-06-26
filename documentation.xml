@@ -265,6 +265,7 @@
             <param name="config">Program configuration.</param>
             <param name="log">Logging framework for this class.</param>
             <param name="enumerator">NAudio link that provides access to system audio.</param>
+            <param name="notificationService">Provides notifications for this class.</param>
         </member>
         <member name="P:QuietTime.Services.AudioService.CurrentVolume">
             <summary>
@@ -286,6 +287,7 @@
             Creates a new <see cref="T:QuietTime.Services.NotificationService"/>.
             </summary>
             <param name="tray"></param>
+            <param name="settings">Provides access to program settings.</param>
         </member>
         <member name="T:QuietTime.Services.NotificationService.MessageLevel">
             <summary>
@@ -368,11 +370,6 @@
             Encapsulates locking the system volume.
             </summary>
         </member>
-        <member name="P:QuietTime.ViewModels.MainWindowVM.Audio">
-            <summary>
-            Used for getting system information on current audio levels and requesting volume locks.
-            </summary>
-        </member>
         <member name="P:QuietTime.ViewModels.MainWindowVM.IncreaseVolume">
             <summary>
             Increases <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> by 5.
@@ -389,6 +386,12 @@
             </summary>
             <param name="logger">Logging framework for this class.</param>
             <param name="audio">Link to underlying audio infrastructure.</param>
+        </member>
+        <member name="M:QuietTime.ViewModels.MainWindowVM.ChangeNewMaxVolume(System.Int32)">
+            <summary>
+            Changes <see cref="P:QuietTime.ViewModels.MainWindowVM.NewMaxVolume"/> while keeping it within 0 - 100.
+            </summary>
+            <param name="amount"></param>
         </member>
         <member name="T:QuietTime.ViewModels.ScheduleWindowVM">
             <summary>
@@ -511,6 +514,11 @@
             </summary>
             <param name="vm">The viewmodel for this window.</param>
         </member>
+        <member name="P:QuietTime.Views.ScheduleWindow.ScaleValue">
+            <summary>
+            How this window scales when resized.
+            </summary>
+        </member>
         <member name="M:QuietTime.Views.ScheduleWindow.InitializeComponent">
             <summary>
             InitializeComponent
@@ -524,39 +532,15 @@
             SettingsWindow
             </summary>
         </member>
+        <member name="M:QuietTime.Views.SettingsWindow.#ctor(QuietTime.ViewModels.SettingsWindowVM)">
+            <summary>
+            Creates a new <see cref="T:QuietTime.Views.SettingsWindow"/>.
+            </summary>
+            <param name="vm">Viewmodel for this window.</param>
+        </member>
         <member name="M:QuietTime.Views.SettingsWindow.InitializeComponent">
             <summary>
             InitializeComponent
-            </summary>
-        </member>
-        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
-            <summary>
-            GeneratedInternalTypeHelper
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
-            <summary>
-            CreateInstance
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            GetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
-            <summary>
-            SetPropertyValue
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
-            <summary>
-            CreateDelegate
-            </summary>
-        </member>
-        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
-            <summary>
-            AddEventHandler
             </summary>
         </member>
     </members>

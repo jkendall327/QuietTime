@@ -37,6 +37,7 @@ namespace QuietTime.Services
         /// <param name="config">Program configuration.</param>
         /// <param name="log">Logging framework for this class.</param>
         /// <param name="enumerator">NAudio link that provides access to system audio.</param>
+        /// <param name="notificationService">Provides notifications for this class.</param>
         public AudioService(IOptions<Settings> config, ILogger<AudioService> log, MMDeviceEnumerator enumerator, NotificationService notificationService)
         {
             _log = log;

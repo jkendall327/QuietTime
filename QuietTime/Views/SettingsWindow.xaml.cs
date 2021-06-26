@@ -20,6 +20,10 @@ namespace QuietTime.Views
     /// </summary>
     public partial class SettingsWindow : Window
     {
+        /// <summary>
+        /// Creates a new <see cref="SettingsWindow"/>.
+        /// </summary>
+        /// <param name="vm">Viewmodel for this window.</param>
         public SettingsWindow(SettingsWindowVM vm)
         {
             InitializeComponent();

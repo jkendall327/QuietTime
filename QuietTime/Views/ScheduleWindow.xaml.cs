@@ -29,6 +29,9 @@ namespace QuietTime.Views
             ScaleValue = _scaleHelper.CalculateScale(ActualHeight, ActualWidth, MainGrid);
         }
 
+        /// <summary>
+        /// How this window scales when resized.
+        /// </summary>
         public double ScaleValue
         {
             get => (double)GetValue(ScaleValueProperty);

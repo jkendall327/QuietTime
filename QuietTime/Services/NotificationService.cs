@@ -20,6 +20,7 @@ namespace QuietTime.Services
         /// Creates a new <see cref="NotificationService"/>.
         /// </summary>
         /// <param name="tray"></param>
+        /// <param name="settings">Provides access to program settings.</param>
         public NotificationService(TaskbarIcon tray, IOptions<Settings> settings)
         {
             _settings = settings.Value;
