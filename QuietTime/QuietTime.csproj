@@ -16,6 +16,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>C:\Users\Jack\source\repos\QuietTime\documentation.xml</DocumentationFile>
+    <NoWarn>1701;1702;NU1701</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,7 +40,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSharpLib" Version="3.0.1" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
