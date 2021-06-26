@@ -40,8 +40,6 @@ namespace QuietTime
             _logger = logger;
             _notifications = notifications;
 
-            TrayIcon.Icon = new(Path.Combine("Resources", "icon.ico"));
-
             // open windows
             ScheduleWindowButton.Click += (s, e) => new ScheduleWindow(schedulesViewModel).Show();
             SettingsWindowButton.Click += (s, e) => new SettingsWindow(settingsViewModel).Show();
