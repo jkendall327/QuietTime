@@ -10,23 +10,6 @@ using System.Windows.Media;
 namespace QuietTime.Other
 {
     /// <summary>
-    /// Converts the <see cref="AudioService.IsLocked"/> bool into text for the button on the main screen.
-    /// </summary>
-    public class BoolToButtonTextConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((bool)value) return "Unlock";
-            return "Lock";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
     /// Converts the <see cref="AudioService.IsLocked"/> bool into colours for the main screen background.
     /// </summary>
     public class BoolToColorConverter : IValueConverter

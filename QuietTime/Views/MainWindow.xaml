@@ -12,7 +12,6 @@
         Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500">
     
     <Window.Resources>
-        <l:BoolToButtonTextConverter x:Key="buttonConverter" />
         <l:BoolToColorConverter x:Key="backgroundConverter"/>
     </Window.Resources>
 
@@ -85,8 +84,20 @@
         <Button x:Name="ScheduleWindowButton" Grid.Column="1" Grid.Row="4" Margin="20" Content="Add schedule"/>
 
         <Button Grid.Column="2" Grid.Row="4" Margin="20" 
-                Content="{Binding IsLocked, Converter={StaticResource buttonConverter}}" 
-                Command="{Binding LockVolume}"></Button>
+                Command="{Binding LockVolume}">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLocked}" Value="true">
+                            <Setter Property="Content" Value="Unlock"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLocked}" Value="false">
+                            <Setter Property="Content" Value="Lock"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
 
         <Button x:Name="SettingsWindowButton" Grid.Column="3" Grid.Row="4" Margin="20" Content="Open settings"></Button>
 

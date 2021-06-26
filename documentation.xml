@@ -73,11 +73,6 @@
             <param name="volumeDuring">The maximum volume allowed while this schedule is active.</param>
             <param name="volumeAfter">What the maximum volume will be set to when this schedule ends.</param>
         </member>
-        <member name="T:QuietTime.Other.BoolToButtonTextConverter">
-            <summary>
-            Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into text for the button on the main screen.
-            </summary>
-        </member>
         <member name="T:QuietTime.Other.BoolToColorConverter">
             <summary>
             Converts the <see cref="P:QuietTime.Services.AudioService.IsLocked"/> bool into colours for the main screen background.
