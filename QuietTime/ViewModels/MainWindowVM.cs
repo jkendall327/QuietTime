@@ -74,6 +74,16 @@ namespace QuietTime.ViewModels
         public RelayCommand LockVolume { get; set; }
 
         /// <summary>
+        /// Increases <see cref="NewMaxVolume"/> by 5.
+        /// </summary>
+        public RelayCommand IncreaseVolume { get; set; }
+
+        /// <summary>
+        /// Decreases <see cref="NewMaxVolume"/> by 5.
+        /// </summary>
+        public RelayCommand DecreaseVolume { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="MainWindowVM"/>.
         /// </summary>
         /// <param name="logger">Logging framework for this class.</param>
@@ -81,6 +91,9 @@ namespace QuietTime.ViewModels
         public MainWindowVM(ILogger<MainWindowVM> logger, AudioService audio)
         {
             logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
+
+            IncreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(5));
+            DecreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(-5));
 
             LockVolume = new(() =>
             {
@@ -94,6 +107,12 @@ namespace QuietTime.ViewModels
 
             // get current volume for UI before any updates
             CurrentVolume = audio.CurrentVolume;
+        }
+
+        private void ChangeNewMaxVolume(int amount)
+        {
+            NewMaxVolume += amount;
+            NewMaxVolume = Math.Clamp(NewMaxVolume, 0, 100);
         }
     }
 }

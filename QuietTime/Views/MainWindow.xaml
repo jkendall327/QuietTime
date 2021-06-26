@@ -22,6 +22,11 @@
         <KeyBinding Modifiers="Control"
                     Key="L"
                     Command="{Binding LockVolume}" />
+        
+        <KeyBinding Key="Up" Command="{Binding IncreaseVolume}"/>
+        <KeyBinding Key="Right" Command="{Binding IncreaseVolume}"/>
+        <KeyBinding Key="Down" Command="{Binding DecreaseVolume}"/>
+        <KeyBinding Key="Left" Command="{Binding DecreaseVolume}"/>
     </Window.InputBindings>
 
     <Window.Background>
