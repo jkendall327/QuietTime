@@ -4,7 +4,9 @@ using QuietTime.Services;
 using QuietTime.ViewModels;
 using QuietTime.Views;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 
 namespace QuietTime
@@ -17,8 +19,13 @@ namespace QuietTime
     /// </summary>
     public partial class MainWindow : Window
     {
+        // services
         private readonly ILogger<MainWindow> _logger;
         private readonly NotificationService _notifications;
+
+        // we have these variables just so we can close all windows when main window closes
+        ScheduleWindow? _schedules;
+        SettingsWindow? _settings;
 
         /// <summary>
         /// Creates a new <see cref="MainWindow"/>.
@@ -39,8 +46,17 @@ namespace QuietTime
             _notifications = notifications;
 
             // open windows
-            ScheduleWindowButton.Click += (s, e) => new ScheduleWindow(schedulesViewModel).Show();
-            SettingsWindowButton.Click += (s, e) => new SettingsWindow(settingsViewModel).Show();
+            ScheduleWindowButton.Click += (s, e) =>
+            {
+                _schedules = new ScheduleWindow(schedulesViewModel);
+                _schedules.Show();
+            };
+
+            SettingsWindowButton.Click += (s, e) =>
+            {
+                _settings = new SettingsWindow(settingsViewModel);
+                _settings.Show();
+            };
 
             // tray icon menus
             ShowWindowMenu.Click += (s, e) => this.Show();
@@ -83,6 +99,10 @@ namespace QuietTime
             }
             else
             {
+                // app won't exit if other windows are open
+                _settings?.Close();
+                _schedules?.Close();
+
                 _logger.LogInformation(EventIds.AppClosing, "App closed.");
             }
 

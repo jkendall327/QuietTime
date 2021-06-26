@@ -409,7 +409,7 @@
         </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.AddSchedule">
             <summary>
-            Creates an initially-inactive schedule.
+            Creates a schedule.
             </summary>
         </member>
         <member name="P:QuietTime.ViewModels.ScheduleWindowVM.FlipActivation">
