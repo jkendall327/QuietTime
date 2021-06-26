@@ -20,6 +20,8 @@
     </Window.InputBindings>
 
     <Window.Resources>
+        <BitmapImage x:Key="TrayIcon" UriSource="../icon.ico" />
+        
         <LinearGradientBrush x:Key="Unlocked" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
             <GradientStop
                 Color="#FFFDDDFF"
@@ -131,7 +133,7 @@
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
 
         <!-- the system tray icon, not visible in the window itself-->
-        <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" ToolTipText="QuietTime">
+        <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" ToolTipText="QuietTime" IconSource="{StaticResource TrayIcon}">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Name="ShowWindowMenu" Header="Show window"/>

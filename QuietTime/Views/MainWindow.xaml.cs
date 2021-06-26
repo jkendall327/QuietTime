@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.IO;
 using System.Windows;
 
 namespace QuietTime
@@ -43,8 +44,6 @@ namespace QuietTime
 
             vm = viewModel;
             DataContext = viewModel;
-
-            TrayIcon.Icon = new("icon.ico");
             _logger = logger;
             _notifications = notifications;
 
