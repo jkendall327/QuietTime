@@ -79,6 +79,16 @@ namespace QuietTime.ViewModels
         public AudioService Audio { get; }
 
         /// <summary>
+        /// Increases <see cref="NewMaxVolume"/> by 5.
+        /// </summary>
+        public RelayCommand IncreaseVolume { get; set; }
+
+        /// <summary>
+        /// Decreases <see cref="NewMaxVolume"/> by 5.
+        /// </summary>
+        public RelayCommand DecreaseVolume { get; set; }
+
+        /// <summary>
         /// Creates a new <see cref="MainWindowVM"/>.
         /// </summary>
         /// <param name="logger">Logging framework for this class.</param>
@@ -88,6 +98,9 @@ namespace QuietTime.ViewModels
             logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
 
             Audio = audio;
+
+            IncreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(5));
+            DecreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(-5));
 
             LockVolume = new(() =>
             {
