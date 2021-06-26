@@ -3,34 +3,49 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QuietTime"
         xmlns:tb="http://www.hardcodet.net/taskbar"
-        xmlns:l="clr-namespace:QuietTime.Other" 
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
         Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500">
-    
-    <Window.Resources>
-        <l:BoolToColorConverter x:Key="backgroundConverter"/>
-    </Window.Resources>
 
-    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
-    
-    <Window.Background>
-        <LinearGradientBrush
-            StartPoint="0.771,0.907"
-            EndPoint="0.229,0.093">
+    <!-- these brushes and the Style section change the background color when the volume locks -->
+    <Window.Resources>
+        <LinearGradientBrush x:Key="Unlocked" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
             <GradientStop
                 Color="#FFFDDDFF"
                 Offset="1" />
             <GradientStop
-                Color="{Binding IsLocked, Converter={StaticResource ResourceKey=backgroundConverter}}" />
+                Color="#bfe3f2" />
         </LinearGradientBrush>
-    </Window.Background>
+
+        <LinearGradientBrush x:Key="Locked" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
+            <GradientStop
+                Color="#FFFDDDFF"
+                Offset="1" />
+            <GradientStop
+                Color="#f2a2ab" />
+        </LinearGradientBrush>
+    </Window.Resources>
+
+    <Window.Style>
+        <Style TargetType="Window">
+            <Style.Triggers >
+                <DataTrigger Binding="{Binding IsLocked}" Value="true">
+                    <Setter Property="Background" Value="{StaticResource Locked}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsLocked}" Value="false">
+                    <Setter Property="Background" Value="{StaticResource Unlocked}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Style>
     
+    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
+
     <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
 
+        <!-- resize window automatically-->
         <Grid.LayoutTransform>
             <ScaleTransform x:Name="ApplicationScaleTransform"
                         CenterX="0"
@@ -50,11 +65,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
+            
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
+            
             <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -104,6 +121,7 @@
         <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
 
+        <!-- the system tray icon, not visible in the window itself-->
         <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" ToolTipText="QuietTime">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>

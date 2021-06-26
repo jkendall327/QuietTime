@@ -10,27 +10,6 @@ using System.Windows.Media;
 namespace QuietTime.Other
 {
     /// <summary>
-    /// Converts the <see cref="AudioService.IsLocked"/> bool into colours for the main screen background.
-    /// </summary>
-    public class BoolToColorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((bool)value)
-            {
-                return Color.FromRgb(242, 162, 171);
-            }
-
-            return Color.FromRgb(191, 227, 242);
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    /// <summary>
     /// Converts between a <see cref="DateTime"/> and a <see cref="TimeOnly"/> for integrating a <see cref="Schedule"/> with the date-picker tool on the Schedule page.
     /// </summary>
     public class DateTimeToTimeOnlyConverter : IValueConverter
