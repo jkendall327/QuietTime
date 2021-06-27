@@ -89,19 +89,26 @@
         <Label Grid.Row="1" Grid.Column="2" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
 
         <StackPanel Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+
+            <StackPanel.Resources>
+                <Style TargetType="Label">
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+            </StackPanel.Resources>
+            
             <StackPanel Margin="10">
                 <Label>Current volume:</Label>
-                <Label HorizontalContentAlignment="Center" Content="{Binding CurrentVolume}"></Label>
+                <Label Content="{Binding CurrentVolume}"></Label>
             </StackPanel>
 
             <StackPanel Margin="10">
-                <Label>New max volume:</Label>
-                <Label HorizontalContentAlignment="Center" Content="{Binding NewMaxVolume}"></Label>
+                <Label>New max volume:</Label> 
+                <Label Content="{Binding NewMaxVolume}"></Label>
             </StackPanel>
 
             <StackPanel Margin="10">
                 <Label>Current max volume:</Label>
-                <Label HorizontalContentAlignment="Center" Content="{Binding MaxVolume}"></Label>
+                <Label Content="{Binding MaxVolume}"></Label>
             </StackPanel>
         </StackPanel>
 
