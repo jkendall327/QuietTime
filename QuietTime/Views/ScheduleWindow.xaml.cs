@@ -22,7 +22,7 @@ namespace QuietTime.Views
 
         // make the UI auto-scale when the window resizes
         private static readonly ScaleValueHelper<ScheduleWindow> _scaleHelper = new();
-        private readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
+        private static readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
 
         private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
