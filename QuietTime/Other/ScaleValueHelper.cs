@@ -30,12 +30,12 @@ namespace QuietTime.Other
 
         }
 
-        public double CalculateScale(double actualHeight, double actualWidth, Grid mainGrid)
+        public double CalculateScale(double actualHeight, double actualWidth, DependencyObject obj)
         {
             double yScale = actualHeight / 400.0d;
             double xScale = actualWidth / 500.0d;
             double value = Math.Min(xScale, yScale);
-            return (double)OnCoerceScaleValue(mainGrid, value);
+            return (double)OnCoerceScaleValue(obj, value);
         }
 
         private object OnCoerceScaleValue(DependencyObject obj, object value)
