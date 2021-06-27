@@ -77,6 +77,9 @@ namespace QuietTime
             // serialization
             services.AddTransient<SerializerService>();
 
+            // autostart
+            services.AddTransient<AutostartService>();
+
             // create service provider
             return services.BuildServiceProvider();
         }
