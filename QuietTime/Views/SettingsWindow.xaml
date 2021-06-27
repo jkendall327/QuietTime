@@ -5,10 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuietTime.Views"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="450" Width="800">
-    <StackPanel>
-        <Label>hello world</Label>
-        <CheckBox IsChecked="{Binding LaunchOnStartup, Mode=OneWayToSource}" Command="{Binding SwitchLaunchOptions}">Open on startup</CheckBox>
-        <CheckBox IsChecked="{Binding LaunchMinimized, Mode=OneWayToSource}">Start minimized</CheckBox>
+        Title="Settings" Name="MySettingsWindow" MinHeight="350" MinWidth="700">
+
+    <Window.Background>
+        <LinearGradientBrush
+            StartPoint="0.771,0.907"
+            EndPoint="0.229,0.093">
+            <GradientStop
+                Color="#FFFDDDFF"
+                Offset="1" />
+            <GradientStop
+                Color="#b9d2e8" />
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
+
+    <StackPanel Margin="10" Name="MainStack" SizeChanged="StackPanel_SizeChanged">
+
+        <StackPanel.LayoutTransform>
+            <ScaleTransform x:Name="ApplicationScaleTransform"
+                        CenterX="0"
+                        CenterY="0"
+                        ScaleX="{Binding ElementName=MySettingsWindow, Path=ScaleValue}"
+                        ScaleY="{Binding ElementName=MySettingsWindow, Path=ScaleValue}" />
+        </StackPanel.LayoutTransform>
+
+        <StackPanel.Resources>
+            <Style TargetType="CheckBox">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="FontFamily" Value="Corbel" />
+                <Setter Property="Margin" Value="15 10 0 10" />
+            </Style>
+        </StackPanel.Resources>
+        
+        <Label FontSize="56" FontFamily="Corbel Light">Settings</Label>
+
+        <CheckBox IsChecked="{Binding LaunchOnStartup, Mode=OneWayToSource}" Command="{Binding SwitchLaunchOptions}" Content="Open on startup"/>
+
+        <CheckBox IsChecked="{Binding LaunchMinimized, Mode=OneWayToSource}" Content="Start minimized"/>
+
     </StackPanel>
 </Window>
