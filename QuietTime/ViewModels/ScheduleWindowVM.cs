@@ -71,7 +71,7 @@ namespace QuietTime.ViewModels
             get { return _schedule; }
             set { SetProperty(ref _schedule, value); }
         }
-        private Schedule _schedule = Schedule.MinValues;
+        private Schedule _schedule = Schedule.Default;
 
         /// <summary>
         /// Creates a schedule.

@@ -29,6 +29,11 @@
             A <see cref="T:QuietTime.Models.Schedule"/> set to all minimum values.
             </summary>
         </member>
+        <member name="P:QuietTime.Models.Schedule.Default">
+            <summary>
+            A <see cref="T:QuietTime.Models.Schedule"/> set to sensible defaults.
+            </summary>
+        </member>
         <member name="P:QuietTime.Models.Schedule.Key">
             <summary>
             Uniquely identifies this schedule in the scheduling system.

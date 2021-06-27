@@ -12,8 +12,17 @@ namespace QuietTime.Models
         /// <summary>
         /// A <see cref="Schedule"/> set to all minimum values.
         /// </summary>
-        public static Schedule MinValues 
+        public static Schedule MinValues
             => new Schedule(TimeOnly.MinValue, TimeOnly.MinValue, 0, 0);
+
+        /// <summary>
+        /// A <see cref="Schedule"/> set to sensible defaults.
+        /// </summary>
+        public static Schedule Default => new Schedule(
+            TimeOnly.FromDateTime(DateTime.Now),
+            TimeOnly.FromDateTime(DateTime.Now + TimeSpan.FromHours(1)),
+            30,
+            100);
 
         /// <summary>
         /// Uniquely identifies this schedule in the scheduling system.
