@@ -38,13 +38,20 @@
                 <Setter Property="FontFamily" Value="Corbel" />
                 <Setter Property="Margin" Value="15 10 0 10" />
             </Style>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="10 0 0 0" />
+            </Style>
         </StackPanel.Resources>
         
         <Label FontSize="56" FontFamily="Corbel Light">Settings</Label>
 
-        <CheckBox IsChecked="{Binding LaunchOnStartup, Mode=OneWayToSource}" Command="{Binding SwitchLaunchOptions}" Content="Open on startup"/>
+        <CheckBox IsChecked="{Binding LaunchOnStartup, Mode=OneWayToSource}" Command="{Binding SwitchLaunchOptions}">
+            <TextBlock>Open on startup</TextBlock>
+        </CheckBox>
 
-        <CheckBox IsChecked="{Binding LaunchMinimized, Mode=OneWayToSource}" Content="Start minimized"/>
+        <CheckBox IsChecked="{Binding LaunchMinimized, Mode=OneWayToSource}" Margin="25 -5 0 0" FontSize="20">
+            <TextBlock>Start minimized</TextBlock>
+        </CheckBox>
 
     </StackPanel>
 </Window>
