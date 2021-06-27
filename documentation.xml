@@ -276,6 +276,29 @@
             Locks the maximum allowed volume.
             </summary>
         </member>
+        <member name="T:QuietTime.Services.AutostartService">
+            <summary>
+            Encapsulates letting QuietTime automatically start on sign-in.
+            </summary>
+        </member>
+        <member name="M:QuietTime.Services.AutostartService.#ctor(QuietTime.Services.NotificationService,Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.SettingsWindowVM})">
+            <summary>
+            Creates a new <see cref="T:QuietTime.ViewModels.SettingsWindowVM"/>.
+            </summary>
+            <param name="notifications">Notification service for this class.</param>
+            <param name="logger">Logging service for this class.</param>
+        </member>
+        <member name="M:QuietTime.Services.AutostartService.SetStartup(System.Boolean)">
+            <summary>
+            Sets program to start when user signs-in.
+            </summary>
+            <param name="launchMinimized"></param>
+        </member>
+        <member name="M:QuietTime.Services.AutostartService.RemoveStartup">
+            <summary>
+            Stops program from starting when user signs-in.
+            </summary>
+        </member>
         <member name="T:QuietTime.Services.NotificationService">
             <summary>
             Encapsulates sending notifications to the user.
@@ -467,12 +490,10 @@
             Either creates or delete the shortcut in the user's startup folder.
             </summary>
         </member>
-        <member name="M:QuietTime.ViewModels.SettingsWindowVM.#ctor(QuietTime.Services.NotificationService,Microsoft.Extensions.Logging.ILogger{QuietTime.ViewModels.SettingsWindowVM})">
+        <member name="M:QuietTime.ViewModels.SettingsWindowVM.#ctor(QuietTime.Services.AutostartService)">
             <summary>
             Creates a new <see cref="T:QuietTime.ViewModels.SettingsWindowVM"/>.
             </summary>
-            <param name="notifications">Notification service for this class.</param>
-            <param name="logger">Logging service for this class.</param>
         </member>
         <member name="T:QuietTime.MainWindow">
             <summary>
