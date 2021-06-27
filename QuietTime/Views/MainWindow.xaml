@@ -144,8 +144,17 @@
                         ToolTipText="QuietTime" IconSource="{StaticResource TrayIcon}">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Name="ShowWindowMenu" Header="Show window"/>
+                    
+                    <TextBlock Text="{Binding CurrentVolume, StringFormat=Current volume: {0}}"/>
+                    <TextBlock Text="{Binding MaxVolume, StringFormat=Current max: {0}}"/>
+                    <Separator/>
+
+                    <MenuItem Command="{Binding LockVolume}" Header="Lock/unlock"/>
+                    <Separator/>
+                    
+                    <MenuItem Name="ShowWindowMenu" Header="Show main window"/>
                     <MenuItem Name="CloseAppMenu" Header="Exit QuietTime"/>
+                    
                 </ContextMenu>
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
