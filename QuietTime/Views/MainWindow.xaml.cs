@@ -118,6 +118,14 @@ namespace QuietTime
         {
             vm.ChangeNewMaxVolume(e.Delta / 10);
         }
+
+        // show window when double-clicking tray icon
+        private void TrayIcon_TrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            if (IsVisible) return;
+
+            this.Show();
+        }
     }
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
