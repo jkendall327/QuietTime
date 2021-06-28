@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Threading;
 
 namespace QuietTime.Services
 {
@@ -15,18 +17,20 @@ namespace QuietTime.Services
     {
         private readonly TaskbarIcon _tray;
         private readonly Settings _settings;
+        private readonly Dispatcher _dispatcher;
 
         /// <summary>
         /// Creates a new <see cref="NotificationService"/>.
         /// </summary>
         /// <param name="tray"></param>
         /// <param name="settings">Provides access to program settings.</param>
-        public NotificationService(TaskbarIcon tray, IOptions<Settings> settings)
+        public NotificationService(TaskbarIcon tray, IOptions<Settings> settings, Dispatcher dispatcher)
         {
             _settings = settings.Value;
 
             _tray = tray;
             _tray.Visibility = System.Windows.Visibility.Collapsed;
+            _dispatcher = dispatcher;
         }
 
         /// <summary>
@@ -65,6 +69,12 @@ namespace QuietTime.Services
         {
             if (!_settings.NotificationsEnabled) return;
 
+            // have to do this because quartz.net can invoke this from another thread
+            _dispatcher.Invoke(() => Send(title, message, level));
+        }
+
+        private void Send(string title, string message, MessageLevel level)
+        {
             _tray.Visibility = System.Windows.Visibility.Visible;
 
             BalloonIcon icon = level switch

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
 using Quartz;
 using Quartz.Impl;
-using Quartz.Spi;
 using QuietTime.Other;
 using QuietTime.Services;
 using QuietTime.ViewModels;
@@ -68,8 +67,10 @@ namespace QuietTime
             services.AddTransient<SchedulerService>();
 
             // notifications
-            services.AddSingleton<NotificationService>();
             services.AddSingleton<TaskbarIcon>();
+            services.AddSingleton<Dispatcher>(Application.Current.Dispatcher);
+
+            services.AddSingleton<NotificationService>();
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();
@@ -84,6 +85,7 @@ namespace QuietTime
             // create service provider
             var provider = services.BuildServiceProvider();
 
+            // some final setup, todo change this...
             scheduler.JobFactory = provider.GetRequiredService<ScheduleJobFactory>();
             await scheduler.Start();
 
@@ -100,29 +102,6 @@ namespace QuietTime
             var exceptionMessage = new List<string>() { DateTime.Now.ToString("G"), e.Exception.Message };
 
             File.AppendAllLines("error.log", exceptionMessage);
-        }
-    }
-
-    public class ScheduleJobFactory : IJobFactory
-    {
-        private readonly AudioService _audioService;
-        private readonly ILogger<ChangeMaxVolumeJob> _logger;
-
-        public ScheduleJobFactory(AudioService audioService, ILogger<ChangeMaxVolumeJob> logger)
-        {
-            _audioService = audioService;
-            _logger = logger;
-        }
-
-        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
-        {
-            return new ChangeMaxVolumeJob(_audioService, _logger, Application.Current.Dispatcher);
-        }
-
-        public void ReturnJob(IJob job)
-        {
-            var disposable = job as IDisposable;
-            disposable?.Dispose();
         }
     }
 }

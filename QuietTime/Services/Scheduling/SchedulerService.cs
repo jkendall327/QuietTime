@@ -13,12 +13,11 @@ namespace QuietTime.Other
     /// <summary>
     /// Encapsulates queueing up a <see cref="Schedule"/> for later execution. Wrapper to Quartz.NET.
     /// </summary>
-    public partial class SchedulerService
+    public class SchedulerService
     {
         private readonly IScheduler _scheduler;
         private readonly ILogger<SchedulerService> _logger;
         private readonly AudioService _audio;
-        private readonly NotificationService _notificationService;
 
         /// <summary>
         /// Creates a new <see cref="SchedulerService"/>.
@@ -26,13 +25,11 @@ namespace QuietTime.Other
         /// <param name="scheduler">The core link to Quartz.NET.</param>
         /// <param name="logger">Logging service for this class.</param>
         /// <param name="audio">Used to actually clamp system volume when jobs fire.</param>
-        /// <param name="notificationService">Notification service for this class.</param>
-        public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio, NotificationService notificationService)
+        public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio)
         {
             _scheduler = scheduler;
             _logger = logger;
             _audio = audio;
-            _notificationService = notificationService;
         }
 
         /// <summary>
@@ -93,14 +90,10 @@ namespace QuietTime.Other
 
         private ITrigger MakeTrigger(string guid, string dateTimeOffset, int volume)
         {
-            var triggerData = new JobDataMap()
-            {
-                { ChangeMaxVolumeJob.VolumeKey, volume }
-            };
-
             return TriggerBuilder.Create()
                 .WithIdentity(NewGuid, guid)
-                .UsingJobData(triggerData)
+                // put the volume into the trigger so we can get it when the job fires
+                .UsingJobData(new JobDataMap() { { ChangeMaxVolumeJob.VolumeKey, volume } })
                 .StartAt(DateTimeOffset.Parse(dateTimeOffset))
                 .WithSimpleSchedule(x =>
                 {
