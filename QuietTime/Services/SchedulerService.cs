@@ -68,17 +68,9 @@ namespace QuietTime.Other
             var groupGUID = NewGuid;
             var jobIdentity = NewGuid;
 
-            var jobData = new JobDataMap()
-            {
-                { ChangeMaxVolumeJob.AudioServiceKey, _audio },
-                { ChangeMaxVolumeJob.NotificationServiceKey, _notificationService },
-                { ChangeMaxVolumeJob.DispatcherKey, Application.Current.Dispatcher }
-            };
-
             // create job
             IJobDetail job = JobBuilder.Create<ChangeMaxVolumeJob>()
                 .WithIdentity(jobIdentity, groupGUID)
-                .UsingJobData(jobData)
                 .Build();
 
             // each trigger has its own jobdatamap, letting us schedule multiple effects for the same job
@@ -103,8 +95,7 @@ namespace QuietTime.Other
         {
             var triggerData = new JobDataMap()
             {
-                { ChangeMaxVolumeJob.VolumeKey, volume },
-                { ChangeMaxVolumeJob.LoggerKey, _logger }
+                { ChangeMaxVolumeJob.VolumeKey, volume }
             };
 
             return TriggerBuilder.Create()

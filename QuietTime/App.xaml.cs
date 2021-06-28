@@ -105,20 +105,18 @@ namespace QuietTime
 
     public class ScheduleJobFactory : IJobFactory
     {
-        private readonly NotificationService _notificationService;
         private readonly AudioService _audioService;
         private readonly ILogger<ChangeMaxVolumeJob> _logger;
 
-        public ScheduleJobFactory(NotificationService notificationService, AudioService audioService, ILogger<ChangeMaxVolumeJob> logger)
+        public ScheduleJobFactory(AudioService audioService, ILogger<ChangeMaxVolumeJob> logger)
         {
-            _notificationService = notificationService;
             _audioService = audioService;
             _logger = logger;
         }
 
         public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
         {
-            return new ChangeMaxVolumeJob(_notificationService, _audioService, _logger, Application.Current.Dispatcher);
+            return new ChangeMaxVolumeJob(_audioService, _logger, Application.Current.Dispatcher);
         }
 
         public void ReturnJob(IJob job)
