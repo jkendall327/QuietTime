@@ -7,14 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 
 namespace QuietTime.Other
 {
     /// <summary>
     /// Encapsulates queueing up a <see cref="Schedule"/> for later execution. Wrapper to Quartz.NET.
     /// </summary>
-    public class SchedulerService
+    public partial class SchedulerService
     {
         private readonly IScheduler _scheduler;
         private readonly ILogger<SchedulerService> _logger;
@@ -184,44 +183,5 @@ namespace QuietTime.Other
         /// Activates all schedules.
         /// </summary>
         public async Task ResumeAll() => await _scheduler.ResumeAll();
-
-        private class ChangeMaxVolumeJob : IJob
-        {
-            // these just provide strongly-typed access to key-value pairs
-            public const string AudioServiceKey = "audioService";
-            public const string VolumeKey = "volume";
-            public const string LoggerKey = "logger";
-            public const string NotificationServiceKey = "notifications";
-            public const string DispatcherKey = "dispatcher";
-
-            async Task IJob.Execute(IJobExecutionContext context)
-            {
-                // TODO: figure out why this is needed/not needed!
-                await Task.Delay(1);
-
-                var audioService = (AudioService)context.MergedJobDataMap.Get(AudioServiceKey);
-                var volume = (int)context.Trigger.JobDataMap.Get(VolumeKey);
-                audioService?.SwitchLock(volume);
-
-                var notificationService = (NotificationService)context.MergedJobDataMap.Get(NotificationServiceKey);
-
-                // have to this because quartz.net fires jobs from another thread
-                // and wpf monopolises access to the UI thread -- I think, anyway 
-                var dispatcher = (Dispatcher)context.MergedJobDataMap.Get(DispatcherKey);
-                dispatcher?.Invoke(() =>
-                {
-                    notificationService?.SendNotification
-                        ("Volume changed",
-                        $"Your maximum volume has been set to {volume}.",
-                        NotificationService.MessageLevel.Information);
-                });
-
-                var logger = (ILogger)context.Trigger.JobDataMap.Get(LoggerKey);
-
-                logger?.LogInformation(EventIds.JobPerformed,
-                    "Job {jobKey} ran for trigger {triggerKey}. Trigger description: {description}",
-                    context.JobDetail.Key, context.Trigger.Key, context.Trigger.Description);
-            }
-        }
     }
 }

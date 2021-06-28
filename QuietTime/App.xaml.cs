@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
 using Quartz;
 using Quartz.Impl;
+using Quartz.Spi;
 using QuietTime.Other;
 using QuietTime.Services;
 using QuietTime.ViewModels;
@@ -61,13 +62,13 @@ namespace QuietTime
             // scheduler
             StdSchedulerFactory schedulerFactory = new();
             IScheduler scheduler = await schedulerFactory.GetScheduler();
-            await scheduler.Start();
 
+            services.AddSingleton<ScheduleJobFactory>();
             services.AddSingleton<IScheduler>(scheduler);
             services.AddTransient<SchedulerService>();
 
             // notifications
-            services.AddTransient<NotificationService>();
+            services.AddSingleton<NotificationService>();
             services.AddSingleton<TaskbarIcon>();
 
             // audio
@@ -81,7 +82,12 @@ namespace QuietTime
             services.AddTransient<AutostartService>();
 
             // create service provider
-            return services.BuildServiceProvider();
+            var provider = services.BuildServiceProvider();
+
+            scheduler.JobFactory = provider.GetRequiredService<ScheduleJobFactory>();
+            await scheduler.Start();
+
+            return provider;
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -94,6 +100,31 @@ namespace QuietTime
             var exceptionMessage = new List<string>() { DateTime.Now.ToString("G"), e.Exception.Message };
 
             File.AppendAllLines("error.log", exceptionMessage);
+        }
+    }
+
+    public class ScheduleJobFactory : IJobFactory
+    {
+        private readonly NotificationService _notificationService;
+        private readonly AudioService _audioService;
+        private readonly ILogger<ChangeMaxVolumeJob> _logger;
+
+        public ScheduleJobFactory(NotificationService notificationService, AudioService audioService, ILogger<ChangeMaxVolumeJob> logger)
+        {
+            _notificationService = notificationService;
+            _audioService = audioService;
+            _logger = logger;
+        }
+
+        public IJob NewJob(TriggerFiredBundle bundle, IScheduler scheduler)
+        {
+            return new ChangeMaxVolumeJob(_notificationService, _audioService, _logger, Application.Current.Dispatcher);
+        }
+
+        public void ReturnJob(IJob job)
+        {
+            var disposable = job as IDisposable;
+            disposable?.Dispose();
         }
     }
 }
