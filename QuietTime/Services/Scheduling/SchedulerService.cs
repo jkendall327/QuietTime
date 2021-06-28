@@ -32,26 +32,6 @@ namespace QuietTime.Other
             _audio = audio;
         }
 
-        /// <summary>
-        /// Starts the scheduler.
-        /// </summary>
-        public async Task StartAsync()
-        {
-            if (_scheduler.IsStarted) return;
-
-            await _scheduler.Start();
-        }
-
-        /// <summary>
-        /// Place the scheduler on standby. Restart with the <see cref="StartAsync"/> method.
-        /// </summary>
-        public async Task StopAsync()
-        {
-            if (!_scheduler.InStandbyMode) return;
-
-            await _scheduler.Standby();
-        }
-
         private string NewGuid => Guid.NewGuid().ToString();
 
         /// <summary>
@@ -115,15 +95,6 @@ namespace QuietTime.Other
             _audio.SwitchLock(100);
 
             return await _scheduler.DeleteJob(key);
-        }
-
-        /// <summary>
-        /// Pauses the firing of a specific schedule.
-        /// </summary>
-        /// <param name="key">The unique <see cref="JobKey"/> of the schedule to be paused.</param>
-        public async Task PauseSchedule(JobKey key)
-        {
-            await _scheduler.PauseJob(key);
         }
 
         /// <summary>
