@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.IO;
 using System.Windows;
+using Microsoft.Extensions.Options;
 
 namespace QuietTime
 {
@@ -23,12 +24,13 @@ namespace QuietTime
         // services
         private readonly ILogger<MainWindow> _logger;
         private readonly NotificationService _notifications;
+        private readonly Settings _settings;
 
-        MainWindowVM vm;
+        private readonly MainWindowVM _viewmodel;
 
         // we have these variables just so we can close all windows when main window closes
-        ScheduleWindow? _schedules;
-        SettingsWindow? _settings;
+        private ScheduleWindow? _schedulesWindow;
+        private SettingsWindow? _settingsWindow;
 
         /// <summary>
         /// Creates a new <see cref="MainWindow"/>.
@@ -38,26 +40,30 @@ namespace QuietTime
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
         /// <param name="settingsViewModel">Viewmodel for the <see cref="SettingsWindow"/> that can be opened from this window.</param>
-        public MainWindow(MainWindowVM viewModel, ScheduleWindowVM schedulesViewModel, ILogger<MainWindow> logger, NotificationService notifications, SettingsWindowVM settingsViewModel)
+        public MainWindow(MainWindowVM viewModel, ScheduleWindowVM schedulesViewModel, ILogger<MainWindow> logger,
+            NotificationService notifications, SettingsWindowVM settingsViewModel, IOptions<Settings> settings)
         {
             InitializeComponent();
 
-            vm = viewModel;
             DataContext = viewModel;
+
+            _viewmodel = viewModel;
             _logger = logger;
             _notifications = notifications;
+
+            _settings = settings.Value;
 
             // open windows
             ScheduleWindowButton.Click += (s, e) =>
             {
-                _schedules = new ScheduleWindow(schedulesViewModel);
-                _schedules.Show();
+                _schedulesWindow = new ScheduleWindow(schedulesViewModel);
+                _schedulesWindow.Show();
             };
 
             SettingsWindowButton.Click += (s, e) =>
             {
-                _settings = new SettingsWindow(settingsViewModel);
-                _settings.Show();
+                _settingsWindow = new SettingsWindow(settingsViewModel);
+                _settingsWindow.Show();
             };
 
             // tray icon menus
@@ -89,6 +95,18 @@ namespace QuietTime
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            // just close app normally
+            if (!_settings.MinimizeOnClose)
+            {
+                this.Hide();
+
+                base.OnClosing(e);
+
+                return;
+            }
+
+            // if closed from window, go to tray
+            // if closed from tray, actually exit app
             e.Cancel = !_traybarClosing;
 
             if (e.Cancel)
@@ -102,8 +120,8 @@ namespace QuietTime
             else
             {
                 // app won't exit if other windows are open
-                _settings?.Close();
-                _schedules?.Close();
+                _settingsWindow?.Close();
+                _schedulesWindow?.Close();
 
                 _logger.LogInformation(EventIds.AppClosing, "App closed.");
             }
@@ -116,7 +134,7 @@ namespace QuietTime
         // enable mousewheel scrolling for audio slider
         private void MyWindow_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            vm.ChangeNewMaxVolume(e.Delta / 10);
+            _viewmodel.ChangeNewMaxVolume(e.Delta / 10);
         }
 
         // show window when double-clicking tray icon

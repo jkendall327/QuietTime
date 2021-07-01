@@ -23,6 +23,11 @@ namespace QuietTime
         /// Whether toast notifications should be enabled.
         /// </summary>
         public bool NotificationsEnabled { get; set; }
+
+        /// <summary>
+        /// Whether the app will minimize to the system tray when the window is closed.
+        /// </summary>
+        public bool MinimizeOnClose { get; set; }
     }
 }
 
