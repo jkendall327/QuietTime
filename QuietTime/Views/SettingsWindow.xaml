@@ -46,10 +46,12 @@
         <Label FontSize="56" FontFamily="Corbel Light">Settings</Label>
 
         <CheckBox IsChecked="{Binding LaunchOnStartup, Mode=OneWayToSource}" Command="{Binding SwitchLaunchOptions}">
+            <CheckBox.ToolTip>QuietTime will automatically start when you sign into your computer.</CheckBox.ToolTip>
             <TextBlock>Open on startup</TextBlock>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding LaunchMinimized, Mode=OneWayToSource}" Margin="25 -5 0 0" FontSize="20">
+            <CheckBox.ToolTip>When QuietTime starts automatically, it will open minimized, in the system tray.</CheckBox.ToolTip>
             <TextBlock>Start minimized</TextBlock>
         </CheckBox>
 
