@@ -53,18 +53,8 @@
         </Style>
     </Window.Style>
 
-    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
+    <Grid x:Name="MainGrid">
 
-    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
-        <!-- resize window automatically-->
-        <Grid.LayoutTransform>
-            <ScaleTransform x:Name="ApplicationScaleTransform"
-                        CenterX="0"
-                        CenterY="0"
-                        ScaleX="{Binding ElementName=MyWindow, Path=ScaleValue}"
-                        ScaleY="{Binding ElementName=MyWindow, Path=ScaleValue}" />
-        </Grid.LayoutTransform>
-        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"></ColumnDefinition>
             
@@ -86,7 +76,9 @@
             <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="2" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
+        <Viewbox Grid.Row="1" Grid.Column="2" >
+            <Label FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
+        </Viewbox>
 
         <StackPanel Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
 
@@ -95,28 +87,36 @@
                     <Setter Property="HorizontalContentAlignment" Value="Center" />
                 </Style>
             </StackPanel.Resources>
-            
+
+            <Viewbox>
+                
             <StackPanel Margin="10">
                 <StackPanel.ToolTip>Your system's current volume</StackPanel.ToolTip>
                 <Label>Current volume:</Label>
                 <Label Content="{Binding CurrentVolume}"></Label>
             </StackPanel>
+            </Viewbox>
+
+            <Viewbox>
 
             <StackPanel Margin="10">
                 <StackPanel.ToolTip>What your volume will be capped to when you hit the lock button</StackPanel.ToolTip>
                 <Label>New max volume:</Label> 
                 <Label Content="{Binding NewMaxVolume}"></Label>
             </StackPanel>
+            </Viewbox>
 
-            <StackPanel Margin="10">
+            <Viewbox>
+                <StackPanel Margin="10">
                 <StackPanel.ToolTip>What your volume is currently capped to</StackPanel.ToolTip>
                 <Label>Current max volume:</Label>
                 <Label Content="{Binding MaxVolume}"></Label>
             </StackPanel>
+            </Viewbox>
         </StackPanel>
 
         <Slider Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" 
-                Maximum="100" MaxWidth="500" VerticalAlignment="Center"
+                Maximum="100" MaxWidth="500" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
                 Value="{Binding NewMaxVolume}">
             <Slider.ToolTip>Use this to set what your new max volume will be</Slider.ToolTip>
             <Slider.ContextMenu>
@@ -151,8 +151,11 @@
             <Button.ToolTip>Open the settings window</Button.ToolTip>
         </Button>
 
-        <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
+        <Viewbox Grid.Column="3" Grid.Row="5">
+            
+        <Label   Content="{Binding VersionInfo}" 
                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+        </Viewbox>
 
         <!-- the system tray icon, not visible in the window itself-->
         <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick" PopupActivation="DoubleClick"

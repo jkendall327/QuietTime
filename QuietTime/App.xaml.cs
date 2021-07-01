@@ -8,6 +8,7 @@ using Quartz.Impl;
 using QuietTime.Other;
 using QuietTime.Services;
 using QuietTime.ViewModels;
+using QuietTime.Views;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +22,8 @@ namespace QuietTime
     {
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
+            //new Window1().Show();
+
             var services = new ServiceCollection();
 
             ServiceProvider serviceProvider = await ConfigureServices(services);

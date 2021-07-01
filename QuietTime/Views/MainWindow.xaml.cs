@@ -75,21 +75,6 @@ namespace QuietTime
             };
         }
 
-        // make the UI auto-scale when the window resizes
-        private static readonly ScaleValueHelper<MainWindow> _scaleHelper = new();
-        private readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
-
-        private void MainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ScaleValue = _scaleHelper.CalculateScale(ActualHeight, ActualWidth, MainGrid);
-        }
-
-        public double ScaleValue
-        {
-            get => (double)GetValue(ScaleValueProperty);
-            set => SetValue(ScaleValueProperty, value);
-        }
-
         // close to system tray by default
         private bool _traybarClosing = false;
 
