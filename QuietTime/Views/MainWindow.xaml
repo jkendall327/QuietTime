@@ -66,16 +66,13 @@
         </Grid.LayoutTransform>
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="10"></ColumnDefinition>
             
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
             
-            <ColumnDefinition Width="10"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10"></RowDefinition>
             
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -83,39 +80,41 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             
-            <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="1" Grid.Column="2" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
+        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
 
-        <StackPanel Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
 
-            <StackPanel.Resources>
+            <Grid.Resources>
                 <Style TargetType="Label">
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="HorizontalAlignment" Value="Center" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="FontSize" Value="18" />
                 </Style>
-            </StackPanel.Resources>
-            
-            <StackPanel Margin="10">
-                <StackPanel.ToolTip>Your system's current volume</StackPanel.ToolTip>
-                <Label>Current volume:</Label>
-                <Label Content="{Binding CurrentVolume}"></Label>
-            </StackPanel>
+            </Grid.Resources>
 
-            <StackPanel Margin="10">
-                <StackPanel.ToolTip>What your volume will be capped to when you hit the lock button</StackPanel.ToolTip>
-                <Label>New max volume:</Label> 
-                <Label Content="{Binding NewMaxVolume}"></Label>
-            </StackPanel>
+            <Label Grid.Row="0" Grid.Column="0">Current volume:</Label>
+            <Label Grid.Row="1" Grid.Column="0" Content="{Binding CurrentVolume}"></Label>
 
-            <StackPanel Margin="10">
-                <StackPanel.ToolTip>What your volume is currently capped to</StackPanel.ToolTip>
-                <Label>Current max volume:</Label>
-                <Label Content="{Binding MaxVolume}"></Label>
-            </StackPanel>
-        </StackPanel>
+            <Label Grid.Row="0" Grid.Column="1">New max volume:</Label>
+            <Label Grid.Row="1" Grid.Column="1" Content="{Binding NewMaxVolume}"></Label>
 
-        <Slider Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" 
+            <Label Grid.Row="0" Grid.Column="2">Current max volume:</Label>
+            <Label Grid.Row="1" Grid.Column="2" Content="{Binding MaxVolume}"></Label>
+
+        </Grid>
+
+        <Slider Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" 
                 Maximum="100" MaxWidth="500" VerticalAlignment="Center"
                 Value="{Binding NewMaxVolume}">
             <Slider.ToolTip>Use this to set what your new max volume will be</Slider.ToolTip>
@@ -126,33 +125,41 @@
             </Slider.ContextMenu>
         </Slider>
 
-        <Button x:Name="ScheduleWindowButton" Grid.Column="1" Grid.Row="4" Margin="20" Content="Add schedule">
-            <Button.ToolTip>Open the schedules window</Button.ToolTip>
-        </Button>
+        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Button Grid.Column="2" Grid.Row="4" Margin="20" 
+            <Button x:Name="ScheduleWindowButton" Grid.Column="0" Margin="20" Content="Add schedule">
+                <Button.ToolTip>Open the schedules window</Button.ToolTip>
+            </Button>
+
+            <Button Grid.Column="1" Margin="20" 
                 Command="{Binding LockVolume}">
-            <Button.ToolTip>Lock or unlock the max volume</Button.ToolTip>
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsLocked}" Value="true">
-                            <Setter Property="Content" Value="Unlock"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding IsLocked}" Value="false">
-                            <Setter Property="Content" Value="Lock"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
+                <Button.ToolTip>Lock or unlock the max volume</Button.ToolTip>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLocked}" Value="true">
+                                <Setter Property="Content" Value="Unlock"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsLocked}" Value="false">
+                                <Setter Property="Content" Value="Lock"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
 
-        <Button x:Name="SettingsWindowButton" Grid.Column="3" Grid.Row="4" Margin="20" Content="Open settings">
-            <Button.ToolTip>Open the settings window</Button.ToolTip>
-        </Button>
+            <Button x:Name="SettingsWindowButton" Grid.Column="2" Margin="20" Content="Open settings">
+                <Button.ToolTip>Open the settings window</Button.ToolTip>
+            </Button>
+        </Grid>
 
-        <Label Grid.Column="3" Grid.Row="5"  Content="{Binding VersionInfo}" 
-               HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+        <Label Grid.Column="3" Grid.Row="4"  Content="{Binding VersionInfo, FallbackValue=QuietTime}" 
+               HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Label>
 
         <!-- the system tray icon, not visible in the window itself-->
         <tb:TaskbarIcon x:Name="TrayIcon" DataContext="{Binding}" TrayMouseDoubleClick="TrayIcon_TrayMouseDoubleClick" PopupActivation="DoubleClick"
