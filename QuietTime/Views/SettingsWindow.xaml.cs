@@ -31,20 +31,5 @@ namespace QuietTime.Views
             
             DataContext = vm;
         }
-
-        private void StackPanel_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            ScaleValue = _scaleHelper.CalculateScale(ActualHeight, ActualWidth, MainStack);
-        }
-
-        // make the UI auto-scale when the window resizes
-        private static readonly ScaleValueHelper<SettingsWindow> _scaleHelper = new();
-        private static readonly DependencyProperty ScaleValueProperty = _scaleHelper.Get();
-
-        public double ScaleValue
-        {
-            get => (double)GetValue(ScaleValueProperty);
-            set => SetValue(ScaleValueProperty, value);
-        }
     }
 }

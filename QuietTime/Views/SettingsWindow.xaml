@@ -19,17 +19,7 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
-
-    <StackPanel Margin="10" Name="MainStack" SizeChanged="StackPanel_SizeChanged">
-
-        <StackPanel.LayoutTransform>
-            <ScaleTransform x:Name="ApplicationScaleTransform"
-                        CenterX="0"
-                        CenterY="0"
-                        ScaleX="{Binding ElementName=MySettingsWindow, Path=ScaleValue}"
-                        ScaleY="{Binding ElementName=MySettingsWindow, Path=ScaleValue}" />
-        </StackPanel.LayoutTransform>
+    <StackPanel Margin="10" Name="MainStack">
 
         <StackPanel.Resources>
             <Style TargetType="CheckBox">

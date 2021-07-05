@@ -7,7 +7,7 @@
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:MainWindowVM}"
         mc:Ignorable="d"
-        Title="QuietTime" Name="MyWindow" MinWidth="800" MinHeight="500" PreviewMouseWheel="MyWindow_PreviewMouseWheel">
+        Title="QuietTime" Name="MyWindow" MinHeight="380" MinWidth="600" PreviewMouseWheel="MyWindow_PreviewMouseWheel">
    
 
     <Window.InputBindings>
@@ -56,56 +56,52 @@
     <Grid x:Name="MainGrid">
 
         <Grid.ColumnDefinitions>
-            
             <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
-            
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
-            
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontSize="46" FontFamily="Corbel Light">QuietTime</Label>
+        <Label  Grid.Row="0" Grid.Column="1" FontSize="40" FontFamily="Corbel Light" HorizontalAlignment="Center" Content="QuietTime"/>
 
-        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3">
+        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Margin="10 0 10 0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
             <Grid.Resources>
                 <Style TargetType="Label">
                     <Setter Property="HorizontalAlignment" Value="Center" />
                     <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="FontSize" Value="18" />
+                    <Setter Property="FontSize" Value="20" />
                 </Style>
             </Grid.Resources>
 
             <Label Grid.Row="0" Grid.Column="0">Current volume:</Label>
-            <Label Grid.Row="1" Grid.Column="0" Content="{Binding CurrentVolume}"></Label>
-
+            <Label Grid.Row="1" Grid.Column="0" Content="{Binding CurrentVolume, FallbackValue=1}"/>
+            
             <Label Grid.Row="0" Grid.Column="1">New max volume:</Label>
-            <Label Grid.Row="1" Grid.Column="1" Content="{Binding NewMaxVolume}"></Label>
+            <Label Grid.Row="1" Grid.Column="1"  Content="{Binding NewMaxVolume}"/>
 
             <Label Grid.Row="0" Grid.Column="2">Current max volume:</Label>
-            <Label Grid.Row="1" Grid.Column="2" Content="{Binding MaxVolume}"></Label>
-
+            <Label Grid.Row="1" Grid.Column="2" Content="{Binding MaxVolume}"/>
         </Grid>
 
-        <Slider Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" 
-                Maximum="100" MaxWidth="500" VerticalAlignment="Center"
+        <Slider Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2"  Margin="50 0 50 0"
+                Maximum="100" VerticalAlignment="Center" HorizontalAlignment="Stretch"
                 Value="{Binding NewMaxVolume}">
             <Slider.ToolTip>Use this to set what your new max volume will be</Slider.ToolTip>
             <Slider.ContextMenu>
@@ -122,11 +118,17 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="ScheduleWindowButton" Grid.Column="0" Margin="20" Content="Add schedule">
+            <Grid.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Margin" Value="20"/>
+                </Style>
+            </Grid.Resources>
+
+            <Button x:Name="ScheduleWindowButton" Grid.Column="0" Content="Add schedule">
                 <Button.ToolTip>Open the schedules window</Button.ToolTip>
             </Button>
 
-            <Button Grid.Column="1" Margin="20" 
+            <Button Grid.Column="1" Margin="20"
                 Command="{Binding LockVolume}">
                 <Button.ToolTip>Lock or unlock the max volume</Button.ToolTip>
                 <Button.Style>
@@ -143,7 +145,7 @@
                 </Button.Style>
             </Button>
 
-            <Button x:Name="SettingsWindowButton" Grid.Column="2" Margin="20" Content="Open settings">
+            <Button x:Name="SettingsWindowButton" Grid.Column="2" Content="Open settings">
                 <Button.ToolTip>Open the settings window</Button.ToolTip>
             </Button>
         </Grid>

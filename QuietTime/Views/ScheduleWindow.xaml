@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:l="clr-namespace:QuietTime.Other" xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:ScheduleWindowVM}"
-        Title="Schedule Window" Name="MyScheduleWindow" MinWidth="1000" MinHeight="500">
+        Title="Schedule Window" Name="MyScheduleWindow" MinWidth="800" MinHeight="400">
     <Window.Background>
         <LinearGradientBrush
             StartPoint="0.771,0.907"
@@ -20,21 +20,11 @@
         </LinearGradientBrush>
     </Window.Background>
 
-    <Window.SizeToContent>WidthAndHeight</Window.SizeToContent>
-
     <Window.Resources>
         <l:DateTimeToTimeOnlyConverter x:Key="timeOnlyToDateTimeConverter" />
     </Window.Resources>
 
-    <Grid x:Name="MainGrid" SizeChanged="MainGrid_SizeChanged">
-
-        <Grid.LayoutTransform>
-            <ScaleTransform x:Name="ApplicationScaleTransform"
-                        CenterX="0"
-                        CenterY="0"
-                        ScaleX="{Binding ElementName=MyScheduleWindow, Path=ScaleValue}"
-                        ScaleY="{Binding ElementName=MyScheduleWindow, Path=ScaleValue}" />
-        </Grid.LayoutTransform>
+    <Grid x:Name="MainGrid">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" ></RowDefinition>
