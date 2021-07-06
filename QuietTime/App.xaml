@@ -5,6 +5,21 @@
              Startup="Application_Startup"
              DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
-         
+        <LinearGradientBrush x:Key="UnlockedBackgroundBrush" StartPoint="0.771,0.907" EndPoint="0.229,0.093">
+            <GradientStop
+                Color="#FFFDDDFF"
+                Offset="1" />
+            <GradientStop
+                Color="#bfe3f2" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="LockedBackgroundBrush"
+            StartPoint="0.771,0.907"
+            EndPoint="0.229,0.093">
+            <GradientStop
+                Color="#FFFDDDFF"
+                Offset="1" />
+            <GradientStop
+                Color="#f2a2ab" />
+        </LinearGradientBrush>
     </Application.Resources>
 </Application>

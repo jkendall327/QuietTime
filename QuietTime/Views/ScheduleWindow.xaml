@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         xmlns:l="clr-namespace:QuietTime.Other" xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:ScheduleWindowVM}"
-        Title="Schedule Window" Name="MyScheduleWindow" MinWidth="800" MinHeight="400">
+        Title="Schedule Window" Name="MyScheduleWindow" Height="400" Width="800" MinWidth="800" MinHeight="400">
     <Window.Background>
         <LinearGradientBrush
             StartPoint="0.771,0.907"
@@ -24,67 +24,25 @@
         <l:DateTimeToTimeOnlyConverter x:Key="timeOnlyToDateTimeConverter" />
     </Window.Resources>
 
-    <Grid x:Name="MainGrid">
-
+    <Grid Margin="15 5 15 15">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" ></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" FontSize="36" FontFamily="Corbel Light">Schedules</Label>
+        <Label Grid.Column="0" Grid.Row="0" FontSize="36" FontFamily="Corbel Light" Content="Schedules"/>
 
-        <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="1" Margin="20 0 20 0">
-            <ListView SelectedIndex="{Binding CurrentIndex}" MaxHeight="150" ItemsSource="{Binding Schedules}" ToolTip="See details about your schedules">
-                <ListView.Resources>
-                    <Style TargetType="{x:Type ListViewItem}">
-                        <Setter Property="HorizontalContentAlignment" Value="Right" />
-                        <Setter Property="ToolTip" Value="See details about your schedules" />
-                    </Style>
-                    <Style TargetType="{x:Type ListView}">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        <Setter Property="ToolTip" Value="See details about your schedules" />
-                    </Style>
-                </ListView.Resources>
-                <ListView.View>
-                    <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="See details about your schedules">
-                        <GridViewColumn DisplayMemberBinding="{Binding Start}" Header="Start" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding End}" Header="End" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding VolumeDuring}" Header="Volume during" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding VolumeAfter}" Header="Volume after" Width="100"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding IsActive}" Header="Active?"  Width="100"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-
-            <StackPanel Grid.Column="1" Grid.Row="3" Margin="0 10 0 0" Orientation="Horizontal">
-                
-                <StackPanel.Resources>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Margin" Value="5 0 5 0" />
-                        <Setter Property="Padding" Value="5" />
-                    </Style>
-                </StackPanel.Resources>
-                
-                <Button Command="{Binding FlipActivation}" ToolTip="If the selected schedule is active, will deactive it. Otherwise, will deactivate it.">Activate/deactivate selected</Button>
-                <Button Command="{Binding ActivateAll}" ToolTip="Activates all schedules.">Activate all</Button>
-                <Button Command="{Binding DeactivateAll}" ToolTip="Deactivates all schedules.">Deactivate all</Button>
-                <Button Command="{Binding DeleteSelected}" ToolTip="Deactivates and permanently deletes the selected schedule.">Delete selected</Button>
-                <Button Command="{Binding Serialize}" ToolTip="Saves your schedules to disk so they can be automatically loaded when you next start QuietTime.">Save schedules</Button>
-            </StackPanel>
-        </StackPanel>
-
-        <Border Grid.Column="0" Grid.Row="1" BorderThickness="2" BorderBrush="Black" Padding="10" CornerRadius="20" Margin="5 0 0 5">
+        <!--Component for creating new schedules-->
+        <Border Grid.Column="0" Grid.Row="1" Grid.RowSpan="2" BorderThickness="1" BorderBrush="Black" Padding="10" CornerRadius="20">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -96,49 +54,84 @@
                 </Grid.RowDefinitions>
                 <Grid.Resources>
                     <Style TargetType="{x:Type Label}">
-                        <Setter Property="Margin" Value="0 5 0 5" />
                         <Setter Property="Grid.Column" Value="0" />
                         <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0 0 15 0" />
                     </Style>
                     <Style TargetType="{x:Type xctk:DateTimeUpDown}">
                         <Setter Property="HorizontalAlignment" Value="Right" />
-                        <Setter Property="Watermark" Value="00:00:00" />
                         <Setter Property="Format" Value="LongTime" />
                         <Setter Property="Padding" Value="5" />
-                        <Setter Property="Margin" Value="0 5 0 5" />
+                        <Setter Property="MaxHeight" Value="30" />
+                        <Setter Property="MinWidth" Value="90" />
                         <Setter Property="Grid.Column" Value="1" />
                     </Style>
                     <Style TargetType="{x:Type xctk:UIntegerUpDown}">
-                        <Setter Property="Margin" Value="0 5 0 5" />
                         <Setter Property="Grid.Column" Value="1" />
-                        <Setter Property="Watermark" Value="0" />
                         <Setter Property="Padding" Value="0 0 5 0" />
+                        <Setter Property="MaxHeight" Value="30" />
                     </Style>
                 </Grid.Resources>
 
-                <Label Grid.Row="0" Content="Start time">
-                    <Label.ToolTip>When this schedule will start and lock your volume</Label.ToolTip>
-                </Label>
+                <Label Grid.Row="0" Content="Start time" 
+                       ToolTip="When this schedule will start and lock your volume"/>
                 <xctk:DateTimeUpDown Grid.Row="0" Value="{Binding Schedule.Start, Converter={StaticResource timeOnlyToDateTimeConverter}}"/>
 
-                <Label Grid.Row="1" Content="End time">
-                    <Label.ToolTip>When this schedule will end and unlock your volume</Label.ToolTip>
-                </Label>
+                <Label Grid.Row="1" Content="End time" 
+                       ToolTip="When this schedule will end and unlock your volume"/>
                 <xctk:DateTimeUpDown Grid.Row="1" Value="{Binding Schedule.End, Converter={StaticResource timeOnlyToDateTimeConverter}}"/>
 
-                <Label Grid.Row="2" Content="Volume during">
-                    <Label.ToolTip>What your volume will be capped to while the schedule is active</Label.ToolTip>
-                </Label>
+                <Label Grid.Row="2" Content="Volume during" 
+                       ToolTip="What your volume will be capped to while the schedule is active"/>
                 <xctk:UIntegerUpDown Grid.Row="2" Value="{Binding Schedule.VolumeDuring}"/>
 
-                <Label Grid.Row="3" Content="Volume after">
-                    <Label.ToolTip>What your volume will be capped to when the schedule ends</Label.ToolTip>
-                </Label>
+                <Label Grid.Row="3" Content="Volume after" 
+                       ToolTip="What your volume will be capped to when the schedule ends"/>
                 <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding Schedule.VolumeAfter}"/>
 
-                <Button HorizontalAlignment="Stretch" Margin="0 5 0 0" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" 
-                        Command="{Binding AddSchedule}" Content="Add schedule" ToolTip="Creates a new schedule with the current values"/>
+                <Button MaxHeight="30" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" 
+                        Command="{Binding AddSchedule}" Content="Add schedule" 
+                        ToolTip="Creates a new schedule with the current values"/>
             </Grid>
         </Border>
+
+        <!--View of current schedules-->
+        <ListView Grid.Column="2" Grid.Row="1" SelectedIndex="{Binding CurrentIndex}" ItemsSource="{Binding Schedules}" 
+                  ToolTip="See details about your schedules">
+            <ListView.View>
+                <GridView AllowsColumnReorder="true">
+                    <GridViewColumn DisplayMemberBinding="{Binding Start}" Header="Start" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding End}" Header="End" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding VolumeDuring}" Header="Volume during" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding VolumeAfter}" Header="Volume after" Width="100"/>
+                    <GridViewColumn DisplayMemberBinding="{Binding IsActive}" Header="Active?" Width="100"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <!--Buttons below the data list-->
+        <Grid Grid.Column="2" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="0 5 0 0" />
+                    <Setter Property="Padding" Value="5" />
+                </Style>
+            </Grid.Resources>
+
+            <Button Grid.Column="0" Command="{Binding FlipActivation}" ToolTip="If the selected schedule is active, will deactive it. Otherwise, will deactivate it.">Flip selected</Button>
+            <Button Grid.Column="1" Margin="5 5 5 0" Command="{Binding ActivateAll}" ToolTip="Activates all schedules.">Activate all</Button>
+            <Button Grid.Column="2" Margin="5 5 5 0" Command="{Binding DeactivateAll}" ToolTip="Deactivates all schedules.">Deactivate all</Button>
+            <Button Grid.Column="3" Margin="5 5 5 0" Command="{Binding DeleteSelected}" ToolTip="Deactivates and permanently deletes the selected schedule.">Delete selected</Button>
+            <Button Grid.Column="4" Command="{Binding Serialize}" ToolTip="Saves your schedules to disk so they can be automatically loaded when you next start QuietTime.">Save schedules</Button>
+        </Grid>
+
     </Grid>
 </Window>
