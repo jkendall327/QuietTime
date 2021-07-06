@@ -56,7 +56,7 @@ namespace QuietTime.Services
         /// </summary>
         public int CurrentVolume => _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
 
-        private int MaxVolume { get; set; }
+        public int MaxVolume { get; private set; }
         private bool IsLocked { get; set; }
 
         private void OnVolumeChange(AudioVolumeNotificationData data)

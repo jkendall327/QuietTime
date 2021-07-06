@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Services;
+
+namespace QuietTime.ViewModels
+{
+    public abstract class AudioAwareBaseVM : ViewModelBase
+    {
+        protected AudioService _audio;
+
+        protected AudioAwareBaseVM(AudioService audio)
+        {
+            _audio = audio;
+            audio.VolumeChanged += (s, e) => OnPropertyChanged(nameof(CurrentVolume));
+            audio.MaxVolumeChanged += (s, e) => OnPropertyChanged(nameof(MaxVolume));
+
+            CloseAppCommand = new RelayCommand(() => CloseAppRequested?.Invoke(this, EventArgs.Empty));
+        }
+
+        public event EventHandler? CloseAppRequested;
+
+        public int CurrentVolume => _audio.CurrentVolume;
+        public int MaxVolume => _audio.MaxVolume;
+
+        public ICommand CloseAppCommand { get; set; }
+    }
+}

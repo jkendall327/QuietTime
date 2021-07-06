@@ -1,6 +1,4 @@
-﻿using QuietTime.Other;
-using QuietTime.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,24 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace QuietTime.Views
 {
     /// <summary>
-    /// Interaction logic for SettingsWindow.xaml
+    /// Interaction logic for SchedulePage.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class SchedulePage : UserControl
     {
-        /// <summary>
-        /// Creates a new <see cref="SettingsWindow"/>.
-        /// </summary>
-        /// <param name="vm">Viewmodel for this window.</param>
-        public SettingsWindow(SettingsWindowVM vm)
+        public SchedulePage()
         {
             InitializeComponent();
-            
-            DataContext = vm;
         }
     }
 }

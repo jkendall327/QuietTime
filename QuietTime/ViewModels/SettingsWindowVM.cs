@@ -13,7 +13,7 @@ namespace QuietTime.ViewModels
     /// <summary>
     /// Viewmodel for a settings window.
     /// </summary>
-    public class SettingsWindowVM : ObservableObject
+    public class SettingsWindowVM : ViewModelBase
     {
         /// <summary>
         /// Whether QuietTime automatically launches when the user signs in.

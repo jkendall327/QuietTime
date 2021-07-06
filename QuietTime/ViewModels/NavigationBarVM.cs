@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Services;
+
+namespace QuietTime.ViewModels
+{
+    public class NavigationBarVM
+    {
+        public ICommand NavigateCommand { get; set; }
+
+        private Navigator _navigator;
+
+        public MainPageVM HomeVM { get; set; }
+        public ScheduleWindowVM ScheduleVM { get; set; }
+        public SettingsWindowVM SettingsVM { get; set; }
+
+        public NavigationBarVM(Navigator navigator, MainPageVM homeVM, ScheduleWindowVM scheduleVM, SettingsWindowVM settingsVM)
+        {
+            _navigator = navigator;
+
+            HomeVM = homeVM;
+            ScheduleVM = scheduleVM;
+            SettingsVM = settingsVM;
+
+            NavigateCommand = new RelayCommand<ViewModelBase>((vm) => navigator.CurrentViewModel = vm);
+        }
+
+        public string VersionInfo
+        {
+            get
+            {
+                var version = Assembly.GetExecutingAssembly().GetName().Version;
+                DateTime buildDate = new FileInfo(AppContext.BaseDirectory).LastWriteTime;
+
+                return $"QuietTime v{version}, built {buildDate:d}";
+            }
+        }
+    }
+}

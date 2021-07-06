@@ -22,77 +22,12 @@ namespace QuietTime
     {
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            //new Window1().Show();
+            var services = await new DIContainerProvider().GetContainer();
 
-            var services = new ServiceCollection();
-
-            ServiceProvider serviceProvider = await ConfigureServices(services);
-
-            // let's go
-            var main = serviceProvider.GetService<MainWindow>()!;
+            var main = services.GetRequiredService<HostWindow>();
 
             if (e.Args.Length == 0 || e.Args[0] != "--minimized")
-            {
                 main.Show();
-            }
-        }
-
-        private static async Task<ServiceProvider> ConfigureServices(ServiceCollection services)
-        {
-            // configuration
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false)
-                .Build();
-
-            services.Configure<Settings>(configuration.GetSection("Settings"));
-
-            // logging
-            services.AddLogging(builder =>
-            {
-                builder.AddConsole();
-                builder.AddDebug();
-                builder.AddFile(configuration.GetSection("Logging"));
-            });
-
-            // register windows
-            services.AddTransient<MainWindow>();
-            services.AddTransient<MainWindowVM>();
-            services.AddTransient<ScheduleWindowVM>();
-            services.AddTransient<SettingsWindowVM>();
-
-            // scheduler
-            StdSchedulerFactory schedulerFactory = new();
-            IScheduler scheduler = await schedulerFactory.GetScheduler();
-
-            services.AddSingleton<ScheduleJobFactory>();
-            services.AddSingleton<IScheduler>(scheduler);
-            services.AddTransient<SchedulerService>();
-
-            // notifications
-            services.AddSingleton<TaskbarIcon>();
-            services.AddSingleton<Dispatcher>(Application.Current.Dispatcher);
-
-            services.AddSingleton<NotificationService>();
-
-            // audio
-            services.AddTransient<MMDeviceEnumerator>();
-            services.AddSingleton<AudioService>();
-
-            // serialization
-            services.AddTransient<SerializerService>();
-
-            // autostart
-            services.AddTransient<AutostartService>();
-
-            // create service provider
-            var provider = services.BuildServiceProvider();
-
-            // some final setup, todo change this...
-            scheduler.JobFactory = provider.GetRequiredService<ScheduleJobFactory>();
-            await scheduler.Start();
-
-            return provider;
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
