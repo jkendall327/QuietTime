@@ -75,19 +75,19 @@
 
                 <Label Grid.Row="0" Content="Start time" 
                        ToolTip="When this schedule will start and lock your volume"/>
-                <xctk:DateTimeUpDown Grid.Row="0" Value="{Binding Schedule.Start, Converter={StaticResource timeOnlyToDateTimeConverter}}"/>
+                <xctk:DateTimeUpDown Grid.Row="0" Value="{Binding NewSchedule.Start, Converter={StaticResource timeOnlyToDateTimeConverter}}"/>
 
                 <Label Grid.Row="1" Content="End time" 
                        ToolTip="When this schedule will end and unlock your volume"/>
-                <xctk:DateTimeUpDown Grid.Row="1" Value="{Binding Schedule.End, Converter={StaticResource timeOnlyToDateTimeConverter}}"/>
+                <xctk:DateTimeUpDown Grid.Row="1" Value="{Binding NewSchedule.End, Converter={StaticResource timeOnlyToDateTimeConverter}}"/>
 
                 <Label Grid.Row="2" Content="Volume during" 
                        ToolTip="What your volume will be capped to while the schedule is active"/>
-                <xctk:UIntegerUpDown Grid.Row="2" Value="{Binding Schedule.VolumeDuring}"/>
+                <xctk:UIntegerUpDown Grid.Row="2" Value="{Binding NewSchedule.VolumeDuring}"/>
 
                 <Label Grid.Row="3" Content="Volume after" 
                        ToolTip="What your volume will be capped to when the schedule ends"/>
-                <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding Schedule.VolumeAfter}"/>
+                <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding NewSchedule.VolumeAfter}"/>
 
                 <Button MaxHeight="30" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" 
                         Command="{Binding AddSchedule}" Content="Add schedule" 

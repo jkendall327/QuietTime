@@ -36,19 +36,24 @@ namespace QuietTime.ViewModels
 
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
 
-            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
-            ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
-            Serialize = new AsyncRelayCommand(() => _serializer.SerializeSchedulesAsync(Schedules));
+            Func<bool> anySchedules = Schedules.Any;
+            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync, anySchedules);
+            ActivateAll = new AsyncRelayCommand(ActivateAllAsync, anySchedules);
+            Serialize = new AsyncRelayCommand(() => _serializer.SerializeSchedulesAsync(Schedules), anySchedules);
 
-            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
-            FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
+            Func<bool> scheduleIsSelected = () => SelectedSchedule is not null;
+            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync, scheduleIsSelected);
+            FlipActivation = new AsyncRelayCommand(FlipActivationAsync, scheduleIsSelected);
 
+            Commands = new() { FlipActivation, ActivateAll, DeactivateAll, DeleteSelected, Serialize };
 
             foreach (var schedule in _serializer.DeserializeSchedules())
             {
                 Schedules.Add(schedule);
             }
         }
+
+        private List<IRelayCommand> Commands;
 
         /// <summary>
         /// The user's current schedules, both active and inactive.
@@ -61,19 +66,32 @@ namespace QuietTime.ViewModels
         public Schedule SelectedSchedule
         {
             get { return _selectedSchedule; }
-            set { _selectedSchedule = value; }
+            set
+            {
+                _selectedSchedule = value;
+                NotifyAllCommands();
+            }
         }
+
+        private void NotifyAllCommands()
+        {
+            foreach (var command in Commands)
+            {
+                command.NotifyCanExecuteChanged();
+            }
+        }
+
         private Schedule _selectedSchedule;
 
         /// <summary>
         /// Binding object for the UI.
         /// </summary>
-        public Schedule Schedule
+        public Schedule NewSchedule
         {
-            get { return _schedule; }
-            set { SetProperty(ref _schedule, value); }
+            get { return _newSchedule; }
+            set { SetProperty(ref _newSchedule, value); }
         }
-        private Schedule _schedule = Schedule.Default;
+        private Schedule _newSchedule = Schedule.Default;
 
         /// <summary>
         /// Creates a schedule.
@@ -117,8 +135,6 @@ namespace QuietTime.ViewModels
 
         private async Task FlipActivationAsync()
         {
-            if (SelectedSchedule is null) return;
-
             SelectedSchedule.IsActive = !SelectedSchedule.IsActive;
 
             if (SelectedSchedule.Key is null) return;
@@ -138,9 +154,8 @@ namespace QuietTime.ViewModels
 
         private async Task RemoveScheduleAsync()
         {
-            if (SelectedSchedule is null) return;
-
             Schedules.Remove(SelectedSchedule);
+            NotifyAllCommands();
 
             if (SelectedSchedule.Key is null) return;
 
@@ -149,7 +164,7 @@ namespace QuietTime.ViewModels
 
         private async Task AddScheduleAsync()
         {
-            var newSchedule = new Schedule(_schedule.Start, _schedule.End, _schedule.VolumeDuring, _schedule.VolumeAfter);
+            var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter);
 
             if (Schedules.Any(x => x.Overlaps(newSchedule)))
             {
@@ -157,6 +172,7 @@ namespace QuietTime.ViewModels
             }
 
             Schedules.Add(newSchedule);
+            NotifyAllCommands();
 
             var newJobKey = await _scheduler.CreateScheduleAsync(newSchedule);
             
