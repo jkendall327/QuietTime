@@ -35,12 +35,14 @@ namespace QuietTime.ViewModels
             _serializer = serializer;
 
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
-            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
-            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
-            FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
-            ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
 
+            DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync);
+            ActivateAll = new AsyncRelayCommand(ActivateAllAsync);
             Serialize = new AsyncRelayCommand(() => _serializer.SerializeSchedulesAsync(Schedules));
+
+            DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync);
+            FlipActivation = new AsyncRelayCommand(FlipActivationAsync);
+
 
             foreach (var schedule in _serializer.DeserializeSchedules())
             {
@@ -51,17 +53,17 @@ namespace QuietTime.ViewModels
         /// <summary>
         /// The user's current schedules, both active and inactive.
         /// </summary>
-        public static ObservableCollection<Schedule> Schedules { get; private set; } = new();
+        public ObservableCollection<Schedule> Schedules { get; private set; } = new();
 
         /// <summary>
-        /// Currently-selected index of <see cref="Schedules"/>.
+        /// Currently-selected <see cref="Schedules"/>.
         /// </summary>
-        public int CurrentIndex
+        public Schedule SelectedSchedule
         {
-            get { return _currentIndex; }
-            set { _currentIndex = value; }
+            get { return _selectedSchedule; }
+            set { _selectedSchedule = value; }
         }
-        private int _currentIndex;
+        private Schedule _selectedSchedule;
 
         /// <summary>
         /// Binding object for the UI.
@@ -115,13 +117,13 @@ namespace QuietTime.ViewModels
 
         private async Task FlipActivationAsync()
         {
-            var item = Schedules[CurrentIndex];
+            if (SelectedSchedule is null) return;
 
-            item.IsActive = !item.IsActive;
+            SelectedSchedule.IsActive = !SelectedSchedule.IsActive;
 
-            if (item.Key is null) return;
+            if (SelectedSchedule.Key is null) return;
 
-            await _scheduler.FlipScheduleActivation(item.Key);
+            await _scheduler.FlipScheduleActivation(SelectedSchedule.Key);
         }
 
         private async Task DeactivateAllAsync()
@@ -136,13 +138,13 @@ namespace QuietTime.ViewModels
 
         private async Task RemoveScheduleAsync()
         {
-            var item = Schedules[CurrentIndex];
+            if (SelectedSchedule is null) return;
 
-            Schedules.Remove(item);
+            Schedules.Remove(SelectedSchedule);
 
-            if (item.Key is null) return;
+            if (SelectedSchedule.Key is null) return;
 
-            await _scheduler.DeleteScheduleAsync(item.Key);
+            await _scheduler.DeleteScheduleAsync(SelectedSchedule.Key);
         }
 
         private async Task AddScheduleAsync()

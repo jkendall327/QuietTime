@@ -96,18 +96,18 @@
         </Border>
 
         <!--View of current schedules-->
-        <ListView Grid.Column="2" Grid.Row="1" SelectedIndex="{Binding CurrentIndex}" ItemsSource="{Binding Schedules}" 
+
+        <DataGrid Grid.Column="2" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedSchedule, Mode=OneWayToSource}" ItemsSource="{Binding Schedules}" IsReadOnly="True" 
                   ToolTip="See details about your schedules">
-            <ListView.View>
-                <GridView AllowsColumnReorder="true">
-                    <GridViewColumn DisplayMemberBinding="{Binding Start}" Header="Start" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding End}" Header="End" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding VolumeDuring}" Header="Volume during" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding VolumeAfter}" Header="Volume after" Width="100"/>
-                    <GridViewColumn DisplayMemberBinding="{Binding IsActive}" Header="Active?" Width="100"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Start" Width="*" Binding="{Binding Start}"/>
+                <DataGridTextColumn Header="End" Width="*" Binding="{Binding End}"/>
+                <DataGridTextColumn Header="Volume during" Width="*" Binding="{Binding VolumeDuring}"/>
+                <DataGridTextColumn Header="Volume after" Width="*" Binding="{Binding VolumeAfter}"/>
+                <DataGridTextColumn Header="Total length" Width="*" Binding="{Binding Length}"/>
+                <DataGridCheckBoxColumn Header="Active?" Width="*" Binding="{Binding IsActive}"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <!--Buttons below the data list-->
         <Grid Grid.Column="2" Grid.Row="2">
