@@ -26,6 +26,26 @@ namespace QuietTime.Other
             return TimeOnly.FromDateTime(time);
         }
     }
+
+    public class BoolToImagePathConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var boolean = (bool)value;
+
+            if (boolean)
+            {
+                return "../icon.ico";
+            }
+
+            return "../icon.ico";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

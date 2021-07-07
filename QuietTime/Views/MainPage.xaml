@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
+             xmlns:converters="clr-namespace:QuietTime.Other"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
              d:Background="White"
              mc:Ignorable="d" 
@@ -23,6 +24,7 @@
             <Setter Property="FontFamily" Value="Corbel Light" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
+        <converters:BoolToImagePathConverter x:Key="boolToImageConverter"/>
     </UserControl.Resources>
 
     <UserControl.Style>
@@ -77,20 +79,27 @@
             </Slider.ContextMenu>
         </Slider>
 
-        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="20" MinHeight="30" MinWidth="200" Command="{Binding LockVolume}" d:Content="Lock/unlock" ToolTip="Lock or unlock the max volume">
+        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="20" MinHeight="30" MinWidth="200" Command="{Binding LockVolume}" Padding="30" ToolTip="Lock or unlock your max volume">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="25" />
+                </Style>
+            </Button.Resources>
             <Button.Style>
                 <Style TargetType="Button">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsLocked}" Value="true">
                             <Setter Property="Content" Value="Unlock"/>
+                            <Setter Property="Background" Value="{StaticResource UnlockedBackgroundBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsLocked}" Value="false">
                             <Setter Property="Content" Value="Lock"/>
+                            <Setter Property="Background" Value="{StaticResource LockedBackgroundBrush}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Button.Style>
+            <Image Source="{Binding IsLocked, Converter={StaticResource boolToImageConverter}}"/>
         </Button>
-        
     </Grid>
 </UserControl>
