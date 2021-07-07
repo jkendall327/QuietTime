@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
+             d:Background="White"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.InputBindings>
@@ -37,38 +38,38 @@
         </Style>
     </UserControl.Style>
 
-    <Grid>
+    <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0" FontSize="40" Content="QuietTime"/>
-
-        <Grid Grid.Row="1" Grid.ColumnSpan="3" Margin="10 0 10 0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
             <Grid.Resources>
                 <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
                     <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="FontSize" Value="18" />
+                    <Setter Property="FontSize" Value="25" />
+                    <Setter Property="HorizontalAlignment" Value="Left" />
                 </Style>
             </Grid.Resources>
 
-            <Label Grid.Column="0" Content="{Binding CurrentVolume, FallbackValue=0}" ContentStringFormat="Current volume:  {0}" />
-            <Label Grid.Column="1"  Content="{Binding NewMaxVolume, FallbackValue=0}" ContentStringFormat="New max volume:  {0}"/>
-            <Label Grid.Column="2" Content="{Binding MaxVolume, FallbackValue=0}" ContentStringFormat="Current max volume:  {0}"/>
+            <Label Grid.Row="0" Content="{Binding CurrentVolume, FallbackValue=0}" ContentStringFormat="Current volume:  {0}" />
+            <Label Grid.Row="1"  Content="{Binding NewMaxVolume, FallbackValue=0}" ContentStringFormat="New max volume:  {0}"/>
+            <Label Grid.Row="2" Content="{Binding MaxVolume, FallbackValue=0}" ContentStringFormat="Current max volume:  {0}"/>
         </Grid>
 
-        <Slider Grid.Row="2"  Margin="50 0 50 0" Maximum="100" VerticalAlignment="Center" Value="{Binding NewMaxVolume}">
-            <Slider.ToolTip>Use this to set what your new max volume will be</Slider.ToolTip>
+        <Slider Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"  Maximum="100" Orientation="Vertical" HorizontalAlignment="Center" Value="{Binding NewMaxVolume}">
+            <Slider.ToolTip>Use this to set your new max volume</Slider.ToolTip>
             <Slider.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Lock/unlock max volume" Command="{Binding LockVolume}"/>
@@ -76,44 +77,20 @@
             </Slider.ContextMenu>
         </Slider>
 
-        <Grid Grid.Row="3" Grid.ColumnSpan="3">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Grid.Resources>
+        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="20" MinHeight="30" MinWidth="200" Command="{Binding LockVolume}" d:Content="Lock/unlock" ToolTip="Lock or unlock the max volume">
+            <Button.Style>
                 <Style TargetType="Button">
-                    <Setter Property="Margin" Value="20"/>
-                    <Setter Property="MinHeight" Value="30" />
-                    <Setter Property="MaxWidth" Value="200" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsLocked}" Value="true">
+                            <Setter Property="Content" Value="Unlock"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsLocked}" Value="false">
+                            <Setter Property="Content" Value="Lock"/>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
-            </Grid.Resources>
-
-            <Button x:Name="ScheduleWindowButton" Grid.Column="0" Content="Add schedule">
-                <Button.ToolTip>Open the schedules window</Button.ToolTip>
-            </Button>
-
-            <Button Grid.Column="1" Command="{Binding LockVolume}">
-                <Button.ToolTip>Lock or unlock the max volume</Button.ToolTip>
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsLocked}" Value="true">
-                                <Setter Property="Content" Value="Unlock"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding IsLocked}" Value="false">
-                                <Setter Property="Content" Value="Lock"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-
-            <Button x:Name="SettingsWindowButton" Grid.Column="2" Content="Open settings">
-                <Button.ToolTip>Open the settings window</Button.ToolTip>
-            </Button>
-        </Grid>
+            </Button.Style>
+        </Button>
+        
     </Grid>
 </UserControl>
