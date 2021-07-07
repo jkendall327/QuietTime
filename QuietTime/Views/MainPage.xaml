@@ -19,7 +19,6 @@
     </UserControl.InputBindings>
 
     <UserControl.Resources>
-        <BitmapImage x:Key="TrayIcon" UriSource="../icon.ico" />
         <Style TargetType="Label">
             <Setter Property="FontFamily" Value="Corbel Light" />
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -89,11 +88,9 @@
                 <Style TargetType="Button">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsLocked}" Value="true">
-                            <Setter Property="Content" Value="Unlock"/>
                             <Setter Property="Background" Value="{StaticResource UnlockedBackgroundBrush}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsLocked}" Value="false">
-                            <Setter Property="Content" Value="Lock"/>
                             <Setter Property="Background" Value="{StaticResource LockedBackgroundBrush}" />
                         </DataTrigger>
                     </Style.Triggers>

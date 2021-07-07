@@ -29,16 +29,17 @@ namespace QuietTime.Other
 
     public class BoolToImagePathConverter : IValueConverter
     {
+        // todo: this is very ugly, try to find a way to do this in xaml
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var boolean = (bool)value;
 
             if (boolean)
             {
-                return "../icon.ico";
+                return "../Resources/unlock.png";
             }
 
-            return "../icon.ico";
+            return "../Resources/lock.png";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

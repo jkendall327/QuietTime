@@ -20,7 +20,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="icon.ico" />
+    <None Remove="Resources\lock.png" />
+    <None Remove="Resources\unlock.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,10 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\lock.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,7 +62,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="icon.ico" />
+    <Resource Include="Resources\icon.ico" />
+    <Resource Include="Resources\unlock.png" />
   </ItemGroup>
 
   <ItemGroup>

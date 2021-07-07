@@ -9,7 +9,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <BitmapImage x:Key="Icon" UriSource="../icon.ico" />
+        <BitmapImage x:Key="Icon" UriSource="../Resources/icon.ico" />
     </UserControl.Resources>
 
     <hardcodet:TaskbarIcon DataContext="{Binding}" ToolTipText="QuietTime" IconSource="{StaticResource Icon}">
