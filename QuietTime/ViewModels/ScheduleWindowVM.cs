@@ -23,16 +23,18 @@ namespace QuietTime.ViewModels
     {
         private readonly SchedulerService _scheduler;
         private readonly SerializerService _serializer;
+        private readonly NotificationService _notifier;
 
         /// <summary>
         /// Creates a new <see cref="ScheduleWindowVM"/>.
         /// </summary>
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         /// <param name="serializer">Handles serialization of user's schedules.</param>
-        public ScheduleWindowVM(SchedulerService scheduler, SerializerService serializer)
+        public ScheduleWindowVM(SchedulerService scheduler, SerializerService serializer, NotificationService notifier)
         {
             _scheduler = scheduler;
             _serializer = serializer;
+            _notifier = notifier;
 
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
 
@@ -168,7 +170,11 @@ namespace QuietTime.ViewModels
         {
             var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter);
 
-            if (Schedules.Any(x => x.Overlaps(newSchedule))) return;
+            if (Schedules.Any(x => x.Overlaps(newSchedule)))
+            {
+                _notifier.SendNotification("Error", "This schedule overlaps with an existing schedule.", NotificationService.MessageLevel.Error);
+                return;
+            }
 
             Schedules.Add(newSchedule);
             NotifyAllCommands();
