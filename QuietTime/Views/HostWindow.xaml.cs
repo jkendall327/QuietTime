@@ -29,15 +29,13 @@ namespace QuietTime.Views
         // services
         private readonly ILogger<HostWindow> _logger;
         private readonly NotificationService _notifications;
-        private readonly Settings _settings;
 
-        public HostWindow(HostViewModel viewModel, TrayIconVM trayViewModel, ILogger<HostWindow> logger, NotificationService notifications, IOptions<Settings> settings)
+        public HostWindow(HostViewModel viewModel, TrayIconVM trayViewModel, ILogger<HostWindow> logger, NotificationService notifications)
         {
             InitializeComponent();
 
             _logger = logger;
             _notifications = notifications;
-            _settings = settings.Value;
 
             DataContext = viewModel;
             TraybarIcon.DataContext = trayViewModel;
@@ -61,7 +59,7 @@ namespace QuietTime.Views
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (!_settings.MinimizeOnClose)
+            if (!UserSettings.Default.MinimizeOnClose)
             {
                 base.OnClosing(e); return;
             }

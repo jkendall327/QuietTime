@@ -18,7 +18,7 @@
         <DataTemplate DataType="{x:Type viewmodels:ScheduleWindowVM}">
             <views:SchedulePage />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewmodels:SettingsWindowVM}">
+        <DataTemplate DataType="{x:Type viewmodels:SettingsPageVM}">
             <views:SettingsPage />
         </DataTemplate>
     </Window.Resources>

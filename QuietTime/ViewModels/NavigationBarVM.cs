@@ -19,9 +19,9 @@ namespace QuietTime.ViewModels
 
         public MainPageVM HomeVM { get; set; }
         public ScheduleWindowVM ScheduleVM { get; set; }
-        public SettingsWindowVM SettingsVM { get; set; }
+        public SettingsPageVM SettingsVM { get; set; }
 
-        public NavigationBarVM(Navigator navigator, MainPageVM homeVM, ScheduleWindowVM scheduleVM, SettingsWindowVM settingsVM)
+        public NavigationBarVM(Navigator navigator, MainPageVM homeVM, ScheduleWindowVM scheduleVM, SettingsPageVM settingsVM)
         {
             _navigator = navigator;
 

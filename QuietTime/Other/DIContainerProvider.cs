@@ -35,12 +35,12 @@ namespace QuietTime.Other
         private void RegisterHostServices(ServiceCollection services)
         {
             // configuration
-            var configuration = new ConfigurationBuilder()
+            IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            services.Configure<Settings>(configuration.GetSection("Settings"));
+            services.AddSingleton<IConfiguration>(configuration);
 
             // logging
             services.AddLogging(builder =>
@@ -101,7 +101,7 @@ namespace QuietTime.Other
 
             services.AddTransient<MainPageVM>();
             services.AddTransient<ScheduleWindowVM>();
-            services.AddTransient<SettingsWindowVM>();
+            services.AddTransient<SettingsPageVM>();
         }
     }
 }

@@ -34,6 +34,13 @@ namespace QuietTime.ViewModels
         {
             logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
 
+            NewMaxVolume = UserSettings.Default.DefaultMaxVolume;
+
+            if (UserSettings.Default.LockOnStartup)
+            {
+                audio.SwitchLock(NewMaxVolume);
+            }
+
             IncreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(5));
             DecreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(-5));
 

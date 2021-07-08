@@ -26,8 +26,10 @@ namespace QuietTime
 
             var main = services.GetRequiredService<HostWindow>();
 
-            if (e.Args.Length == 0 || e.Args[0] != "--minimized")
+            if (!UserSettings.Default.LaunchMinimized)
+            {
                 main.Show();
+            }
         }
 
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
