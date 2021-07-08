@@ -166,21 +166,17 @@ namespace QuietTime.ViewModels
 
         private async Task AddScheduleAsync()
         {
-            var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter)
-            {
-                IsActive = true
-            };
+            var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter);
 
-            if (Schedules.Any(x => x.Overlaps(newSchedule)))
-            {
-                return;
-            }
+            if (Schedules.Any(x => x.Overlaps(newSchedule))) return;
 
             Schedules.Add(newSchedule);
             NotifyAllCommands();
 
+            if (!UserSettings.Default.ActivateSchedulesOnCreation) return;
+
             var newJobKey = await _scheduler.CreateScheduleAsync(newSchedule);
-            
+            newSchedule.IsActive = true;
             newSchedule.Key = newJobKey;
         }
     }

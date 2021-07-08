@@ -47,6 +47,7 @@ namespace QuietTime.Other
         public bool MinimizeOnClose { get; set; }
         public bool LaunchMinimized { get; set; }
         public bool LockOnStartup { get; set; }
+        public bool ActivateSchedulesOnCreation { get; set; }
         public int DefaultMaxVolume { get; set; }
     }
 }

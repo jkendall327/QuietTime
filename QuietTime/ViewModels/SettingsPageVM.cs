@@ -55,6 +55,12 @@ namespace QuietTime.ViewModels
             set { UserSettings.Default.LockOnStartup = value; UserSettings.Default.Save(); OnPropertyChanged(nameof(LockOnStartup)); }
         }
 
+        public bool ActivateSchedulesOnCreation
+        {
+            get { return UserSettings.Default.ActivateSchedulesOnCreation; }
+            set { UserSettings.Default.ActivateSchedulesOnCreation = value; UserSettings.Default.Save(); OnPropertyChanged(nameof(ActivateSchedulesOnCreation)); }
+        }
+
         public int DefaultMaxVolume
         {
             get { return UserSettings.Default.DefaultMaxVolume; }

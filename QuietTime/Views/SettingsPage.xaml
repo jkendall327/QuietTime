@@ -63,6 +63,11 @@
             <TextBlock>Lock audio on startup</TextBlock>
         </CheckBox>
 
+        <CheckBox IsChecked="{Binding ActivateSchedulesOnCreation}">
+            <CheckBox.ToolTip>Schedules will be automatically made active when created.</CheckBox.ToolTip>
+            <TextBlock>Activate schedules on creation</TextBlock>
+        </CheckBox>
+
         <StackPanel Orientation="Horizontal">
             <xctk:UIntegerUpDown HorizontalAlignment="Center" Value="{Binding DefaultMaxVolume}" Margin="15 10 0 10" ClipValueToMinMax="True" Minimum="0" Maximum="100" Watermark="0"/>
             <TextBlock Text="Default max volume" FontSize="20" VerticalAlignment="Center"/>
