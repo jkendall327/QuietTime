@@ -14,14 +14,14 @@ namespace QuietTime.Services
     public class AutostartService
     {
         private readonly NotificationService _notifications;
-        private readonly ILogger<SettingsWindowVM> _logger;
+        private readonly ILogger<SettingsPageVM> _logger;
 
         /// <summary>
-        /// Creates a new <see cref="SettingsWindowVM"/>.
+        /// Creates a new <see cref="SettingsPageVM"/>.
         /// </summary>
         /// <param name="notifications">Notification service for this class.</param>
         /// <param name="logger">Logging service for this class.</param>
-        public AutostartService(NotificationService notifications, ILogger<SettingsWindowVM> logger)
+        public AutostartService(NotificationService notifications, ILogger<SettingsPageVM> logger)
         {
             _notifications = notifications;
             _logger = logger;
@@ -36,8 +36,7 @@ namespace QuietTime.Services
         /// <summary>
         /// Sets program to start when user signs-in.
         /// </summary>
-        /// <param name="launchMinimized"></param>
-        public void SetStartup(bool launchMinimized)
+        public void SetStartup()
         {
             var shortcutPath = ShortcutPath();
 
@@ -45,11 +44,6 @@ namespace QuietTime.Services
 
             var shell = new WshShell();
             var sc = (IWshShortcut)shell.CreateShortcut(shortcutPath);
-
-            if (launchMinimized)
-            {
-                sc.Arguments = "--minimized";
-            }
 
             sc.Description = "QuietTime";
             sc.WorkingDirectory = Directory.GetCurrentDirectory();

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using QuietTime.Models;
 using QuietTime.Other;
@@ -18,7 +19,7 @@ namespace QuietTime.Services
     /// </summary>
     public class SerializerService
     {
-        private readonly Settings _config;
+        private readonly IConfiguration _config;
         private readonly ILogger<SerializerService> _logger;
         private readonly NotificationService _notifications;
 
@@ -28,14 +29,14 @@ namespace QuietTime.Services
         /// <param name="config">Program configuration for this class.</param>
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
-        public SerializerService(IOptions<Settings> config, ILogger<SerializerService> logger, NotificationService notifications)
+        public SerializerService(IConfiguration config, ILogger<SerializerService> logger, NotificationService notifications)
         {
-            _config = config.Value;
+            _config = config;
             _logger = logger;
             _notifications = notifications;
         }
 
-        private string filepath => _config.SerializedDataFilename;
+        private string filepath => _config.GetValue<string>("SerializedDataFilename");
 
         internal IEnumerable<Schedule> DeserializeSchedules()
         {

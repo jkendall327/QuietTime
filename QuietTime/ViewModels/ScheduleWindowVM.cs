@@ -19,7 +19,7 @@ namespace QuietTime.ViewModels
     /// <summary>
     /// Viewmodel for <see cref="QuietTime.Views.ScheduleWindow"/>.
     /// </summary>
-    public class ScheduleWindowVM : ObservableObject
+    public class ScheduleWindowVM : ViewModelBase
     {
         private readonly SchedulerService _scheduler;
         private readonly SerializerService _serializer;

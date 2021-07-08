@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace QuietTime.Views
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class SettingsPage : UserControl
     {
-        public Window1()
+        public SettingsPage()
         {
             InitializeComponent();
         }
