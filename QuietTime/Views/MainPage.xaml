@@ -4,9 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
-             xmlns:converters="clr-namespace:QuietTime.Other"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
-             d:Background="White"
+             d:Background="{StaticResource UnlockedBackgroundBrush}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.InputBindings>
@@ -21,9 +20,14 @@
     <UserControl.Resources>
         <Style TargetType="Label">
             <Setter Property="FontFamily" Value="Corbel Light" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="25" />
+            <Setter Property="Margin" Value="20 0 0 0" />
         </Style>
-        <converters:BoolToImagePathConverter x:Key="boolToImageConverter"/>
+        
+        <Image x:Key="lockedImage" Source="../Resources/lock.png"/>
+        <Image x:Key="unlockedImage" Source="../Resources/unlock.png"/>
     </UserControl.Resources>
 
     <UserControl.Style>
@@ -45,7 +49,8 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="40"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -56,29 +61,16 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid.Resources>
-                <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
-                    <Setter Property="VerticalAlignment" Value="Center" />
-                    <Setter Property="FontSize" Value="25" />
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                </Style>
-            </Grid.Resources>
-
             <Label Grid.Row="0" Content="{Binding CurrentVolume, FallbackValue=0}" ContentStringFormat="Current volume:  {0}" />
             <Label Grid.Row="1"  Content="{Binding NewMaxVolume, FallbackValue=0}" ContentStringFormat="New max volume:  {0}"/>
             <Label Grid.Row="2" Content="{Binding MaxVolume, FallbackValue=0}" ContentStringFormat="Current max volume:  {0}"/>
         </Grid>
 
-        <Slider Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"  Maximum="100" Orientation="Vertical" HorizontalAlignment="Center" Value="{Binding NewMaxVolume}">
-            <Slider.ToolTip>Use this to set your new max volume</Slider.ToolTip>
-            <Slider.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Lock/unlock max volume" Command="{Binding LockVolume}"/>
-                </ContextMenu>
-            </Slider.ContextMenu>
-        </Slider>
-
-        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="20" MinHeight="30" MinWidth="200" Command="{Binding LockVolume}" Padding="30" ToolTip="Lock or unlock your max volume">
+        <Button Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" 
+                Margin="20" MinHeight="30" MinWidth="200" Padding="30"
+                d:Background="{StaticResource LockedBackgroundBrush}"
+                MaxHeight="200"
+                Command="{Binding LockVolume}" ToolTip="Lock or unlock your max volume">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="25" />
@@ -89,14 +81,39 @@
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsLocked}" Value="true">
                             <Setter Property="Background" Value="{StaticResource UnlockedBackgroundBrush}" />
+                            <Setter Property="Content" Value="{StaticResource unlockedImage}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsLocked}" Value="false">
                             <Setter Property="Background" Value="{StaticResource LockedBackgroundBrush}" />
+                            <Setter Property="Content" Value="{StaticResource lockedImage}" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Button.Style>
-            <Image Source="{Binding IsLocked, Converter={StaticResource boolToImageConverter}}"/>
         </Button>
+
+        <Slider Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"  Maximum="100" 
+                Background="AliceBlue" BorderThickness="2" BorderBrush="Gray"
+                Orientation="Vertical" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
+                Value="{Binding NewMaxVolume}">
+            <Slider.ToolTip>Use this to set your new max volume</Slider.ToolTip>
+            <Slider.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="15" />
+                </Style>
+                <Style TargetType="Track">
+                    <Setter Property="Width" Value="100" />
+                </Style>
+                <Style TargetType="Thumb">
+                    <Setter Property="Width" Value="200" />
+                    <Setter Property="Foreground" Value="Red" />
+                </Style>
+            </Slider.Resources>
+            <Slider.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Lock/unlock max volume" Command="{Binding LockVolume}"/>
+                </ContextMenu>
+            </Slider.ContextMenu>
+        </Slider>
     </Grid>
 </UserControl>

@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:NavigationBarVM}"
              mc:Ignorable="d"
              d:DesignHeight="50" d:DesignWidth="800">
     
@@ -24,10 +26,33 @@
             </Style>
         </Grid.Resources>
 
-        <Button Grid.Column="0" Content="Home" Command="{Binding NavigateCommand}" CommandParameter="{Binding HomeVM}"/>
-        <Button Grid.Column="1" Content="Schedules" Command="{Binding NavigateCommand}" CommandParameter="{Binding ScheduleVM}"/>
-        <Button Grid.Column="2" Content="Settings" Command="{Binding NavigateCommand}" CommandParameter="{Binding SettingsVM}"/>
+        <Button Grid.Column="0" Command="{Binding NavigateCommand}" CommandParameter="{Binding HomeVM}" Background="{StaticResource LockedBackgroundBrush}">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5" />
+                </Style>
+            </Button.Resources>
+            <Image Source="../Resources/home.png"/>
+        </Button>
 
-        <Label Grid.Column="4" VerticalAlignment="Center" Margin="0 0 5 0" Content="{Binding VersionInfo}"/>
+        <Button Grid.Column="1" Command="{Binding NavigateCommand}" CommandParameter="{Binding ScheduleVM}" Background="{StaticResource LockedBackgroundBrush}">
+        <Button.Resources>
+            <Style TargetType="Border">
+                <Setter Property="CornerRadius" Value="5" />
+            </Style>
+        </Button.Resources>
+            <Image Source="../Resources/clock.png"/>
+        </Button>
+
+        <Button Grid.Column="2" Command="{Binding NavigateCommand}" CommandParameter="{Binding SettingsVM}" Background="{StaticResource LockedBackgroundBrush}">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="5" />
+                </Style>
+            </Button.Resources>
+            <Image Source="../Resources/settings.png"/>
+        </Button>
+
+        <Label Grid.Column="4" FontFamily="Corbel Light" FontSize="15" VerticalAlignment="Center" Margin="0 0 5 0" Content="{Binding VersionInfo, FallbackValue=QuietTime}"/>
     </Grid>
 </UserControl>

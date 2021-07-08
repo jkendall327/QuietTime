@@ -24,25 +24,4 @@ namespace QuietTime.Other
             return TimeOnly.FromDateTime(time);
         }
     }
-
-    public class BoolToImagePathConverter : IValueConverter
-    {
-        // todo: this is very ugly, try to find a way to do this in xaml
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var boolean = (bool)value;
-
-            if (boolean)
-            {
-                return "../Resources/unlock.png";
-            }
-
-            return "../Resources/lock.png";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

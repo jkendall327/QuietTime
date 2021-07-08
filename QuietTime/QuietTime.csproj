@@ -5,13 +5,15 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
-    <Version>0.0.1</Version>
+    <Version>0.9.0</Version>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <PackageProjectUrl>https://github.com/jkendall327/QuietTime</PackageProjectUrl>
     <Description>Like f.lux for your ears, QuietTime lets you cap your computer's maximum volume either on-command or according to schedules that you create.</Description>
     <Copyright>MIT License</Copyright>
     <RepositoryUrl>https://github.com/jkendall327/QuietTime</RepositoryUrl>
     <PackageTags>audio, wpf, mvvm, mit, productivity, well-being, health</PackageTags>
+    <PackageIcon>icon.ico</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -20,8 +22,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\clock.png" />
+    <None Remove="Resources\home.png" />
     <None Remove="Resources\lock.png" />
+    <None Remove="Resources\settings.png" />
     <None Remove="Resources\unlock.png" />
+    <None Include="icon.ico">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +46,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\clock.png" />
+    <Resource Include="Resources\home.png" />
     <Resource Include="Resources\lock.png" />
   </ItemGroup>
 
@@ -63,6 +74,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\icon.ico" />
+    <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\unlock.png" />
   </ItemGroup>
 

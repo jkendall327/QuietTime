@@ -22,55 +22,67 @@
         </LinearGradientBrush>
     </UserControl.Background>
 
-    <StackPanel Margin="10" Name="MainStack">
+    <UserControl.Resources>
+        <Style TargetType="CheckBox">
+            <Setter Property="FontSize" Value="24" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="Corbel" />
+            <Setter Property="Margin" Value="0 5 0 5" />
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="10 0 0 0" />
+        </Style>
+    </UserControl.Resources>
 
-        <StackPanel.Resources>
-            <Style TargetType="CheckBox">
-                <Setter Property="FontSize" Value="24" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="FontFamily" Value="Corbel" />
-                <Setter Property="Margin" Value="15 10 0 10" />
-            </Style>
-            <Style TargetType="TextBlock">
-                <Setter Property="Margin" Value="10 0 0 0" />
-            </Style>
-        </StackPanel.Resources>
+    <Grid Margin="20 10 10 10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <Label FontSize="56" FontFamily="Corbel Light">Settings</Label>
 
-        <CheckBox IsChecked="{Binding LaunchOnStartup}">
-            <CheckBox.ToolTip>QuietTime will automatically start when you sign into your computer.</CheckBox.ToolTip>
-            <TextBlock>Launch on sign-in</TextBlock>
-        </CheckBox>
+        <CheckBox Grid.Column="0" Grid.Row="1" IsChecked="{Binding LaunchOnStartup}">
+                <CheckBox.ToolTip>QuietTime will automatically start when you sign into your computer.</CheckBox.ToolTip>
+                <TextBlock>Launch on sign-in</TextBlock>
+            </CheckBox>
 
-        <CheckBox IsChecked="{Binding LaunchMinimized}">
-            <CheckBox.ToolTip>When QuietTime starts automatically, it will open minimized, in the system tray.</CheckBox.ToolTip>
-            <TextBlock>Start minimized</TextBlock>
-        </CheckBox>
+        <CheckBox Grid.Column="0" Grid.Row="2" IsChecked="{Binding LaunchMinimized}">
+                <CheckBox.ToolTip>When QuietTime starts automatically, it will open minimized, in the system tray.</CheckBox.ToolTip>
+                <TextBlock>Start minimized</TextBlock>
+            </CheckBox>
 
-        <CheckBox IsChecked="{Binding EnableNotifications}">
-            <CheckBox.ToolTip>QuietTime will send your notifications.</CheckBox.ToolTip>
-            <TextBlock>Enable notifications</TextBlock>
-        </CheckBox>
+        <CheckBox Grid.Column="0" Grid.Row="3" IsChecked="{Binding EnableNotifications}">
+                <CheckBox.ToolTip>QuietTime will send your notifications.</CheckBox.ToolTip>
+                <TextBlock>Enable notifications</TextBlock>
+            </CheckBox>
 
-        <CheckBox IsChecked="{Binding MinimizeOnClose}">
-            <CheckBox.ToolTip>QuietTime will close to the system tray.</CheckBox.ToolTip>
-            <TextBlock>Close to system tray</TextBlock>
-        </CheckBox>
-        
-        <CheckBox IsChecked="{Binding LockOnStartup}">
-            <CheckBox.ToolTip>QuietTime will lock your audio on startup to your default setting.</CheckBox.ToolTip>
-            <TextBlock>Lock audio on startup</TextBlock>
-        </CheckBox>
+        <CheckBox Grid.Column="1" Grid.Row="1"  IsChecked="{Binding MinimizeOnClose}">
+                <CheckBox.ToolTip>QuietTime will close to the system tray.</CheckBox.ToolTip>
+                <TextBlock>Close to system tray</TextBlock>
+            </CheckBox>
 
-        <CheckBox IsChecked="{Binding ActivateSchedulesOnCreation}">
-            <CheckBox.ToolTip>Schedules will be automatically made active when created.</CheckBox.ToolTip>
-            <TextBlock>Activate schedules on creation</TextBlock>
-        </CheckBox>
+        <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding LockOnStartup}">
+                <CheckBox.ToolTip>QuietTime will lock your audio on startup to your default setting.</CheckBox.ToolTip>
+                <TextBlock>Lock audio on startup</TextBlock>
+            </CheckBox>
 
-        <StackPanel Orientation="Horizontal">
-            <xctk:UIntegerUpDown HorizontalAlignment="Center" Value="{Binding DefaultMaxVolume}" Margin="15 10 0 10" ClipValueToMinMax="True" Minimum="0" Maximum="100" Watermark="0"/>
-            <TextBlock Text="Default max volume" FontSize="20" VerticalAlignment="Center"/>
-        </StackPanel>
-    </StackPanel>
+        <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding ActivateSchedulesOnCreation}">
+                <CheckBox.ToolTip>Schedules will be automatically made active when created.</CheckBox.ToolTip>
+                <TextBlock>Activate schedules on creation</TextBlock>
+            </CheckBox>
+
+        <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal">
+                <xctk:UIntegerUpDown HorizontalAlignment="Center" Value="{Binding DefaultMaxVolume}" Margin="0 10 0 10" Padding="3" MinWidth="50" MaxHeight="30"
+                                 ClipValueToMinMax="True" Minimum="0" Maximum="100" Watermark="0"/>
+                <TextBlock Text="Default max volume" FontSize="20" VerticalAlignment="Center"/>
+            </StackPanel>
+    </Grid>
 </UserControl>
