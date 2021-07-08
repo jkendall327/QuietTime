@@ -39,7 +39,8 @@ namespace QuietTime.ViewModels
             Func<bool> anySchedules = Schedules.Any;
             DeactivateAll = new AsyncRelayCommand(DeactivateAllAsync, anySchedules);
             ActivateAll = new AsyncRelayCommand(ActivateAllAsync, anySchedules);
-            Serialize = new AsyncRelayCommand(() => _serializer.SerializeSchedulesAsync(Schedules), anySchedules);
+
+            Serialize = new AsyncRelayCommand(() => _serializer.SerializeSchedulesAsync(Schedules));
 
             Func<bool> scheduleIsSelected = () => SelectedSchedule is not null;
             DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync, scheduleIsSelected);
@@ -53,7 +54,7 @@ namespace QuietTime.ViewModels
             }
         }
 
-        private List<IRelayCommand> Commands;
+        private readonly List<IRelayCommand> Commands;
 
         /// <summary>
         /// The user's current schedules, both active and inactive.
@@ -154,17 +155,21 @@ namespace QuietTime.ViewModels
 
         private async Task RemoveScheduleAsync()
         {
+            if (SelectedSchedule.Key is not null)
+            {
+                await _scheduler.DeleteScheduleAsync(SelectedSchedule.Key);
+            }
+
             Schedules.Remove(SelectedSchedule);
             NotifyAllCommands();
-
-            if (SelectedSchedule.Key is null) return;
-
-            await _scheduler.DeleteScheduleAsync(SelectedSchedule.Key);
         }
 
         private async Task AddScheduleAsync()
         {
-            var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter);
+            var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter)
+            {
+                IsActive = true
+            };
 
             if (Schedules.Any(x => x.Overlaps(newSchedule)))
             {
@@ -177,7 +182,6 @@ namespace QuietTime.ViewModels
             var newJobKey = await _scheduler.CreateScheduleAsync(newSchedule);
             
             newSchedule.Key = newJobKey;
-            newSchedule.IsActive = true;
         }
     }
 }
