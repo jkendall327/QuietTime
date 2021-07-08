@@ -5,8 +5,6 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
 namespace QuietTime.Other
 {
     /// <summary>
@@ -48,5 +46,3 @@ namespace QuietTime.Other
         }
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

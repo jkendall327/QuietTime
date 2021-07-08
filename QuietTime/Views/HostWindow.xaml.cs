@@ -40,11 +40,8 @@ namespace QuietTime.Views
             DataContext = viewModel;
             TraybarIcon.DataContext = trayViewModel;
 
-            viewModel.CloseAppRequested += CloseApp;
             trayViewModel.ShowAppRequested += (_, _) => this.Show();
-
             trayViewModel.CloseAppRequested += CloseApp;
-            viewModel.HideAppRequested += (_, _) => this.Hide();
         }
 
         private bool _closeToTray = true;

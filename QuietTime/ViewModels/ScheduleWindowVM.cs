@@ -66,7 +66,7 @@ namespace QuietTime.ViewModels
         /// <summary>
         /// Currently-selected <see cref="Schedules"/>.
         /// </summary>
-        public Schedule SelectedSchedule
+        public Schedule? SelectedSchedule
         {
             get { return _selectedSchedule; }
             set
@@ -75,6 +75,7 @@ namespace QuietTime.ViewModels
                 NotifyAllCommands();
             }
         }
+        private Schedule? _selectedSchedule;
 
         private void NotifyAllCommands()
         {
@@ -83,8 +84,6 @@ namespace QuietTime.ViewModels
                 command.NotifyCanExecuteChanged();
             }
         }
-
-        private Schedule _selectedSchedule;
 
         /// <summary>
         /// Binding object for the UI.
@@ -138,7 +137,7 @@ namespace QuietTime.ViewModels
 
         private async Task FlipActivationAsync()
         {
-            SelectedSchedule.IsActive = !SelectedSchedule.IsActive;
+            SelectedSchedule!.IsActive = !SelectedSchedule.IsActive;
 
             if (SelectedSchedule.Key is null) return;
 
@@ -157,7 +156,7 @@ namespace QuietTime.ViewModels
 
         private async Task RemoveScheduleAsync()
         {
-            if (SelectedSchedule.Key is not null)
+            if (SelectedSchedule!.Key is not null)
             {
                 await _scheduler.DeleteScheduleAsync(SelectedSchedule.Key);
             }

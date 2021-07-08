@@ -15,21 +15,20 @@ namespace QuietTime.ViewModels
     {
         public ICommand NavigateCommand { get; set; }
 
-        private Navigator _navigator;
-
         public MainPageVM HomeVM { get; set; }
         public ScheduleWindowVM ScheduleVM { get; set; }
         public SettingsPageVM SettingsVM { get; set; }
 
         public NavigationBarVM(Navigator navigator, MainPageVM homeVM, ScheduleWindowVM scheduleVM, SettingsPageVM settingsVM)
         {
-            _navigator = navigator;
-
             HomeVM = homeVM;
             ScheduleVM = scheduleVM;
             SettingsVM = settingsVM;
 
-            NavigateCommand = new RelayCommand<ViewModelBase>((vm) => navigator.CurrentViewModel = vm);
+            NavigateCommand = new RelayCommand<ViewModelBase>((vm) =>
+            {
+                if (vm is not null) navigator.CurrentViewModel = vm;
+            });
         }
 
         public string VersionInfo

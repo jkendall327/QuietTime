@@ -9,13 +9,13 @@ namespace QuietTime.Services
 {
     public class Navigator
     {
-        private ViewModelBase _currentViewModel;
+        private ViewModelBase? _currentViewModel;
         public ViewModelBase CurrentViewModel
         {
-            get { return _currentViewModel; }
+            get { return _currentViewModel!; }
             set { _currentViewModel = value; CurrentViewModelChanged?.Invoke(this, EventArgs.Empty); }
         }
 
-        public event EventHandler CurrentViewModelChanged;
+        public event EventHandler? CurrentViewModelChanged;
     }
 }
