@@ -33,7 +33,7 @@ QuietTime is made with WPF and targets the .NET 6.0 runtime (how exciting!). It 
 * The Extended WPF Toolkit by Xceed for some user controls
 * The Hardcodet NotifyIcon library for the tray icon
 * Microsoft.Extensions for dependency injection, configuration and logging
-* The Microsoft MVVM Toolkit to help implement the MVVM design pattern
+* The Microsoft MVVM Toolkit
 * NAudio by Mark Heath for system audio
 * NReco by Vitalii Fedorchenko for simple file-logging
 * Quartz.NET by Marko Lahma for scheduling
@@ -50,16 +50,11 @@ Please see CONTRIBUTING.md and ARCHITECTURE.md in the `docs` folder.
 
 ## Credits
 
-[Catalin Fertu](https://catalinfertu.com/) for the program icon.
 [Quiet on the Set](https://github.com/troylar/quiet-on-the-set) for initial inspiration.
 
-home 
-                                    Icon by <a href="https://freeicons.io/profile/3">icon king1</a> on <a href="https://freeicons.io">freeicons.io</a>
-                                
+Icons by:
 
-gear
-                                    Icon by <a href="https://freeicons.io/profile/2257">www.wishforge.games</a> on <a href="https://freeicons.io">freeicons.io</a>
-                                
-clock
-                                    Icon by <a href="https://freeicons.io/profile/714">Raj Dev</a> on <a href="https://freeicons.io">freeicons.io</a>
-                                
+* [icon king1](https://freeicons.io/profile/3)
+* [www.wishforge.games](https://freeicons.io/profile/2257)
+* [Raj Dev](https://freeicons.io/profile/714)
+* [Catalin Fertu](https://catalinfertu.com/)
