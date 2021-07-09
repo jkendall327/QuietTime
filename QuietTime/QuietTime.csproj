@@ -14,6 +14,8 @@
     <PackageTags>audio, wpf, mvvm, mit, productivity, well-being, health</PackageTags>
     <PackageIcon>icon.ico</PackageIcon>
     <PackageIconUrl />
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
