@@ -5,15 +5,8 @@ on:
     branches: [ release ]
 
 jobs:
-
   build:
-
-    runs-on: ubuntu-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
-
-    env:
-      Solution_Name: QuietTime.sln                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: QuietTime/QuietTime.csproj                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
+    runs-on: windows-latest 
 
     steps:
     - name: Checkout
@@ -21,46 +14,43 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
     - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
-
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
+        dotnet-version: '6.0.x'
+        include-prerelease: true
       
-   # Publish
     - name: Publish to single file
-      run: dotnet publish -r win-x64 -p:PublishSingleFile=true --self-contained true
+      run: dotnet publish .\QuietTime\QuietTime.csproj -o Output  
 
-    - name: release
+    - name: Zip files
+      run: 7z a QuietTime.zip Output\*
+
+    - name: Print current directory
+      run: dir
+
+    - name: Print current directory 2
+      run: dir Output
+
+    - name: Create GitHub release
       uses: actions/create-release@v1
       id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        version: 0.0.2
       with:
         draft: true
         prerelease: false
-        release_name: "albatross"
+        release_name: Release ${version}
         tag_name: ${{ github.ref }}
-        body: "Test release"
-      env:
-       GITHUB_TOKEN: ${{ github.token }}
+        body_path: docs\CHANGELOG.MD
 
-    - name: Zip Release
-      uses: TheDoctor0/zip-release@0.4.2
-      with:
-    # Filename for archive
-        filename: release.zip
-    # Base path for archive files
-        path: ./bin/Debug/net6.0-windows/win-x64/publish
-
-    - name: upload artifact
+    - name: Upload attachment
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ github.token }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin/Debug/net6.0-windows/win-x64/publish/release.zip
-        asset_name: release.zip
+        asset_path: QuietTime.zip
+        asset_name: myRelease
         asset_content_type: application/zip
