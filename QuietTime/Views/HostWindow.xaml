@@ -9,7 +9,8 @@
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
         xmlns:views="clr-namespace:QuietTime.Views"
         xmlns:components="clr-namespace:QuietTime.Controls"
-        Title="QuietTime" Height="450" Width="800" MinHeight="500" MinWidth="790">
+        Title="QuietTime" Height="450" Width="800" MinHeight="500" MinWidth="790"
+        FocusManager.FocusedElement="{Binding ElementName=test}">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:MainPageVM}">
@@ -28,7 +29,7 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl Grid.Row="0" Content="{Binding CurrentViewModel}"/>
+        <ContentControl x:Name="test" Grid.Row="0" Content="{Binding CurrentViewModel}" Focusable="True"/>
         
         <components:NavigationBar Grid.Row="1" MaxHeight="50" DataContext="{Binding NavigationBarViewModel}"/>
 
