@@ -1,30 +1,33 @@
 ﻿# QuietTime
 
-Like [f.lux](https://justgetflux.com/) for your ears, QuietTime caps your computer's maximum volume to prevent long-term hearing damage or accidentally blasting your ears with loud music late at night.
+Like [f.lux](https://justgetflux.com/) for your ears, QuietTime caps your computer's maximum volume.
 
 ![Screenshot](docs/main_window_screenshot.png)
 
+Why use QuietTime?
+
+* Your bluetooth headphones automatically set your volume way too high when you connect them
+* You're worried about long-term hearing damage but forget to keep the volume low yourself
+* You don't want to disturb other people with unexpectedly loud sounds from your PC
+
 You can limit your system volume manually, or according to schedules that you create.
 
-This program is inspired by [Quiet on the Set](https://github.com/troylar/quiet-on-the-set). I wanted to make an updated version of the same idea in WPF, rather than Winforms, that included scheduling.
+This program is inspired by [Quiet on the Set](https://github.com/troylar/quiet-on-the-set). I wanted to make an updated version in WPF, rather than Winforms, that included scheduling and a nicer UI.
 
 ## Features
 
 * Lock your system's max volume
-* Create schedules with defined start and end points:
-  * Cap your max volume to 20% at 8PM, then set it to 60% at 9AM the next day
-  * Cap your volume to 0% during working hours (like 9AM - 5PM), then set it to 100% during your free time
-  * And any other possibilities you can think of!
+* Create schedules with defined start and end points: cap your volume to 20% at 8PM, then unlock it and set it to 60% at 9AM the next day
 * Schedules and settings file saved in simple, human-readable JSON format you can tweak by hand
-* Runs in background by default (but can be completely closed through the tray icon)
+* Can start on Windows sign-in and run in the background silently
 
 ## Installation and usage
 
-QuietTime is a stand-alone executable. Simply click the .exe to get started.
+QuietTime doesn't need to be installed. Simply click the shortcut file to get started.
 
-Your settings are saved in a file called `appsettings.json`. By default, your saved schedules are in a file called `schedules.json`. You can edit both of these files directly, but changes won't be reflected until you restart the program.
+Your settings are saved in `usersettings.json`. By default, your saved schedules are in `schedules.json`. You can edit these files directly, but changes won't be reflected until you restart the program.
 
-In the settings window, you can choose for QuietTime to automatically launch when you sign-in to Windows. You can also opt for it to start minimized (in the system tray).
+Many parts of the program have tooltips that give extra information when you hover your mouse over them. You can also right-click to see a context-menu with extra options in many cases.
 
 ## Technologies
 
@@ -40,7 +43,9 @@ QuietTime is made with WPF and targets the .NET 6.0 runtime (how exciting!). It 
 
 ## Issues and future goals
 
-The back-end code for scheduling periods of lowered volume is quite messy. While it works, I'm not confident in it. I plan to add unit-tests to this and other parts of the program.
+The slider on the main screen is very ugly. I'm planning to change it once I figure out control templates in WPF.
+
+The program has essentially no unit tests, which I aim to fix.
 
 I have only tested QuietTime on my personal set-up. Please let me know if something doesn't work on your system!
 
