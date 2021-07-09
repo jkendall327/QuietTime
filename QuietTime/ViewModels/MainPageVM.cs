@@ -30,6 +30,8 @@ namespace QuietTime.ViewModels
         public RelayCommand IncreaseVolume { get; set; }
         public RelayCommand DecreaseVolume { get; set; }
 
+        public RelayCommand<MouseWheelEventArgs> ChangeVolumeCommand { get; set; }
+
         public MainPageVM(ILogger<MainPageVM> logger, AudioService audio) : base(audio)
         {
             logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
@@ -43,6 +45,11 @@ namespace QuietTime.ViewModels
 
             IncreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(5));
             DecreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(-5));
+
+            ChangeVolumeCommand = new RelayCommand<MouseWheelEventArgs>((e) =>
+            {
+                ChangeNewMaxVolume(e.Delta / 10);
+            });
 
             LockVolume = new RelayCommand(() => audio.SwitchLock(NewMaxVolume));
 

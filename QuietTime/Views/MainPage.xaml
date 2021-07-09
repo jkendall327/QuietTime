@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
+             xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
              d:Background="{StaticResource UnlockedBackgroundBrush}"
              mc:Ignorable="d" 
@@ -54,11 +55,18 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!--Change slider value with mousewheel-->
+        <behaviors:Interaction.Triggers>
+            <behaviors:EventTrigger EventName="PreviewMouseWheel">
+                <behaviors:InvokeCommandAction Command="{Binding ChangeVolumeCommand}" PassEventArgsToCommand="True"/>
+            </behaviors:EventTrigger>
+        </behaviors:Interaction.Triggers>
+
         <Border Grid.Row="0" Grid.Column="0" BorderThickness="1" BorderBrush="Gray">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="2" Color="Gray" Opacity="0.1"/>
             </Border.Effect>
-            <Grid >
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
