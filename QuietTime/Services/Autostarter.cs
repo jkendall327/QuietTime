@@ -11,9 +11,9 @@ namespace QuietTime.Services
     /// <summary>
     /// Encapsulates letting QuietTime automatically start on sign-in.
     /// </summary>
-    public class AutostartService
+    public class Autostarter
     {
-        private readonly NotificationService _notifications;
+        private readonly Notifier _notifications;
         private readonly ILogger<SettingsPageVM> _logger;
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace QuietTime.Services
         /// </summary>
         /// <param name="notifications">Notification service for this class.</param>
         /// <param name="logger">Logging service for this class.</param>
-        public AutostartService(NotificationService notifications, ILogger<SettingsPageVM> logger)
+        public Autostarter(Notifier notifications, ILogger<SettingsPageVM> logger)
         {
             _notifications = notifications;
             _logger = logger;
@@ -42,6 +42,7 @@ namespace QuietTime.Services
 
             if (File.Exists(shortcutPath)) return;
 
+            // COM interop
             var shell = new WshShell();
             var sc = (IWshShortcut)shell.CreateShortcut(shortcutPath);
 
@@ -55,7 +56,7 @@ namespace QuietTime.Services
 
             _notifications.SendNotification("Start-up",
                 "QuietTime will now automatically start when you sign in. This won't affect other users. This added a shortcut file to your Startup folder.",
-                NotificationService.MessageLevel.Information);
+                Notifier.MessageLevel.Information);
         }
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace QuietTime.Services
 
                 _notifications.SendNotification("Start-up",
                 "QuietTime will no longer automatically start when you sign in. This removed a shortcut file in your Startup folder.",
-                NotificationService.MessageLevel.Information);
+                Notifier.MessageLevel.Information);
             }
             catch (Exception ex)
             {
@@ -83,7 +84,7 @@ namespace QuietTime.Services
 
                 _notifications.SendNotification("Error",
                     "An error ocurred when deleting QuietTime's shortcut. You can try again or delete the shortcut manually to stop the program from automatically starting. Enter 'shell:startup' in Windows Explorer to find it.",
-                    NotificationService.MessageLevel.Error);
+                    Notifier.MessageLevel.Error);
             }
         }
     }

@@ -4,7 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuietTime.Controls" 
-             xmlns:hardcodet="http://www.hardcodet.net/taskbar"
+             xmlns:hardcodet="http://www.hardcodet.net/taskbar" 
+             xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconVM}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
@@ -18,9 +20,7 @@
 
                 <TextBlock Text="{Binding CurrentVolume, StringFormat=Current volume: {0}}"/>
                 <TextBlock Text="{Binding MaxVolume, StringFormat=Current max: {0}}"/>
-                <Separator/>
-
-                <MenuItem Command="{Binding LockVolume}" Header="Lock/unlock"/>
+                
                 <Separator/>
 
                 <MenuItem Header="Show main window" Command="{Binding ShowAppCommand}"/>

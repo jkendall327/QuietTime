@@ -4,32 +4,33 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"         
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-             xmlns:other="clr-namespace:QuietTime.Other"
+             xmlns:other="clr-namespace:QuietTime.Other" 
+             xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:ScheduleWindowVM}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
+    <!--Gradient background-->
     <UserControl.Background>
-        <LinearGradientBrush
-            StartPoint="0.771,0.907"
-            EndPoint="0.229,0.093">
-            <GradientStop
-                Color="#FFFDDDFF"
-                Offset="1" />
-            <GradientStop
-                Color="#bea3e0" />
+        <LinearGradientBrush StartPoint="0.771,0.907" EndPoint="0.229,0.093">
+            <GradientStop Color="#FFFDDDFF" Offset="1" />
+            <GradientStop Color="#bea3e0" />
         </LinearGradientBrush>
     </UserControl.Background>
 
+    <!--Used for displaying the TimeOnly fields of Schedules-->
     <UserControl.Resources>
         <other:DateTimeToTimeOnlyConverter x:Key="timeOnlyToDateTimeConverter" />
     </UserControl.Resources>
 
     <Grid Margin="15 5 15 15">
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" ></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"></ColumnDefinition>
             <ColumnDefinition Width="10"/>
@@ -89,6 +90,7 @@
                        ToolTip="What your volume will be capped to when the schedule ends"/>
                 <xctk:UIntegerUpDown Grid.Row="3" Value="{Binding NewSchedule.VolumeAfter}"/>
 
+                <!--TODO: make this less ugly!-->
                 <Button MaxHeight="30" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" 
                         Command="{Binding AddSchedule}" Content="Add schedule" 
                         ToolTip="Creates a new schedule with the current values"/>
@@ -96,7 +98,6 @@
         </Border>
 
         <!--View of current schedules-->
-
         <DataGrid Grid.Column="2" Grid.Row="1" AutoGenerateColumns="False" SelectedItem="{Binding SelectedSchedule, Mode=OneWayToSource}" ItemsSource="{Binding Schedules}" IsReadOnly="True" 
                   ToolTip="See details about your schedules">
             <DataGrid.Columns>

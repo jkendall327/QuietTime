@@ -9,6 +9,9 @@ using QuietTime.Services;
 
 namespace QuietTime.ViewModels
 {
+    /// <summary>
+    /// Provides properties for <see cref="TrayIconVM"/> and <see cref="MainPageVM"/>.
+    /// </summary>
     public abstract class AudioAwareBaseVM : ViewModelBase
     {
         protected AudioService _audio;

@@ -13,19 +13,19 @@ namespace QuietTime.Other
     /// <summary>
     /// Encapsulates queueing up a <see cref="Schedule"/> for later execution. Wrapper to Quartz.NET.
     /// </summary>
-    public class SchedulerService
+    public class Scheduler
     {
         private readonly IScheduler _scheduler;
-        private readonly ILogger<SchedulerService> _logger;
+        private readonly ILogger<Scheduler> _logger;
         private readonly AudioService _audio;
 
         /// <summary>
-        /// Creates a new <see cref="SchedulerService"/>.
+        /// Creates a new <see cref="Scheduler"/>.
         /// </summary>
         /// <param name="scheduler">The core link to Quartz.NET.</param>
         /// <param name="logger">Logging service for this class.</param>
         /// <param name="audio">Used to actually clamp system volume when jobs fire.</param>
-        public SchedulerService(IScheduler scheduler, ILogger<SchedulerService> logger, AudioService audio)
+        public Scheduler(IScheduler scheduler, ILogger<Scheduler> logger, AudioService audio)
         {
             _scheduler = scheduler;
             _logger = logger;
@@ -50,7 +50,7 @@ namespace QuietTime.Other
                 .WithIdentity(jobIdentity, groupGUID)
                 .Build();
 
-            // each trigger has its own jobdatamap, letting us schedule multiple effects for the same job
+            // multiple triggers let us schedule separate effects for schedule start and end
             ITrigger startTrigger = MakeTrigger(groupGUID, userSchedule.Start.ToString(), userSchedule.VolumeDuring);
             ITrigger endTrigger = MakeTrigger(groupGUID, userSchedule.End.ToString(), userSchedule.VolumeAfter);
 
@@ -123,6 +123,7 @@ namespace QuietTime.Other
 
             foreach (var triggerKey in keys)
             {
+                // todo change this, what if one's true and the next is false?
                 anyPaused = await _scheduler.GetTriggerState(triggerKey) == TriggerState.Paused;
             }
 

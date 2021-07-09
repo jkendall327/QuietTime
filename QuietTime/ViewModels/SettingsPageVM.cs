@@ -67,9 +67,9 @@ namespace QuietTime.ViewModels
             set { UserSettings.Default.DefaultMaxVolume = value; UserSettings.Default.Save(); OnPropertyChanged(nameof(DefaultMaxVolume)); }
         }
 
-        public AutostartService Autostarter { get; }
+        public Autostarter Autostarter { get; }
 
-        public SettingsPageVM(AutostartService _autostart)
+        public SettingsPageVM(Autostarter _autostart)
         {
             Autostarter = _autostart;
         }

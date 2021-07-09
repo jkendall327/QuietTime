@@ -11,6 +11,9 @@
              d:DesignHeight="450" d:DesignWidth="800" 
              Focusable="True" FocusManager.FocusedElement="{Binding ElementName=LockButton}">
     
+    <!--FocusManager sets default focus to the lock button, which enables keyboard commands for some reason-->
+    
+    <!--Keyboard commands for locking audio or changing max volume-->
     <UserControl.InputBindings>
         <KeyBinding Modifiers="Control" Key="L" Command="{Binding LockVolume}" />
 
@@ -32,6 +35,7 @@
         <Image x:Key="unlockedImage" Source="../Resources/unlock.png"/>
     </UserControl.Resources>
 
+    <!--Make background change when audio is locked-->
     <UserControl.Style>
         <Style TargetType="UserControl">
             <Style.Triggers >
@@ -62,6 +66,7 @@
             </behaviors:EventTrigger>
         </behaviors:Interaction.Triggers>
 
+        <!--Add translucent background to labels-->
         <Border Grid.Row="0" Grid.Column="0" BorderThickness="1" BorderBrush="Gray">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="2" Color="Gray" Opacity="0.1"/>
@@ -83,6 +88,7 @@
                     <SolidColorBrush Color="AliceBlue" Opacity="0.25"/>
                 </Grid.Background>
 
+                <!--Labels with info on current audio, new max volume, etc.-->
                 <Label Grid.Row="0" Grid.Column="1" Content="Current volume:" HorizontalAlignment="Right" />
                 <Label Grid.Row="0" Grid.Column="2" Content="{Binding CurrentVolume, FallbackValue=0}" Margin="1 0 0 0" HorizontalAlignment="Left" FontWeight="Light" />
 
@@ -94,17 +100,21 @@
             </Grid>
         </Border>
 
+        <!--Main button that locks system audio-->
         <Button x:Name="LockButton"
                 Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" 
                 Margin="20" MinHeight="30" MinWidth="200" Padding="30"
                 d:Background="{StaticResource LockedBackgroundBrush}"
                 MaxHeight="200"
                 Command="{Binding LockVolume}" ToolTip="Lock or unlock your max volume">
+            
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="25" />
                 </Style>
             </Button.Resources>
+            
+            <!--Change button image and background colour when audio is locked-->
             <Button.Style>
                 <Style TargetType="Button">
                     <Style.Triggers>
@@ -121,11 +131,14 @@
             </Button.Style>
         </Button>
 
+        <!--Slider for setting new max volume-->
         <Slider Grid.Row="0" Grid.Column="3" Grid.RowSpan="2"  Maximum="100" 
                 Background="AliceBlue" BorderThickness="2" BorderBrush="Gray"
                 Orientation="Vertical" HorizontalAlignment="Center" HorizontalContentAlignment="Center"
                 Value="{Binding NewMaxVolume}">
             <Slider.ToolTip>Use this to set your new max volume</Slider.ToolTip>
+            
+            <!--Make very slightly less ugly than the default WPF slider-->
             <Slider.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="15" />
@@ -138,6 +151,7 @@
                     <Setter Property="Foreground" Value="Red" />
                 </Style>
             </Slider.Resources>
+            
             <Slider.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Lock/unlock max volume" Command="{Binding LockVolume}"/>

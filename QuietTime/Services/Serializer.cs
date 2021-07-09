@@ -17,19 +17,19 @@ namespace QuietTime.Services
     /// <summary>
     /// Encapsulates serializing a user's schedules.
     /// </summary>
-    public class SerializerService
+    public class Serializer
     {
         private readonly IConfiguration _config;
-        private readonly ILogger<SerializerService> _logger;
-        private readonly NotificationService _notifications;
+        private readonly ILogger<Serializer> _logger;
+        private readonly Notifier _notifications;
 
         /// <summary>
-        /// Creates a new <see cref="SerializerService"/>.
+        /// Creates a new <see cref="Serializer"/>.
         /// </summary>
         /// <param name="config">Program configuration for this class.</param>
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
-        public SerializerService(IConfiguration config, ILogger<SerializerService> logger, NotificationService notifications)
+        public Serializer(IConfiguration config, ILogger<Serializer> logger, Notifier notifications)
         {
             _config = config;
             _logger = logger;
@@ -48,6 +48,8 @@ namespace QuietTime.Services
 
             try
             {
+                // convert to ScheduleDTO and back because Schedule has fields that are awkward to serialize
+
                 string json = File.ReadAllText(filepath);
                 var result = JsonSerializer.Deserialize<IEnumerable<ScheduleDTO>>(json);
 
@@ -97,17 +99,17 @@ namespace QuietTime.Services
                 });
 
                 _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
-                _notifications.SendNotification("Success", "Your schedules have been successfully saved.", NotificationService.MessageLevel.Information);
+                _notifications.SendNotification("Success", "Your schedules have been successfully saved.", Notifier.MessageLevel.Information);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.LogError(EventIds.SerializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", NotificationService.MessageLevel.Information);
+                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", Notifier.MessageLevel.Information);
             }
             catch (Exception ex)
             {
                 _logger.LogError(EventIds.SerializationError, ex, "Exception when deserializing {file}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", NotificationService.MessageLevel.Information);
+                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", Notifier.MessageLevel.Information);
             }
         }
     }

@@ -14,17 +14,18 @@ namespace QuietTime.Services
     /// <summary>
     /// Encapsulates sending notifications to the user.
     /// </summary>
-    public class NotificationService
+    public class Notifier
     {
+        // there's better ways than using an invisible taskbar icon, but it works for now
         private readonly TaskbarIcon _tray;
         private readonly Dispatcher _dispatcher;
 
         /// <summary>
-        /// Creates a new <see cref="NotificationService"/>.
+        /// Creates a new <see cref="Notifier"/>.
         /// </summary>
         /// <param name="tray"></param>
         /// <param name="settings">Provides access to program settings.</param>
-        public NotificationService(TaskbarIcon tray, Dispatcher dispatcher)
+        public Notifier(TaskbarIcon tray, Dispatcher dispatcher)
         {
             _tray = tray;
             _tray.Visibility = System.Windows.Visibility.Collapsed;

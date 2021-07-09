@@ -13,7 +13,7 @@ namespace QuietTime.Services
     public class AudioService
     {
         private readonly ILogger<AudioService> _log;
-        private readonly NotificationService _notificationService;
+        private readonly Notifier _notificationService;
         private readonly MMDevice _device;
 
         /// <summary>
@@ -38,15 +38,16 @@ namespace QuietTime.Services
         /// <param name="log">Logging framework for this class.</param>
         /// <param name="enumerator">NAudio link that provides access to system audio.</param>
         /// <param name="notificationService">Provides notifications for this class.</param>
-        public AudioService(ILogger<AudioService> log, MMDeviceEnumerator enumerator, NotificationService notificationService)
+        public AudioService(ILogger<AudioService> log, MMDeviceEnumerator enumerator, Notifier notificationService)
         {
             _log = log;
+            _notificationService = notificationService;
 
             // get audio device
             _device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-            _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
 
-            _notificationService = notificationService;
+            // get notified when system audio volume changes
+            _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
         }
 
         /// <summary>
@@ -82,6 +83,7 @@ namespace QuietTime.Services
         public void SwitchLock(int newMaxVolume)
         {
             IsLocked = !IsLocked;
+
             MaxVolume = Math.Clamp(newMaxVolume, 0, 100);
 
             _log.LogInformation(EventIds.MaxVolumeChanged, "Max volume changed to {max}", MaxVolume);
@@ -89,7 +91,7 @@ namespace QuietTime.Services
             _notificationService.SendNotification(
                 "Max volume changed", 
                 $"Your maximum volume has been set to {MaxVolume}.", 
-                NotificationService.MessageLevel.Information);
+                Notifier.MessageLevel.Information);
 
             if (IsLocked)
             {

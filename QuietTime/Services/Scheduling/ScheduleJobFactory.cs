@@ -8,6 +8,9 @@ using System.Windows;
 
 namespace QuietTime
 {
+    /// <summary>
+    /// Creates a new <see cref="ChangeMaxVolumeJob"/> for the scheduler.
+    /// </summary>
     public class ScheduleJobFactory : IJobFactory
     {
         private readonly AudioService _audioService;
@@ -26,6 +29,7 @@ namespace QuietTime
 
         public void ReturnJob(IJob job)
         {
+            // this probably isn't necessary
             var disposable = job as IDisposable;
             disposable?.Dispose();
         }

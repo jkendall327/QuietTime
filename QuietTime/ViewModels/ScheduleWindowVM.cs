@@ -21,21 +21,22 @@ namespace QuietTime.ViewModels
     /// </summary>
     public class ScheduleWindowVM : ViewModelBase
     {
-        private readonly SchedulerService _scheduler;
-        private readonly SerializerService _serializer;
-        private readonly NotificationService _notifier;
+        private readonly Scheduler _scheduler;
+        private readonly Serializer _serializer;
+        private readonly Notifier _notifier;
 
         /// <summary>
         /// Creates a new <see cref="ScheduleWindowVM"/>.
         /// </summary>
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         /// <param name="serializer">Handles serialization of user's schedules.</param>
-        public ScheduleWindowVM(SchedulerService scheduler, SerializerService serializer, NotificationService notifier)
+        public ScheduleWindowVM(Scheduler scheduler, Serializer serializer, Notifier notifier)
         {
             _scheduler = scheduler;
             _serializer = serializer;
             _notifier = notifier;
 
+            // set up commands
             AddSchedule = new AsyncRelayCommand(AddScheduleAsync);
 
             Func<bool> anySchedules = Schedules.Any;
@@ -48,23 +49,33 @@ namespace QuietTime.ViewModels
             DeleteSelected = new AsyncRelayCommand(RemoveScheduleAsync, scheduleIsSelected);
             FlipActivation = new AsyncRelayCommand(FlipActivationAsync, scheduleIsSelected);
 
+            // so we can call NotifyCanExecuteChanged() on them all easily
             Commands = new() { FlipActivation, ActivateAll, DeactivateAll, DeleteSelected, Serialize };
 
+            // get user's schedules
             foreach (var schedule in _serializer.DeserializeSchedules())
             {
                 Schedules.Add(schedule);
             }
         }
 
+        /* Simplify telling all commands to update their CanExecute() */
+
         private readonly List<IRelayCommand> Commands;
+        private void NotifyAllCommands()
+        {
+            foreach (var command in Commands)
+            {
+                command.NotifyCanExecuteChanged();
+            }
+        }
+
+        /* UI Bindings */
+
+        public ObservableCollection<Schedule> Schedules { get; } = new();
 
         /// <summary>
-        /// The user's current schedules, both active and inactive.
-        /// </summary>
-        public ObservableCollection<Schedule> Schedules { get; private set; } = new();
-
-        /// <summary>
-        /// Currently-selected <see cref="Schedules"/>.
+        /// The currently-selected <see cref="Schedules"/>.
         /// </summary>
         public Schedule? SelectedSchedule
         {
@@ -77,16 +88,8 @@ namespace QuietTime.ViewModels
         }
         private Schedule? _selectedSchedule;
 
-        private void NotifyAllCommands()
-        {
-            foreach (var command in Commands)
-            {
-                command.NotifyCanExecuteChanged();
-            }
-        }
-
         /// <summary>
-        /// Binding object for the UI.
+        /// Schedule being created by user.
         /// </summary>
         public Schedule NewSchedule
         {
@@ -94,6 +97,8 @@ namespace QuietTime.ViewModels
             set { SetProperty(ref _newSchedule, value); }
         }
         private Schedule _newSchedule = Schedule.Default;
+
+        /* Commands */
 
         /// <summary>
         /// Creates a schedule.
@@ -121,7 +126,7 @@ namespace QuietTime.ViewModels
         public AsyncRelayCommand DeleteSelected { get; set; }
 
         /// <summary>
-        /// Serializes the current contents of <see cref="Schedules"/> to JSON.
+        /// Serializes the current contents of <see cref="Schedules"/>.
         /// </summary>
         public AsyncRelayCommand Serialize { get; set; }
 
@@ -167,11 +172,20 @@ namespace QuietTime.ViewModels
 
         private async Task AddScheduleAsync()
         {
-            var newSchedule = new Schedule(_newSchedule.Start, _newSchedule.End, _newSchedule.VolumeDuring, _newSchedule.VolumeAfter);
+            Schedule newSchedule = new()
+            {
+                Start = _newSchedule.Start,
+                End = _newSchedule.End,
+                VolumeDuring = _newSchedule.VolumeDuring,
+                VolumeAfter = _newSchedule.VolumeAfter,
+            };
 
             if (Schedules.Any(x => x.Overlaps(newSchedule)))
             {
-                _notifier.SendNotification("Error", "This schedule overlaps with an existing schedule.", NotificationService.MessageLevel.Error);
+                _notifier.SendNotification(title: "Error", 
+                    message: "This schedule overlaps with an existing schedule.", 
+                    level: Notifier.MessageLevel.Error);
+
                 return;
             }
 
@@ -180,6 +194,8 @@ namespace QuietTime.ViewModels
 
             if (!UserSettings.Default.ActivateSchedulesOnCreation) return;
 
+            // we get the job key back as a way to uniquely identify
+            // each schedule in the scheduling system
             var newJobKey = await _scheduler.CreateScheduleAsync(newSchedule);
             newSchedule.IsActive = true;
             newSchedule.Key = newJobKey;

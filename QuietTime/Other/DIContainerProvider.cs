@@ -19,6 +19,9 @@ using Microsoft.Extensions.Logging;
 
 namespace QuietTime.Other
 {
+    /// <summary>
+    /// Encapsulates setting up DI for the project.
+    /// </summary>
     class DIContainerProvider
     { 
         public async Task<ServiceProvider> GetContainer()
@@ -59,29 +62,30 @@ namespace QuietTime.Other
 
             services.AddSingleton<ScheduleJobFactory>();
             services.AddSingleton<IScheduler>(scheduler);
-            services.AddTransient<SchedulerService>();
+            services.AddTransient<Scheduler>();
 
             // notifications
             services.AddSingleton<TaskbarIcon>();
             services.AddSingleton<Dispatcher>(Application.Current.Dispatcher);
-            services.AddSingleton<NotificationService>();
+            services.AddSingleton<Notifier>();
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();
             services.AddSingleton<AudioService>();
 
             // serialization
-            services.AddTransient<SerializerService>();
+            services.AddTransient<Serializer>();
 
             // autostart
-            services.AddTransient<AutostartService>();
+            services.AddTransient<Autostarter>();
 
             // create service provider
             var provider = services.BuildServiceProvider();
 
-            // some final setup, todo change this...
+            // todo: some final setup, change this...
             scheduler.JobFactory = provider.GetRequiredService<ScheduleJobFactory>();
             await scheduler.Start();
+
             return provider;
         }
 

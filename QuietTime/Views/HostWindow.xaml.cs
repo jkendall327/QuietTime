@@ -28,9 +28,9 @@ namespace QuietTime.Views
     {
         // services
         private readonly ILogger<HostWindow> _logger;
-        private readonly NotificationService _notifications;
+        private readonly Notifier _notifications;
 
-        public HostWindow(HostViewModel viewModel, TrayIconVM trayViewModel, ILogger<HostWindow> logger, NotificationService notifications)
+        public HostWindow(HostViewModel viewModel, TrayIconVM trayViewModel, ILogger<HostWindow> logger, Notifier notifications)
         {
             InitializeComponent();
 
@@ -65,7 +65,7 @@ namespace QuietTime.Views
 
             _notifications.SendNotification("Window closed",
                 "QuietTime is still running in the system tray. You can re-open or close it from there.",
-                NotificationService.MessageLevel.Information);
+                Notifier.MessageLevel.Information);
 
             _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
 

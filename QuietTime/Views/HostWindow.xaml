@@ -4,14 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        
-        xmlns:hardcodet="http://www.hardcodet.net/taskbar"
         xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
         xmlns:views="clr-namespace:QuietTime.Views"
         xmlns:components="clr-namespace:QuietTime.Controls"
-        Title="QuietTime" Height="450" Width="800" MinHeight="500" MinWidth="790"
-        FocusManager.FocusedElement="{Binding ElementName=test}">
+        d:DataContext="{d:DesignInstance Type=viewmodels:HostViewModel}"
+        Title="QuietTime" Height="450" Width="800" 
+        MinHeight="500" MinWidth="790"
+        FocusManager.FocusedElement="{Binding ElementName=MainContent}">
+    
+    <!--MinHeight and MinWidth are the smallest size that makes everything look good-->
+    <!--FocusManager sets focus to the ContentControl for keyboard commands-->
 
+    <!--Map viewmodels to views so WPF knows how to display them-->
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewmodels:MainPageVM}">
             <views:MainPage />
@@ -23,17 +27,20 @@
             <views:SettingsPage />
         </DataTemplate>
     </Window.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <ContentControl x:Name="test" Grid.Row="0" Content="{Binding CurrentViewModel}" Focusable="True"/>
+        <!--Displays the current page-->
+        <ContentControl x:Name="MainContent" Grid.Row="0" Content="{Binding CurrentViewModel}" Focusable="True"/>
         
+        <!--The navbar-->
         <components:NavigationBar Grid.Row="1" MaxHeight="50" DataContext="{Binding NavigationBarViewModel}"/>
 
-        <!--traybar icon, has no visible presence and ergo needs no grid row-->
+        <!--The traybar icon, has no visible presence or grid row-->
         <components:TrayIcon x:Name="TraybarIcon"/>
 
     </Grid>

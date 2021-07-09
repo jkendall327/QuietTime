@@ -46,6 +46,8 @@ namespace QuietTime.Models
                 VolumeDuring,
                 VolumeAfter);
 
+            // the jobkey is awkward to serialize so we break it apart
+            // and fuse it back together as needed
             if (KeyName is not null && KeyGroup is not null)
             {
                 ret.Key = new(KeyName, KeyGroup);

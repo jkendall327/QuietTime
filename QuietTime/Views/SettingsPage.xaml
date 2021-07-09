@@ -10,6 +10,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     
+    <!--Gradient background-->
     <UserControl.Background>
         <LinearGradientBrush
             StartPoint="0.771,0.907"
@@ -37,10 +38,12 @@
     </UserControl.Resources>
 
     <Grid Margin="20 10 10 10">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -49,6 +52,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <!--Set style for borders to be translucent, have drop shadow effect, etc.-->
         <Grid.Resources>
             <Style TargetType="Border">
                 <Setter Property="BorderBrush" Value="Gray" />
@@ -79,14 +83,14 @@
 
         <Border Grid.Column="0" Grid.Row="2">
             <CheckBox IsChecked="{Binding LaunchMinimized}">
-                <CheckBox.ToolTip>When QuietTime starts automatically, it will open minimized, in the system tray.</CheckBox.ToolTip>
+                <CheckBox.ToolTip>When QuietTime will open minimized, in the system tray.</CheckBox.ToolTip>
                 <TextBlock>Start minimized</TextBlock>
             </CheckBox>
         </Border>
 
         <Border Grid.Column="0" Grid.Row="3">
             <CheckBox IsChecked="{Binding EnableNotifications}">
-                <CheckBox.ToolTip>QuietTime will send your notifications.</CheckBox.ToolTip>
+                <CheckBox.ToolTip>QuietTime will send you notifications.</CheckBox.ToolTip>
                 <TextBlock>Enable notifications</TextBlock>
             </CheckBox>
         </Border>
@@ -100,7 +104,7 @@
 
         <Border Grid.Column="2" Grid.Row="2">
             <CheckBox IsChecked="{Binding LockOnStartup}">
-                <CheckBox.ToolTip>QuietTime will lock your audio on startup to your default setting.</CheckBox.ToolTip>
+                <CheckBox.ToolTip>QuietTime will lock your audio on startup to the default max volume.</CheckBox.ToolTip>
                 <TextBlock>Lock audio on startup</TextBlock>
             </CheckBox>
         </Border>

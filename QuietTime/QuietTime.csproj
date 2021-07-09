@@ -22,15 +22,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="icon.ico" />
     <None Remove="Resources\clock.png" />
     <None Remove="Resources\home.png" />
     <None Remove="Resources\lock.png" />
     <None Remove="Resources\settings.png" />
     <None Remove="Resources\unlock.png" />
-    <None Include="icon.ico">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
   <ItemGroup>

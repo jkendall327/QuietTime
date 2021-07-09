@@ -25,6 +25,8 @@ namespace QuietTime.ViewModels
             ScheduleVM = scheduleVM;
             SettingsVM = settingsVM;
 
+            // view just picks from one of the properties above to set the new VM
+            // doesn't scale but it works alright for this
             NavigateCommand = new RelayCommand<ViewModelBase>((vm) =>
             {
                 if (vm is not null) navigator.CurrentViewModel = vm;
@@ -35,6 +37,7 @@ namespace QuietTime.ViewModels
         {
             get
             {
+                // todo: this might not work right with single-file publish
                 var version = Assembly.GetExecutingAssembly().GetName().Version;
                 DateTime buildDate = new FileInfo(AppContext.BaseDirectory).LastWriteTime;
 

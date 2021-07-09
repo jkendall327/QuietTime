@@ -98,5 +98,7 @@ namespace QuietTime.Models
             _volumeDuring = volumeDuring;
             _volumeAfter = volumeAfter;
         }
+
+        public Schedule() { }
     }
 }
