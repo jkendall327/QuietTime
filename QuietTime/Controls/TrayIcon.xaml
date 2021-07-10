@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuietTime.Controls" 
+             xmlns:other="clr-namespace:QuietTime.Other" 
              xmlns:hardcodet="http://www.hardcodet.net/taskbar" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:TrayIconVM}"
@@ -14,9 +15,18 @@
         <BitmapImage x:Key="Icon" UriSource="../Resources/icon.ico" />
     </UserControl.Resources>
 
-    <hardcodet:TaskbarIcon DataContext="{Binding}" ToolTipText="QuietTime" IconSource="{StaticResource Icon}">
+    <hardcodet:TaskbarIcon Name="test" ToolTipText="QuietTime" IconSource="{StaticResource Icon}">
+        
+        <!--major subtleties here-->
+        <!--context menus aren't part of the same visual tree and ergo don't inherit datacontext-->
+        <!--we have to use a proxy class that inherits from Freezeable to get the effect we want-->
+        <!--https://thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/-->
+        <hardcodet:TaskbarIcon.Resources>
+            <other:BindingProxy x:Key="proxy" Data="{Binding}"/>
+        </hardcodet:TaskbarIcon.Resources>
+        
         <hardcodet:TaskbarIcon.ContextMenu>
-            <ContextMenu>
+            <ContextMenu DataContext="{Binding Path=Data, Source={StaticResource proxy}}">
 
                 <TextBlock Text="{Binding CurrentVolume, StringFormat=Current volume: {0}}"/>
                 <TextBlock Text="{Binding MaxVolume, StringFormat=Current max: {0}}"/>
