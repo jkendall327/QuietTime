@@ -20,29 +20,35 @@ jobs:
         dotnet-version: '6.0.x'
         include-prerelease: true
       
-    - name: Publish to single file
+    - name: Publish project
       run: dotnet publish .\QuietTime\QuietTime.csproj -o Output  
 
-    - name: Zip files
-      run: 7z a QuietTime.zip Output\*
+    - name: Upload zipped binary
+      uses: actions/upload-artifact@v2
+      with:
+        name: app
+        path: Output/
 
-    - name: Print current directory
-      run: dir
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
 
-    - name: Print current directory 2
-      run: dir Output
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: app
 
     - name: Create GitHub release
       uses: actions/create-release@v1
       id: create_release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        version: 0.0.2
       with:
         draft: true
         prerelease: false
-        release_name: Release ${version}
-        tag_name: ${{ github.ref }}
+        release_name: V${{ github.run_number }}
+        tag_name: ${{ github.run_number }}
         body_path: docs\CHANGELOG.MD
 
     - name: Upload attachment
@@ -51,6 +57,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: QuietTime.zip
-        asset_name: myRelease
+        asset_path: ./app.zip
+        asset_name: Quiet-Time-v${{ github.run_number }}.zip
         asset_content_type: application/zip
