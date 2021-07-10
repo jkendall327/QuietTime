@@ -96,7 +96,7 @@
                 <Label Grid.Row="1" Grid.Column="2"  Content="{Binding NewMaxVolume, FallbackValue=0}" Margin="1 0 0 0" HorizontalAlignment="Left" FontWeight="Light"/>
 
                 <Label Grid.Row="2" Grid.Column="1" Content="Current max volume:" HorizontalAlignment="Right"/>
-                <Label Grid.Row="2" Grid.Column="2" Content="{Binding CurrentVolume, FallbackValue=0}" Margin="1 0 0 0" HorizontalAlignment="Left" FontWeight="Light" />
+                <Label Grid.Row="2" Grid.Column="2" Content="{Binding MaxVolume, FallbackValue=0}" Margin="1 0 0 0" HorizontalAlignment="Left" FontWeight="Light" />
             </Grid>
         </Border>
 
