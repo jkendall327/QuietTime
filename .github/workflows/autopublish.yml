@@ -21,7 +21,7 @@ jobs:
         include-prerelease: true
       
     - name: Publish project
-      run: msbuild .\QuietTime.sln /p:OutDir=Output/ /p:Configuration=Release
+      run: dotnet publish QuietTime\QuietTime.csproj /p:PublishProfile=QuietTime\Properties\PublishProfiles\SingleFileOutputProfile.pubxml -o Output
 
     - name: Upload zipped binary
       uses: actions/upload-artifact@v2
