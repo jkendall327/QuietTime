@@ -63,13 +63,20 @@ namespace QuietTime.Views
 
             e.Cancel = _closeToTray;
 
-            _notifications.SendNotification("Window closed",
-                "QuietTime is still running in the system tray. You can re-open or close it from there.",
-                Notifier.MessageLevel.Information);
+            if (e.Cancel)
+            {
+                _notifications.SendNotification("Window closed",
+                    "QuietTime is still running in the system tray. You can re-open or close it from there.",
+                    Notifier.MessageLevel.Information);
 
-            _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
+                _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
 
-            this.Hide();
+                this.Hide();
+
+                return;
+            }
+
+            base.OnClosed(e);
         }
     }
 }
