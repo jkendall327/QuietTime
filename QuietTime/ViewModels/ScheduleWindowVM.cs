@@ -3,7 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
-using QuietTime.Models;
+using QuietTime.Core.Services.Scheduling;
+using QuietTime.Core.Models;
 using QuietTime.Other;
 using QuietTime.Services;
 using System;
@@ -13,6 +14,8 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 
 namespace QuietTime.ViewModels
 {
@@ -23,14 +26,14 @@ namespace QuietTime.ViewModels
     {
         private readonly Scheduler _scheduler;
         private readonly Serializer _serializer;
-        private readonly Notifier _notifier;
+        private readonly INotifier _notifier;
 
         /// <summary>
         /// Creates a new <see cref="ScheduleWindowVM"/>.
         /// </summary>
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         /// <param name="serializer">Handles serialization of user's schedules.</param>
-        public ScheduleWindowVM(Scheduler scheduler, Serializer serializer, Notifier notifier)
+        public ScheduleWindowVM(Scheduler scheduler, Serializer serializer, INotifier notifier)
         {
             _scheduler = scheduler;
             _serializer = serializer;
@@ -184,7 +187,7 @@ namespace QuietTime.ViewModels
             {
                 _notifier.SendNotification(title: "Error", 
                     message: "This schedule overlaps with an existing schedule.", 
-                    level: Notifier.MessageLevel.Error);
+                    level: MessageLevel.Error);
 
                 return;
             }

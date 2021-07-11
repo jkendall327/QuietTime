@@ -1,13 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using QuietTime.Models;
-using QuietTime.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace QuietTime.Other
+namespace QuietTime.Core.Other
 {
     /// <summary>
     /// Provides strongly-typed access to <see cref="EventId"/> instances for logging.

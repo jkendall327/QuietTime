@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Core.Services;
 using QuietTime.Services;
 
 namespace QuietTime.ViewModels
 {
     public class TrayIconVM : AudioAwareBaseVM
     {
-        public TrayIconVM(AudioService audio) : base(audio)
+        public TrayIconVM(IAudioLocker audio) : base(audio)
         {
 
             ShowAppCommand = new RelayCommand(() => ShowAppRequested?.Invoke(this, EventArgs.Empty));

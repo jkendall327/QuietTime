@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using QuietTime.Core.Models;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 using QuietTime.Models;
 using QuietTime.Other;
 using System;
@@ -21,7 +24,7 @@ namespace QuietTime.Services
     {
         private readonly IConfiguration _config;
         private readonly ILogger<Serializer> _logger;
-        private readonly Notifier _notifications;
+        private readonly INotifier _notifications;
 
         /// <summary>
         /// Creates a new <see cref="Serializer"/>.
@@ -29,7 +32,7 @@ namespace QuietTime.Services
         /// <param name="config">Program configuration for this class.</param>
         /// <param name="logger">Logging framework for this class.</param>
         /// <param name="notifications">Notification service for this class.</param>
-        public Serializer(IConfiguration config, ILogger<Serializer> logger, Notifier notifications)
+        public Serializer(IConfiguration config, ILogger<Serializer> logger, INotifier notifications)
         {
             _config = config;
             _logger = logger;
@@ -99,17 +102,17 @@ namespace QuietTime.Services
                 });
 
                 _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
-                _notifications.SendNotification("Success", "Your schedules have been successfully saved.", Notifier.MessageLevel.Information);
+                _notifications.SendNotification("Success", "Your schedules have been successfully saved.", MessageLevel.Information);
             }
             catch (FileNotFoundException ex)
             {
                 _logger.LogError(EventIds.SerializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", Notifier.MessageLevel.Information);
+                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", MessageLevel.Information);
             }
             catch (Exception ex)
             {
                 _logger.LogError(EventIds.SerializationError, ex, "Exception when deserializing {file}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", Notifier.MessageLevel.Information);
+                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", MessageLevel.Information);
             }
         }
     }

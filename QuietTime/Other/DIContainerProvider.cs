@@ -16,6 +16,8 @@ using QuietTime.Views;
 using System.Windows.Threading;
 using System.Windows;
 using Microsoft.Extensions.Logging;
+using QuietTime.Core.Services.Scheduling;
+using QuietTime.Core.Services;
 
 namespace QuietTime.Other
 {
@@ -67,11 +69,13 @@ namespace QuietTime.Other
             // notifications
             services.AddSingleton<TaskbarIcon>();
             services.AddSingleton<Dispatcher>(Application.Current.Dispatcher);
-            services.AddSingleton<Notifier>();
+
+            services.AddSingleton<INotifier, Notifier>();
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();
-            services.AddSingleton<AudioService>();
+
+            services.AddSingleton<IAudioLocker, AudioLocker>();
 
             // serialization
             services.AddTransient<Serializer>();

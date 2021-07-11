@@ -2,7 +2,7 @@
 using Quartz;
 using System;
 
-namespace QuietTime.Models
+namespace QuietTime.Core.Models
 {
     /// <summary>
     /// Represents a a period during which the system audio will be capped to a specific volume.

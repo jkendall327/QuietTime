@@ -73,6 +73,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\QuietTime.Core\QuietTime.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\icon.ico" />
     <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\unlock.png" />

@@ -1,22 +1,19 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
-using QuietTime.Other;
-using QuietTime.Services;
 using System;
-using System.Windows;
 
-namespace QuietTime
+namespace QuietTime.Core.Services.Scheduling
 {
     /// <summary>
     /// Creates a new <see cref="ChangeMaxVolumeJob"/> for the scheduler.
     /// </summary>
     public class ScheduleJobFactory : IJobFactory
     {
-        private readonly AudioService _audioService;
+        private readonly IAudioLocker _audioService;
         private readonly ILogger<ChangeMaxVolumeJob> _logger;
 
-        public ScheduleJobFactory(AudioService audioService, ILogger<ChangeMaxVolumeJob> logger)
+        public ScheduleJobFactory(IAudioLocker audioService, ILogger<ChangeMaxVolumeJob> logger)
         {
             _audioService = audioService;
             _logger = logger;

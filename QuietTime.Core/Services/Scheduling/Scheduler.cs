@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
-using QuietTime.Models;
-using QuietTime.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
+using QuietTime.Core.Services.Scheduling;
+using QuietTime.Core.Models;
+using QuietTime.Core.Other;
 
-namespace QuietTime.Other
+namespace QuietTime.Core.Services.Scheduling
 {
     /// <summary>
     /// Encapsulates queueing up a <see cref="Schedule"/> for later execution. Wrapper to Quartz.NET.
@@ -17,7 +17,7 @@ namespace QuietTime.Other
     {
         private readonly IScheduler _scheduler;
         private readonly ILogger<Scheduler> _logger;
-        private readonly AudioService _audio;
+        private readonly IAudioLocker _audio;
 
         /// <summary>
         /// Creates a new <see cref="Scheduler"/>.
@@ -25,7 +25,7 @@ namespace QuietTime.Other
         /// <param name="scheduler">The core link to Quartz.NET.</param>
         /// <param name="logger">Logging service for this class.</param>
         /// <param name="audio">Used to actually clamp system volume when jobs fire.</param>
-        public Scheduler(IScheduler scheduler, ILogger<Scheduler> logger, AudioService audio)
+        public Scheduler(IScheduler scheduler, ILogger<Scheduler> logger, IAudioLocker audio)
         {
             _scheduler = scheduler;
             _logger = logger;

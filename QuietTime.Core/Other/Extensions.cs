@@ -1,11 +1,11 @@
-﻿using QuietTime.Models;
+﻿using QuietTime.Core.Models;
 using System;
 
-namespace QuietTime.Other
+namespace QuietTime.Core.Other
 {
-    internal static class Extensions
+    public static class Extensions
     {
-        internal static int ToPercentage(this float val)
+        public static int ToPercentage(this float val)
         {
             val = Math.Clamp(val, 0, 1);
 
@@ -13,7 +13,7 @@ namespace QuietTime.Other
             return (int)val;
         }
 
-        internal static bool Overlaps(this Schedule x, Schedule y)
+        public static bool Overlaps(this Schedule x, Schedule y)
         {
             if (x is null || y is null) return false;
 

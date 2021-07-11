@@ -1,5 +1,7 @@
 ﻿using IWshRuntimeLibrary;
 using Microsoft.Extensions.Logging;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 using QuietTime.Other;
 using QuietTime.ViewModels;
 using System;
@@ -13,7 +15,7 @@ namespace QuietTime.Services
     /// </summary>
     public class Autostarter
     {
-        private readonly Notifier _notifications;
+        private readonly INotifier _notifications;
         private readonly ILogger<SettingsPageVM> _logger;
 
         /// <summary>
@@ -21,7 +23,7 @@ namespace QuietTime.Services
         /// </summary>
         /// <param name="notifications">Notification service for this class.</param>
         /// <param name="logger">Logging service for this class.</param>
-        public Autostarter(Notifier notifications, ILogger<SettingsPageVM> logger)
+        public Autostarter(INotifier notifications, ILogger<SettingsPageVM> logger)
         {
             _notifications = notifications;
             _logger = logger;
@@ -56,7 +58,7 @@ namespace QuietTime.Services
 
             _notifications.SendNotification("Start-up",
                 "QuietTime will now automatically start when you sign in. This won't affect other users. This added a shortcut file to your Startup folder.",
-                Notifier.MessageLevel.Information);
+                MessageLevel.Information);
         }
 
         /// <summary>
@@ -76,7 +78,7 @@ namespace QuietTime.Services
 
                 _notifications.SendNotification("Start-up",
                 "QuietTime will no longer automatically start when you sign in. This removed a shortcut file in your Startup folder.",
-                Notifier.MessageLevel.Information);
+                MessageLevel.Information);
             }
             catch (Exception ex)
             {
@@ -84,7 +86,7 @@ namespace QuietTime.Services
 
                 _notifications.SendNotification("Error",
                     "An error ocurred when deleting QuietTime's shortcut. You can try again or delete the shortcut manually to stop the program from automatically starting. Enter 'shell:startup' in Windows Explorer to find it.",
-                    Notifier.MessageLevel.Error);
+                    MessageLevel.Error);
             }
         }
     }

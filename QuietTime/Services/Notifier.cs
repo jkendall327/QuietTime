@@ -1,5 +1,7 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Extensions.Options;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 using QuietTime.Other;
 using System;
 using System.Collections.Generic;
@@ -14,7 +16,7 @@ namespace QuietTime.Services
     /// <summary>
     /// Encapsulates sending notifications to the user.
     /// </summary>
-    public class Notifier
+    public class Notifier : INotifier
     {
         // there's better ways than using an invisible taskbar icon, but it works for now
         private readonly TaskbarIcon _tray;
@@ -30,32 +32,6 @@ namespace QuietTime.Services
             _tray = tray;
             _tray.Visibility = System.Windows.Visibility.Collapsed;
             _dispatcher = dispatcher;
-        }
-
-        /// <summary>
-        /// Level of importance of notifications sent to user.
-        /// </summary>
-        public enum MessageLevel
-        {
-            /// <summary>
-            /// Message has unclassified importance.
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Message indicates no issues with the system.
-            /// </summary>
-            Information,
-
-            /// <summary>
-            /// Message indicates a failure that the system can work through.
-            /// </summary>
-            Warning,
-
-            /// <summary>
-            /// Message indicates a catastrophic failure the system can not recover from.
-            /// </summary>
-            Error
         }
 
         /// <summary>

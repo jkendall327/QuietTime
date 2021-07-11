@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 using QuietTime.Other;
 using QuietTime.Services;
 using QuietTime.ViewModels;
@@ -28,9 +30,9 @@ namespace QuietTime.Views
     {
         // services
         private readonly ILogger<HostWindow> _logger;
-        private readonly Notifier _notifications;
+        private readonly INotifier _notifications;
 
-        public HostWindow(HostViewModel viewModel, TrayIconVM trayViewModel, ILogger<HostWindow> logger, Notifier notifications)
+        public HostWindow(HostViewModel viewModel, TrayIconVM trayViewModel, ILogger<HostWindow> logger, INotifier notifications)
         {
             InitializeComponent();
 
@@ -67,7 +69,7 @@ namespace QuietTime.Views
             {
                 _notifications.SendNotification("Window closed",
                     "QuietTime is still running in the system tray. You can re-open or close it from there.",
-                    Notifier.MessageLevel.Information);
+                    MessageLevel.Information);
 
                 _logger.LogInformation(EventIds.AppClosingCancelled, "App sent to system tray.");
 
