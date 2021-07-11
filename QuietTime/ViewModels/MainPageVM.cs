@@ -29,10 +29,8 @@ namespace QuietTime.ViewModels
         private bool _isLocked;
 
         public RelayCommand LockVolume { get; set; }
-        public RelayCommand IncreaseVolume { get; set; }
-        public RelayCommand DecreaseVolume { get; set; }
-
-        public RelayCommand<MouseWheelEventArgs> ChangeVolumeCommand { get; set; }
+        public RelayCommand<string> ChangeVolumeCommand { get; set; }
+        public RelayCommand<MouseWheelEventArgs> MousewheelChangeVolumeCommand { get; set; }
 
         public MainPageVM(ILogger<MainPageVM> logger, IAudioLocker audio) : base(audio)
         {
@@ -45,13 +43,11 @@ namespace QuietTime.ViewModels
                 audio.SwitchLock(NewMaxVolume);
             }
 
-            // todo: parameterize this command
-            IncreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(5));
-            DecreaseVolume = new RelayCommand(() => ChangeNewMaxVolume(-5));
+            ChangeVolumeCommand = new RelayCommand<string>((amount) => ChangeNewMaxVolume(int.Parse(amount)));
 
             // delta is how much mousewheel was moved
             // divide by ten because it's too big otherwise
-            ChangeVolumeCommand = new RelayCommand<MouseWheelEventArgs>((e) =>
+            MousewheelChangeVolumeCommand = new RelayCommand<MouseWheelEventArgs>((e) =>
             {
                 ChangeNewMaxVolume(e!.Delta / 10);
             });
