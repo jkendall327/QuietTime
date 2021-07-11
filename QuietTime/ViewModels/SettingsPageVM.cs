@@ -1,12 +1,5 @@
-﻿using IWshRuntimeLibrary;
-using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using QuietTime.Other;
+﻿using QuietTime.Other;
 using QuietTime.Services;
-using System;
-using System.IO;
-using File = System.IO.File;
 
 namespace QuietTime.ViewModels
 {

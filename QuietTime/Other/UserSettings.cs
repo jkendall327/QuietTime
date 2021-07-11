@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
@@ -20,10 +21,10 @@ namespace QuietTime.Other
                 }
 
                 var builder = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .SetBasePath(AppContext.BaseDirectory)
                     .AddJsonFile("usersettings.json", optional: false, reloadOnChange: true);
 
-                _jsonSource = $"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}usersettings.json";
+                _jsonSource = $"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}usersettings.json";
 
                 var config = builder.Build();
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Core.Services;
 using QuietTime.Services;
 
 namespace QuietTime.ViewModels
@@ -14,9 +15,9 @@ namespace QuietTime.ViewModels
     /// </summary>
     public abstract class AudioAwareBaseVM : ViewModelBase
     {
-        protected AudioService _audio;
+        protected IAudioLocker _audio;
 
-        protected AudioAwareBaseVM(AudioService audio)
+        protected AudioAwareBaseVM(IAudioLocker audio)
         {
             _audio = audio;
             audio.VolumeChanged += (s, e) => OnPropertyChanged(nameof(CurrentVolume));

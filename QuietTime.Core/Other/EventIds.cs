@@ -1,13 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using QuietTime.Models;
-using QuietTime.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace QuietTime.Other
+namespace QuietTime.Core.Other
 {
     /// <summary>
     /// Provides strongly-typed access to <see cref="EventId"/> instances for logging.
@@ -55,24 +48,14 @@ namespace QuietTime.Other
         public static readonly EventId AppClosingCancelled = new(7, "App close cancelled");
 
         /// <summary>
-        /// Used when deserializing a user's schedules fails.
+        /// Used when deserializing a user's schedules.
         /// </summary>
-        public static readonly EventId DeserializationError = new(8, "Deserialization error");
+        public static readonly EventId Deserialization = new(8, "Deserialization");
 
         /// <summary>
-        /// Used when deserializing a user's schedules succeeds.
+        /// Used when serializing a user's schedules.
         /// </summary>
-        public static readonly EventId DeserializationSuccess = new(9, "Deserialization success");
-
-        /// <summary>
-        /// Used when serializing a user's schedules fails.
-        /// </summary>
-        public static readonly EventId SerializationError = new(10, "Serialization error");
-
-        /// <summary>
-        /// Used when serializing a user's schedules succeeds.
-        /// </summary>
-        public static readonly EventId SerializationSuccess = new(11, "Serialization success");
+        public static readonly EventId Serialization = new(10, "Serialization");
 
         /// <summary>
         /// Used when user makes QuietTime load on sign-in.

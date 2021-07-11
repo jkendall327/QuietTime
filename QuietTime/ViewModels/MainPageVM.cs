@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 using QuietTime.Other;
 using QuietTime.Services;
 using System;
@@ -32,7 +34,7 @@ namespace QuietTime.ViewModels
 
         public RelayCommand<MouseWheelEventArgs> ChangeVolumeCommand { get; set; }
 
-        public MainPageVM(ILogger<MainPageVM> logger, AudioService audio) : base(audio)
+        public MainPageVM(ILogger<MainPageVM> logger, IAudioLocker audio) : base(audio)
         {
             logger.LogInformation(EventIds.AppStartup, "App booted succesfully.");
 

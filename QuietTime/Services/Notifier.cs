@@ -1,5 +1,7 @@
 ﻿using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Extensions.Options;
+using QuietTime.Core.Other;
+using QuietTime.Core.Services;
 using QuietTime.Other;
 using System;
 using System.Collections.Generic;
@@ -12,19 +14,14 @@ using System.Windows.Threading;
 namespace QuietTime.Services
 {
     /// <summary>
-    /// Encapsulates sending notifications to the user.
+    /// <inheritdoc cref="INotifier"/>
     /// </summary>
-    public class Notifier
+    internal class Notifier : INotifier
     {
         // there's better ways than using an invisible taskbar icon, but it works for now
         private readonly TaskbarIcon _tray;
         private readonly Dispatcher _dispatcher;
 
-        /// <summary>
-        /// Creates a new <see cref="Notifier"/>.
-        /// </summary>
-        /// <param name="tray"></param>
-        /// <param name="settings">Provides access to program settings.</param>
         public Notifier(TaskbarIcon tray, Dispatcher dispatcher)
         {
             _tray = tray;
@@ -32,38 +29,6 @@ namespace QuietTime.Services
             _dispatcher = dispatcher;
         }
 
-        /// <summary>
-        /// Level of importance of notifications sent to user.
-        /// </summary>
-        public enum MessageLevel
-        {
-            /// <summary>
-            /// Message has unclassified importance.
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Message indicates no issues with the system.
-            /// </summary>
-            Information,
-
-            /// <summary>
-            /// Message indicates a failure that the system can work through.
-            /// </summary>
-            Warning,
-
-            /// <summary>
-            /// Message indicates a catastrophic failure the system can not recover from.
-            /// </summary>
-            Error
-        }
-
-        /// <summary>
-        /// Sends a notification to the user.
-        /// </summary>
-        /// <param name="title">The title of the message.</param>
-        /// <param name="message">The content of the message.</param>
-        /// <param name="level">Indicates the relative importance of the message.</param>
         public void SendNotification(string title, string message, MessageLevel level)
         {
             if (!UserSettings.Default.NotificationsEnabled) return;

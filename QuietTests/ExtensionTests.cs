@@ -1,8 +1,9 @@
 using FluentAssertions;
 using QuietTime.Models;
-using QuietTime.Other;
+using QuietTime.Core.Other;
 using System;
 using Xunit;
+using QuietTime.Core.Models;
 
 namespace QuietTests
 {

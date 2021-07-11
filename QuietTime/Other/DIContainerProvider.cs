@@ -16,6 +16,8 @@ using QuietTime.Views;
 using System.Windows.Threading;
 using System.Windows;
 using Microsoft.Extensions.Logging;
+using QuietTime.Core.Services.Scheduling;
+using QuietTime.Core.Services;
 
 namespace QuietTime.Other
 {
@@ -39,7 +41,8 @@ namespace QuietTime.Other
         {
             // configuration
             IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                // using Directory.GetCurrentDirectory() here breaks when launching from shortcut file
+                .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
@@ -62,19 +65,20 @@ namespace QuietTime.Other
 
             services.AddSingleton<ScheduleJobFactory>();
             services.AddSingleton<IScheduler>(scheduler);
-            services.AddTransient<Scheduler>();
+            services.AddTransient<ISchedulingService, Scheduler>();
 
             // notifications
             services.AddSingleton<TaskbarIcon>();
             services.AddSingleton<Dispatcher>(Application.Current.Dispatcher);
-            services.AddSingleton<Notifier>();
+
+            services.AddSingleton<INotifier, Notifier>();
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();
-            services.AddSingleton<AudioService>();
+            services.AddSingleton<IAudioLocker, AudioLocker>();
 
             // serialization
-            services.AddTransient<Serializer>();
+            services.AddTransient<ISerializer, Serializer>();
 
             // autostart
             services.AddTransient<Autostarter>();

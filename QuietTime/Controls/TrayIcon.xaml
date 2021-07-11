@@ -15,9 +15,8 @@
         <BitmapImage x:Key="Icon" UriSource="../Resources/icon.ico" />
     </UserControl.Resources>
 
-    <hardcodet:TaskbarIcon Name="test" ToolTipText="QuietTime" IconSource="{StaticResource Icon}">
+    <hardcodet:TaskbarIcon Name="test" ToolTipText="QuietTime" IconSource="{StaticResource Icon}" DoubleClickCommand="{Binding ShowAppCommand}">
         
-        <!--major subtleties here-->
         <!--context menus aren't part of the same visual tree and ergo don't inherit datacontext-->
         <!--we have to use a proxy class that inherits from Freezeable to get the effect we want-->
         <!--https://thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/-->

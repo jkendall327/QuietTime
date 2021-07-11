@@ -1,44 +1,33 @@
 ﻿using Microsoft.Extensions.Logging;
 using Quartz;
-using QuietTime.Models;
-using QuietTime.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
+using QuietTime.Core.Services.Scheduling;
+using QuietTime.Core.Models;
+using QuietTime.Core.Other;
 
-namespace QuietTime.Other
+namespace QuietTime.Core.Services.Scheduling
 {
     /// <summary>
-    /// Encapsulates queueing up a <see cref="Schedule"/> for later execution. Wrapper to Quartz.NET.
+    /// <inheritdoc cref="ISchedulingService"/>
     /// </summary>
-    public class Scheduler
+    public class Scheduler : ISchedulingService
     {
         private readonly IScheduler _scheduler;
         private readonly ILogger<Scheduler> _logger;
-        private readonly AudioService _audio;
+        private readonly IAudioLocker _audio;
 
-        /// <summary>
-        /// Creates a new <see cref="Scheduler"/>.
-        /// </summary>
-        /// <param name="scheduler">The core link to Quartz.NET.</param>
-        /// <param name="logger">Logging service for this class.</param>
-        /// <param name="audio">Used to actually clamp system volume when jobs fire.</param>
-        public Scheduler(IScheduler scheduler, ILogger<Scheduler> logger, AudioService audio)
+        public Scheduler(IScheduler scheduler, ILogger<Scheduler> logger, IAudioLocker audio)
         {
             _scheduler = scheduler;
             _logger = logger;
             _audio = audio;
         }
 
-        private string NewGuid => Guid.NewGuid().ToString();
+        private static string NewGuid => Guid.NewGuid().ToString();
 
-        /// <summary>
-        /// Gives a user's schedule to the scheduler for later execution.
-        /// </summary>
-        /// <param name="userSchedule">The times and volumes to be executed later.</param>
-        /// <returns>A <see cref="JobKey"/> for uniquely identifying this schedule.</returns>
         public async Task<JobKey> CreateScheduleAsync(Schedule userSchedule)
         {
             // groupGUID is given to the job and both triggers, jobIdentity is just for the job
@@ -84,11 +73,6 @@ namespace QuietTime.Other
                 .Build();
         }
 
-        /// <summary>
-        /// Deletes a schedule permanently.
-        /// </summary>
-        /// <param name="key">The unique key of the job to be deletes.</param>
-        /// <returns>true if the schedule was found and deleted succesfully.</returns>
         public async Task<bool> DeleteScheduleAsync(JobKey key)
         {
             _logger.LogInformation(EventIds.JobDeleted, "Job {key} deleted.", key);
@@ -97,10 +81,6 @@ namespace QuietTime.Other
             return await _scheduler.DeleteJob(key);
         }
 
-        /// <summary>
-        /// Activates paused schedules and pauses activated schedules.
-        /// </summary>
-        /// <param name="key">The unique <see cref="JobKey"/> of the schedule to be paused.</param>
         public async Task FlipScheduleActivation(JobKey key)
         {
             bool anyPaused = await JobHasAnyPausedTriggers(key);
@@ -130,14 +110,7 @@ namespace QuietTime.Other
             return anyPaused;
         }
 
-        /// <summary>
-        /// Pauses all schedules.
-        /// </summary>
         public async Task PauseAll() => await _scheduler.PauseAll();
-
-        /// <summary>
-        /// Activates all schedules.
-        /// </summary>
         public async Task ResumeAll() => await _scheduler.ResumeAll();
     }
 }
