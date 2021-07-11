@@ -39,6 +39,11 @@ jobs:
       with:
         name: app
 
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
     - name: Create GitHub release
       uses: actions/create-release@v1
       id: create_release
