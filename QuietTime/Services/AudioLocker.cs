@@ -13,36 +13,18 @@ namespace QuietTime.Services
      */
 
     /// <summary>
-    /// Encapsulates manipulation of system audio through the NAudio library.
+    /// <inheritdoc cref="IAudioLocker"/>
     /// </summary>
-    public class AudioLocker : IAudioLocker
+    internal class AudioLocker : IAudioLocker
     {
         private readonly ILogger<AudioLocker> _log;
         private readonly INotifier _notificationService;
         private readonly MMDevice _device;
 
-        /// <summary>
-        /// Fires when <see cref="IsLocked"/> changes. The boolean value represents whether system audio is currently locked.
-        /// </summary>
         public event EventHandler<bool>? LockStatusChanged;
-
-        /// <summary>
-        /// Fires when <see cref="CurrentVolume"/> changes. The int represents the new volume as a percentage.
-        /// </summary>
         public event EventHandler<int>? VolumeChanged;
-
-        /// <summary>
-        /// Fires when <see cref="MaxVolume"/> changes. The int represents the new max volume as a percentage.
-        /// </summary>
         public event EventHandler<int>? MaxVolumeChanged;
 
-        /// <summary>
-        /// Creates a new <see cref="AudioLocker"/>.
-        /// </summary>
-        /// <param name="config">Program configuration.</param>
-        /// <param name="log">Logging framework for this class.</param>
-        /// <param name="enumerator">NAudio link that provides access to system audio.</param>
-        /// <param name="notificationService">Provides notifications for this class.</param>
         public AudioLocker(ILogger<AudioLocker> log, MMDeviceEnumerator enumerator, INotifier notificationService)
         {
             _log = log;
@@ -55,9 +37,6 @@ namespace QuietTime.Services
             _device.AudioEndpointVolume.OnVolumeNotification += OnVolumeChange;
         }
 
-        /// <summary>
-        /// The system's current volume, as a percentage.
-        /// </summary>
         public int CurrentVolume => _device.AudioEndpointVolume.MasterVolumeLevelScalar.ToPercentage();
 
         public int MaxVolume { get; private set; }
@@ -80,9 +59,6 @@ namespace QuietTime.Services
             _device.AudioEndpointVolume.MasterVolumeLevelScalar = newLevel;
         }
 
-        /// <summary>
-        /// Locks the maximum allowed volume.
-        /// </summary>
         public void SwitchLock(int newMaxVolume)
         {
             IsLocked = !IsLocked;

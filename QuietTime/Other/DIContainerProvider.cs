@@ -64,7 +64,7 @@ namespace QuietTime.Other
 
             services.AddSingleton<ScheduleJobFactory>();
             services.AddSingleton<IScheduler>(scheduler);
-            services.AddTransient<Scheduler>();
+            services.AddTransient<ISchedulingService, Scheduler>();
 
             // notifications
             services.AddSingleton<TaskbarIcon>();
@@ -74,7 +74,6 @@ namespace QuietTime.Other
 
             // audio
             services.AddTransient<MMDeviceEnumerator>();
-
             services.AddSingleton<IAudioLocker, AudioLocker>();
 
             // serialization

@@ -24,7 +24,7 @@ namespace QuietTime.ViewModels
     /// </summary>
     public class ScheduleWindowVM : ViewModelBase
     {
-        private readonly Scheduler _scheduler;
+        private readonly ISchedulingService _scheduler;
         private readonly Serializer _serializer;
         private readonly INotifier _notifier;
 
@@ -33,7 +33,7 @@ namespace QuietTime.ViewModels
         /// </summary>
         /// <param name="scheduler">Used to pass schedules created here into the scheduling back-end.</param>
         /// <param name="serializer">Handles serialization of user's schedules.</param>
-        public ScheduleWindowVM(Scheduler scheduler, Serializer serializer, INotifier notifier)
+        public ScheduleWindowVM(ISchedulingService scheduler, Serializer serializer, INotifier notifier)
         {
             _scheduler = scheduler;
             _serializer = serializer;
