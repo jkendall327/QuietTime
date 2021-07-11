@@ -41,7 +41,8 @@ namespace QuietTime.Other
         {
             // configuration
             IConfiguration configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
+                // using Directory.GetCurrentDirectory() here breaks when launching from shortcut file
+                .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 

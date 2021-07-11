@@ -1,9 +1,8 @@
-﻿using IWshRuntimeLibrary;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using QuietTime.Core.Other;
 using QuietTime.Core.Services;
-using QuietTime.Other;
 using QuietTime.ViewModels;
+using ShellLink;
 using System;
 using System.IO;
 using File = System.IO.File;
@@ -29,30 +28,15 @@ namespace QuietTime.Services
             _logger = logger;
         }
 
-        private string ShortcutPath()
-        {
-            var startupFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
-            return Path.Combine(startupFolderPath, @"QuietTime.lnk");
-        }
+        private string ShortcutPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Startup), @"QuietTime.lnk");
+        private string AppLocation => Path.Combine(AppContext.BaseDirectory, @"QuietTime.exe");
 
         /// <summary>
         /// Sets program to start when user signs-in.
         /// </summary>
         public void SetStartup()
         {
-            var shortcutPath = ShortcutPath();
-
-            if (File.Exists(shortcutPath)) return;
-
-            // COM interop
-            var shell = new WshShell();
-            var sc = (IWshShortcut)shell.CreateShortcut(shortcutPath);
-
-            sc.Description = "QuietTime";
-            sc.WorkingDirectory = Directory.GetCurrentDirectory();
-            sc.TargetPath = Path.Combine(sc.WorkingDirectory, @"QuietTime.exe");
-
-            sc.Save();
+            Shortcut.CreateShortcut(AppLocation).WriteToFile(ShortcutPath);
 
             _logger.LogInformation(EventIds.AutomaticStartupAdded, "Added shortcut to shell:startup.");
 
@@ -66,13 +50,11 @@ namespace QuietTime.Services
         /// </summary>
         public void RemoveStartup()
         {
-            var shortcutPath = ShortcutPath();
-
-            if (!File.Exists(shortcutPath)) return;
+            if (!File.Exists(ShortcutPath)) return;
 
             try
             {
-                File.Delete(shortcutPath);
+                File.Delete(ShortcutPath);
 
                 _logger.LogInformation(EventIds.AutomaticStartupRemoved, "Removed shortcut from shell:startup.");
 
@@ -85,7 +67,7 @@ namespace QuietTime.Services
                 _logger.LogError(EventIds.AutomaticStartupRemoved, ex, "Exception when removing shortcut from shell:startup.");
 
                 _notifications.SendNotification("Error",
-                    "An error ocurred when deleting QuietTime's shortcut. You can try again or delete the shortcut manually to stop the program from automatically starting. Enter 'shell:startup' in Windows Explorer to find it.",
+                    "An error ocurred when deleting QuietTime's shortcut. You can delete the shortcut manually to stop it automatically starting. Enter 'shell:startup' in Windows Explorer to find it.",
                     MessageLevel.Error);
             }
         }

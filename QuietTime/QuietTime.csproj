@@ -33,18 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="IWshRuntimeLibrary">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Resource Include="Resources\clock.png" />
     <Resource Include="Resources\home.png" />
     <Resource Include="Resources\lock.png" />
@@ -70,6 +58,7 @@
     <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="NReco.Logging.File" Version="1.1.1" />
     <PackageReference Include="Quartz" Version="3.3.2" />
+    <PackageReference Include="securifybv.ShellLink" Version="0.1.0" />
   </ItemGroup>
 
   <ItemGroup>
