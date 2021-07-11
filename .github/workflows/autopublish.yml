@@ -51,12 +51,15 @@ jobs:
         release_name: V${{ github.run_number }}
         tag_name: ${{ github.run_number }}
 
+    - name: Debug print
+      run: dir ${{steps.download_artifact.outputs.download-path}}
+
     - name: Upload attachment
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{steps.download_artifact.outputs.download-path}}
+        asset_path: ${{steps.download_artifact.outputs.download-path}}/app.zip
         asset_name: Quiet-Time-v${{ github.run_number }}.zip
         asset_content_type: application/zip
