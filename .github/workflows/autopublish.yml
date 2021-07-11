@@ -56,6 +56,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app.zip
+        asset_path: app
         asset_name: Quiet-Time-v${{ github.run_number }}.zip
         asset_content_type: application/zip
