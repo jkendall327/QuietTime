@@ -18,20 +18,14 @@ using System.Threading.Tasks;
 namespace QuietTime.Services
 {
     /// <summary>
-    /// Encapsulates serializing a user's schedules.
+    /// <inheritdoc cref="ISerializer"/>
     /// </summary>
-    public class Serializer
+    internal class Serializer : ISerializer
     {
         private readonly IConfiguration _config;
         private readonly ILogger<Serializer> _logger;
         private readonly INotifier _notifications;
 
-        /// <summary>
-        /// Creates a new <see cref="Serializer"/>.
-        /// </summary>
-        /// <param name="config">Program configuration for this class.</param>
-        /// <param name="logger">Logging framework for this class.</param>
-        /// <param name="notifications">Notification service for this class.</param>
         public Serializer(IConfiguration config, ILogger<Serializer> logger, INotifier notifications)
         {
             _config = config;
@@ -41,11 +35,11 @@ namespace QuietTime.Services
 
         private string filepath => _config.GetValue<string>("SerializedDataFilename");
 
-        internal IEnumerable<Schedule> DeserializeSchedules()
+        public IEnumerable<Schedule> DeserializeSchedules()
         {
             if (!File.Exists(filepath))
             {
-                _logger.LogError(EventIds.DeserializationError, "Schedules file {filepath} was not found.", filepath);
+                _logger.LogError(EventIds.Deserialization, "Schedules file {filepath} was not found.", filepath);
                 return Enumerable.Empty<Schedule>();
             }
 
@@ -58,37 +52,22 @@ namespace QuietTime.Services
 
                 if (result is null)
                 {
-                    _logger.LogError(EventIds.DeserializationError, "File {file} was null on deserialization.", filepath);
+                    _logger.LogError(EventIds.Deserialization, "File {file} was null on deserialization.", filepath);
                     return Enumerable.Empty<Schedule>();
                 }
 
-                _logger.LogInformation(EventIds.DeserializationSuccess, "File {file} deserialized successfully.", filepath);
+                _logger.LogInformation(EventIds.Deserialization, "File {file} deserialized successfully.", filepath);
 
                 return result.Select(r => r.ToSchedule());
             }
-            catch (FileNotFoundException ex)
-            {
-                _logger.LogError(EventIds.DeserializationError, ex, "File {filepath} was not found.", filepath);
-                return Enumerable.Empty<Schedule>();
-            }
-            catch (ArgumentNullException ex)
-            {
-                _logger.LogError(EventIds.DeserializationError, ex, "Argument was null when deserializing {file}.", filepath);
-                return Enumerable.Empty<Schedule>();
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogError(EventIds.DeserializationError, ex, "Improper JSON detected while deserializing {file}.", filepath);
-                return Enumerable.Empty<Schedule>();
-            }
             catch (Exception ex)
             {
-                _logger.LogError(EventIds.DeserializationError, ex, "Exception while loading or deserializing {file}.", filepath);
+                _logger.LogError(EventIds.Deserialization, ex, "Exception while loading or deserializing {file}.", filepath);
                 return Enumerable.Empty<Schedule>();
             }
         }
 
-        internal async Task SerializeSchedulesAsync(ObservableCollection<Schedule> schedules)
+        public async Task SerializeSchedulesAsync(IEnumerable<Schedule> schedules)
         {
             var dtos = schedules.Select(s => new ScheduleDTO(s));
 
@@ -101,17 +80,12 @@ namespace QuietTime.Services
                     WriteIndented = true
                 });
 
-                _logger.LogInformation(EventIds.SerializationSuccess, "File {file} serialized succesfully.", filepath);
+                _logger.LogInformation(EventIds.Serialization, "File {file} serialized succesfully.", filepath);
                 _notifications.SendNotification("Success", "Your schedules have been successfully saved.", MessageLevel.Information);
-            }
-            catch (FileNotFoundException ex)
-            {
-                _logger.LogError(EventIds.SerializationError, ex, "File {file} loaded from app config file was not found}.", filepath);
-                _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", MessageLevel.Information);
             }
             catch (Exception ex)
             {
-                _logger.LogError(EventIds.SerializationError, ex, "Exception when deserializing {file}.", filepath);
+                _logger.LogError(EventIds.Serialization, ex, "Exception when deserializing {file}.", filepath);
                 _notifications.SendNotification("Error", "There was an issue saving your schedules. You may have to restart QuietTime and try again.", MessageLevel.Information);
             }
         }

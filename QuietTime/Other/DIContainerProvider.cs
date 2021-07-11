@@ -78,7 +78,7 @@ namespace QuietTime.Other
             services.AddSingleton<IAudioLocker, AudioLocker>();
 
             // serialization
-            services.AddTransient<Serializer>();
+            services.AddTransient<ISerializer, Serializer>();
 
             // autostart
             services.AddTransient<Autostarter>();
