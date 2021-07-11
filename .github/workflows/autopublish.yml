@@ -39,11 +39,6 @@ jobs:
       with:
         name: app
 
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-
     - name: Create GitHub release
       uses: actions/create-release@v1
       id: create_release
@@ -54,7 +49,6 @@ jobs:
         prerelease: false
         release_name: V${{ github.run_number }}
         tag_name: ${{ github.run_number }}
-        body_path: docs\CHANGELOG.MD
 
     - name: Upload attachment
       uses: actions/upload-release-asset@v1
