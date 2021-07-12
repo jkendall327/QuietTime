@@ -10,7 +10,7 @@ using QuietTime.Services;
 
 namespace QuietTime.ViewModels
 {
-    public class TrayIconVM : AudioAwareBaseVM
+    internal class TrayIconVM : AudioAwareBaseVM
     {
         public TrayIconVM(IAudioLocker audio) : base(audio)
         {

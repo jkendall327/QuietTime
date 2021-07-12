@@ -12,7 +12,7 @@ using System.Windows.Input;
 
 namespace QuietTime.ViewModels
 {
-    public class MainPageVM : AudioAwareBaseVM
+    internal class MainPageVM : AudioAwareBaseVM
     {
         public int NewMaxVolume
         {

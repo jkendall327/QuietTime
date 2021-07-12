@@ -8,6 +8,7 @@
         xmlns:views="clr-namespace:QuietTime.Views"
         xmlns:components="clr-namespace:QuietTime.Controls"
         d:DataContext="{d:DesignInstance Type=viewmodels:HostViewModel}"
+        x:ClassModifier="internal"
         Title="QuietTime" Height="450" Width="800" 
         MinHeight="500" MinWidth="790"
         FocusManager.FocusedElement="{Binding ElementName=MainContent}">

@@ -6,7 +6,7 @@ namespace QuietTime.ViewModels
     /// <summary>
     /// Viewmodel for a settings page.
     /// </summary>
-    public class SettingsPageVM : ViewModelBase
+    internal class SettingsPageVM : ViewModelBase
     {
         public bool LaunchOnStartup
         {

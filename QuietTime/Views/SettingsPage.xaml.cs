@@ -18,7 +18,7 @@ namespace QuietTime.Views
     /// <summary>
     /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class SettingsPage : UserControl
+    internal partial class SettingsPage : UserControl
     {
         public SettingsPage()
         {

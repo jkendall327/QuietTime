@@ -2,5 +2,5 @@
 
 namespace QuietTime.ViewModels
 {
-    public class ViewModelBase : ObservableObject { }
+    internal class ViewModelBase : ObservableObject { }
 }

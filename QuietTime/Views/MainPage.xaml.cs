@@ -18,7 +18,7 @@ namespace QuietTime.Views
     /// <summary>
     /// Interaction logic for MainTest.xaml
     /// </summary>
-    public partial class MainPage : UserControl
+    internal partial class MainPage : UserControl
     {
         public MainPage()
         {

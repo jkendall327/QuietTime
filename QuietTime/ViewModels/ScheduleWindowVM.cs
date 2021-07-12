@@ -22,7 +22,7 @@ namespace QuietTime.ViewModels
     /// <summary>
     /// Viewmodel for <see cref="QuietTime.Views.ScheduleWindow"/>.
     /// </summary>
-    public class ScheduleWindowVM : ViewModelBase
+    internal class ScheduleWindowVM : ViewModelBase
     {
         private readonly ISchedulingService _scheduler;
         private readonly ISerializer _serializer;

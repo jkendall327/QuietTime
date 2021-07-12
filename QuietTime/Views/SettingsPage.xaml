@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:QuietTime.Views" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels" 
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             x:ClassModifier="internal"
              d:DataContext="{d:DesignInstance Type=viewmodels:SettingsPageVM}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">

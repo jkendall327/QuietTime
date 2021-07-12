@@ -6,7 +6,7 @@ namespace QuietTime.Services
     /// <summary>
     /// Allows navigation between viewmodels by storing the app's current viewmodel.
     /// </summary>
-    public class Navigator
+    internal class Navigator
     {
         private ViewModelBase? _currentViewModel;
         public ViewModelBase CurrentViewModel

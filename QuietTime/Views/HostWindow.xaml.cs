@@ -26,7 +26,7 @@ namespace QuietTime.Views
     /// <summary>
     /// Interaction logic for HostWindow.xaml
     /// </summary>
-    public partial class HostWindow : Window
+    internal partial class HostWindow : Window
     {
         // services
         private readonly ILogger<HostWindow> _logger;

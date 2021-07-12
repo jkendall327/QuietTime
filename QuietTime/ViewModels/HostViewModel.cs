@@ -9,7 +9,7 @@ using QuietTime.Services;
 
 namespace QuietTime.ViewModels
 {
-    public class HostViewModel : ViewModelBase
+    internal class HostViewModel : ViewModelBase
     {
         Navigator _navigator;
 

@@ -11,7 +11,7 @@ using QuietTime.Services;
 
 namespace QuietTime.ViewModels
 {
-    public class NavigationBarVM
+    internal class NavigationBarVM
     {
         public ICommand NavigateCommand { get; set; }
 

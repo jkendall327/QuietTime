@@ -18,7 +18,7 @@ namespace QuietTime.Views
     /// <summary>
     /// Interaction logic for SchedulePage.xaml
     /// </summary>
-    public partial class SchedulePage : UserControl
+    internal partial class SchedulePage : UserControl
     {
         public SchedulePage()
         {

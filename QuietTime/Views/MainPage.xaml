@@ -6,6 +6,7 @@
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:others="clr-namespace:QuietTime.Core.Other;assembly=QuietTime.Core"
+             x:ClassModifier="internal"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
              d:Background="{StaticResource UnlockedBackgroundBrush}"
              mc:Ignorable="d" 
