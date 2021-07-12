@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:others="clr-namespace:QuietTime.Core.Other"
+             xmlns:others="clr-namespace:QuietTime.Core.Other;assembly=QuietTime.Core"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
              d:Background="{StaticResource UnlockedBackgroundBrush}"
              mc:Ignorable="d" 
@@ -13,16 +13,7 @@
              Focusable="True" FocusManager.FocusedElement="{Binding ElementName=LockButton}">
     
     <!--FocusManager sets default focus to the lock button, which enables keyboard commands for some reason-->
-    
-    <!--Keyboard commands for locking audio or changing max volume-->
-    <UserControl.InputBindings>
-        <KeyBinding Modifiers="Control" Key="L" Command="{Binding LockVolume}" />
-
-        <KeyBinding Key="Up" Command="{Binding ChangeVolumeCommand}" CommandParameter="5"/>
-        <KeyBinding Key="Right" Command="{Binding ChangeVolumeCommand}" CommandParameter="5"/>
-        <KeyBinding Key="Down" Command="{Binding ChangeVolumeCommand}" CommandParameter="-5"/>
-        <KeyBinding Key="Left" Command="{Binding ChangeVolumeCommand}" CommandParameter="-5"/>
-    </UserControl.InputBindings>
+   
 
     <UserControl.Resources>
         <Style TargetType="Label">
@@ -35,8 +26,19 @@
         <Image x:Key="lockedImage" Source="../Resources/lock.png"/>
         <Image x:Key="unlockedImage" Source="../Resources/unlock.png"/>
 
-        <others:VolumeAmount></others:VolumeAmount>
+        <others:VolumeAmounts x:Key="smallIncrease">SmallIncrease</others:VolumeAmounts>
+        <others:VolumeAmounts x:Key="smallDecrease">SmallDecrease</others:VolumeAmounts>
     </UserControl.Resources>
+
+    <!--Keyboard commands for locking audio or changing max volume-->
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Control" Key="L" Command="{Binding LockVolume}" />
+
+        <KeyBinding Key="Up" Command="{Binding ChangeVolumeCommand}" CommandParameter="{StaticResource smallIncrease}"/>
+        <KeyBinding Key="Right" Command="{Binding ChangeVolumeCommand}" CommandParameter="{StaticResource smallIncrease}"/>
+        <KeyBinding Key="Down" Command="{Binding ChangeVolumeCommand}" CommandParameter="{StaticResource smallDecrease}"/>
+        <KeyBinding Key="Left" Command="{Binding ChangeVolumeCommand}" CommandParameter="{StaticResource smallDecrease}"/>
+    </UserControl.InputBindings>
 
     <!--Make background change when audio is locked-->
     <UserControl.Style>
