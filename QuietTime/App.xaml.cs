@@ -1,20 +1,11 @@
-﻿using Hardcodet.Wpf.TaskbarNotification;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NAudio.CoreAudioApi;
-using Quartz;
-using Quartz.Impl;
-using QuietTime.Other;
-using QuietTime.Services;
-using QuietTime.ViewModels;
-using QuietTime.Views;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using Microsoft.Extensions.DependencyInjection;
+using QuietTime.Other;
+using QuietTime.Views;
 
 namespace QuietTime
 {

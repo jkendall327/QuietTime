@@ -28,7 +28,7 @@ namespace QuietTime.Core.Services.Scheduling
         /// </summary>
         /// <param name="key">The unique <see cref="JobKey"/> of the schedule to be paused.</param>
         Task FlipScheduleActivation(JobKey key);
-        
+
         /// <summary>
         /// Pauses all schedules.
         /// </summary>

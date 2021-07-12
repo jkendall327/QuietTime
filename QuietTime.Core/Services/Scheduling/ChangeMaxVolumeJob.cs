@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using QuietTime.Core.Other;
-using System.Threading.Tasks;
 
 namespace QuietTime.Core.Services.Scheduling
 {

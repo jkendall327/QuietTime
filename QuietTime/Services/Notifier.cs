@@ -1,8 +1,8 @@
-﻿using Hardcodet.Wpf.TaskbarNotification;
+﻿using System.Windows.Threading;
+using Hardcodet.Wpf.TaskbarNotification;
 using QuietTime.Core.Other;
 using QuietTime.Core.Services;
 using QuietTime.Other;
-using System.Windows.Threading;
 
 namespace QuietTime.Services
 {

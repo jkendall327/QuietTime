@@ -1,21 +1,15 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.Input;
-using QuietTime.Core.Services.Scheduling;
-using QuietTime.Core.Models;
-using QuietTime.Other;
-using QuietTime.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Toolkit.Mvvm.Input;
+using QuietTime.Core.Models;
 using QuietTime.Core.Other;
 using QuietTime.Core.Services;
+using QuietTime.Core.Services.Scheduling;
+using QuietTime.Other;
+using QuietTime.Services;
 
 namespace QuietTime.ViewModels
 {
@@ -185,8 +179,8 @@ namespace QuietTime.ViewModels
 
             if (Schedules.Any(x => x.Overlaps(newSchedule)))
             {
-                _notifier.SendNotification(title: "Error", 
-                    message: "This schedule overlaps with an existing schedule.", 
+                _notifier.SendNotification(title: "Error",
+                    message: "This schedule overlaps with an existing schedule.",
                     level: MessageLevel.Error);
 
                 return;

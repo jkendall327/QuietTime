@@ -1,5 +1,5 @@
-﻿using QuietTime.Core.Models;
-using System;
+﻿using System;
+using QuietTime.Core.Models;
 
 namespace QuietTime.Core.Other
 {

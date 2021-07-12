@@ -11,8 +11,8 @@ namespace QuietTime.ViewModels
         public bool LaunchOnStartup
         {
             get { return _launchOnStartup; }
-            set 
-            { 
+            set
+            {
                 SetProperty<bool>(ref _launchOnStartup, value);
 
                 if (LaunchOnStartup)

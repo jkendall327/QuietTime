@@ -11,7 +11,7 @@ namespace QuietTime.Models
         public string? KeyGroup { get; private set; }
         public string? KeyName { get; private set; }
 
-        public string Start { get; set;}
+        public string Start { get; set; }
         public string End { get; set; }
 
         public int VolumeDuring { get; set; }

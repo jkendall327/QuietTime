@@ -1,10 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Quartz;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using QuietTime.Core.Services.Scheduling;
+using Microsoft.Extensions.Logging;
+using Quartz;
 using QuietTime.Core.Models;
 using QuietTime.Core.Other;
 
@@ -57,9 +56,8 @@ namespace QuietTime.Core.Services.Scheduling
             return job.Key;
         }
 
-        private ITrigger MakeTrigger(string guid, string dateTimeOffset, int volume)
-        {
-            return TriggerBuilder.Create()
+        private static ITrigger MakeTrigger(string guid, string dateTimeOffset, int volume) =>
+            TriggerBuilder.Create()
                 .WithIdentity(NewGuid, guid)
                 // put the volume into the trigger so we can get it when the job fires
                 .UsingJobData(new JobDataMap() { { ChangeMaxVolumeJob.VolumeKey, volume } })
@@ -71,7 +69,6 @@ namespace QuietTime.Core.Services.Scheduling
                 })
                 .WithDescription($"Set max volume to {volume}.")
                 .Build();
-        }
 
         public async Task<bool> DeleteScheduleAsync(JobKey key)
         {

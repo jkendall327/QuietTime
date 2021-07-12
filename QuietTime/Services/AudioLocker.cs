@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
 using QuietTime.Core.Other;
 using QuietTime.Core.Services;
-using System;
 
 namespace QuietTime.Services
 {
@@ -68,8 +68,8 @@ namespace QuietTime.Services
             _log.LogInformation(EventIds.MaxVolumeChanged, "Max volume changed to {max}", MaxVolume);
 
             _notificationService.SendNotification(
-                "Max volume changed", 
-                $"Your maximum volume has been set to {MaxVolume}.", 
+                "Max volume changed",
+                $"Your maximum volume has been set to {MaxVolume}.",
                 MessageLevel.Information);
 
             if (IsLocked)

@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using Quartz;
 using Quartz.Spi;
-using System;
 
 namespace QuietTime.Core.Services.Scheduling
 {

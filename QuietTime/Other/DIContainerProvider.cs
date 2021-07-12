@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NAudio.CoreAudioApi;
-using Quartz.Impl;
 using Quartz;
+using Quartz.Impl;
+using QuietTime.Core.Services;
+using QuietTime.Core.Services.Scheduling;
 using QuietTime.Services;
 using QuietTime.ViewModels;
 using QuietTime.Views;
-using System.Windows.Threading;
-using System.Windows;
-using Microsoft.Extensions.Logging;
-using QuietTime.Core.Services.Scheduling;
-using QuietTime.Core.Services;
 
 namespace QuietTime.Other
 {
@@ -21,7 +21,7 @@ namespace QuietTime.Other
     /// Encapsulates setting up DI for the project.
     /// </summary>
     internal class DIContainerProvider
-    { 
+    {
         public async Task<ServiceProvider> GetContainer()
         {
             var services = new ServiceCollection();

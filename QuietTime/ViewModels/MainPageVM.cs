@@ -1,14 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
+﻿using System;
+using System.Windows.Input;
+using Microsoft.Extensions.Logging;
 using Microsoft.Toolkit.Mvvm.Input;
 using QuietTime.Core.Other;
 using QuietTime.Core.Services;
 using QuietTime.Other;
-using QuietTime.Services;
-using System;
-using System.IO;
-using System.Reflection;
-using System.Windows.Input;
 
 namespace QuietTime.ViewModels
 {

@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.IO;
+using Microsoft.Extensions.Logging;
 using QuietTime.Core.Other;
 using QuietTime.Core.Services;
 using QuietTime.ViewModels;
 using ShellLink;
-using System;
-using System.IO;
 using File = System.IO.File;
 
 namespace QuietTime.Services
