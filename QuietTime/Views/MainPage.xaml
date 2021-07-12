@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:QuietTime.ViewModels"
              xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:others="clr-namespace:QuietTime.Core.Other"
              d:DataContext="{d:DesignInstance Type=viewmodels:MainPageVM}"
              d:Background="{StaticResource UnlockedBackgroundBrush}"
              mc:Ignorable="d" 
@@ -33,6 +34,8 @@
         
         <Image x:Key="lockedImage" Source="../Resources/lock.png"/>
         <Image x:Key="unlockedImage" Source="../Resources/unlock.png"/>
+
+        <others:VolumeAmount></others:VolumeAmount>
     </UserControl.Resources>
 
     <!--Make background change when audio is locked-->
