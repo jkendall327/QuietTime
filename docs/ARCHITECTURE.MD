@@ -1,12 +1,18 @@
 ﻿# Guide to the QuietTime source
 
-QuietTime is a small project. If you are familiar with WPF and MVVM, nothing should be too surprising. The most interesting classes are the `AudioService` and `SchedulerService`. These implement audio interfacing and job scheduling, respectively.
+QuietTime is a small project. If you are familiar with WPF and MVVM, nothing should be too surprising. The most interesting classes are the `AudioService` and `SchedulerService`. These implement audio interfacing and job scheduling.
 
-## Controls
+## Projects
 
-The `NavigationBar` is what lets you switch between screens.
+The QuietTime project houses the WPF application with UI concerns and Windows-specific service implementations.
 
-The `TrayIcon` is for the icon in the system tray and its context menu.
+QuietTime.Core contains domain objects, interfaces and portable code.
+
+## QuietTime.Controls
+
+The `NavigationBar` handles switching between screens.
+
+The `TrayIcon` is for the system tray icon and its context menu.
 
 ## Models
 
@@ -16,13 +22,15 @@ The `ScheduleDTO` is used for serializing awkward `TimeOnly` and `JobKey` proper
 
 ## Services
 
-The `AudioService` encapsulates the user's actual audio hardware. It is what actually limits your audio. It provides events for when the user's volume has changed levels, or when the volume is locked/unlocked.
+The `IAudioLocker` interface and `AudioLocker` implementation encapsulate the user's actual audio hardware. It is what actually limits your audio. It provides events for when the user's volume has changed levels, or when the volume is locked/unlocked.
 
-The `Scheduler` encapsulates queueing up a Schedule for later execution. Currently, all Schedules are a start point and an end point that repeats daily. This class is essentially a wrapper for Quartz.NET.
+The `AudioLocker` implementation is in the UI layer because it relies on a Windows-specific NuGet package and I didn't want that tied to the domain project.
 
-The `Notifier` encapsulates sending messages to the user (currently only through toast notifications). It does this with Hardcodet's `TrayIcon` class, out of convenience, but this implementation could be easily swapped out.
+The `IScheduler` and `Scheduler` encapsulate queueing up a Schedule for later execution. Currently, all Schedules are a start point and an end point that repeats daily. This current implementation is essentially a wrapper for Quartz.NET.
 
-The `Serializer` encapsulates saving a user's Schedules, with appropriate error-handling.
+`INotifier` and `Notifier` encapsulate sending messages to the user through toast notifications. It currently does this with Hardcodet's `TrayIcon` class, out of convenience.
+
+`ISerializer` and `Serializer` encapsulate saving a user's Schedules, with appropriate error-handling.
 
 The `Navigator` handles MVVM navigation between ViewModels.
 
@@ -44,16 +52,22 @@ The `HostWindow` 'contains' the various Page files as well as the `NavigationBar
 
 ## Startup
 
-The program is instantiated in the code-behind to App.xaml. Command-line arguments are also processed here.
+The program root is found in the code-behind to App.xaml. This is where DI is set up.
 
 ## Other
 
-The Converters class lets WPF handle more data than it can by default. For instance, translating a `TimeOnly` property into a `DateTime` object for UI display.
+The Converters file contains classes that let WPF handle more data than it can by default. For instance, translating a `TimeOnly` property into a `DateTime` object for UI display.
 
-The `Extensions` class contains static extension methods that had no home elsewhere.
+The `Extensions` class contains static extension methods.
 
-The `EventIds` class provides a strongly-typed way to add extra information to log files.
+The `EventIds` class provides strongly-typed event classification for log files.
+
+The `MessageLevel` enum provides strongly-typed importance levels for user-facing notifications.
+
+The `VolumeAmounts` enum is for changing the current max volume in discrete steps rather than hard-coded numbers.
 
 The `DIContainerProvider` encapsulates setting up dependency injection for the app.
 
 `UserSettings` is a strongly-typed way of getting and storing user settings.
+
+The `BindingProxy` class is used to work around a limitation of WPF's databinding for context-menus on elements outside of the visual tree (in this case, the system tray icon).

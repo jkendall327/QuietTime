@@ -45,7 +45,13 @@ QuietTime is made with WPF and targets the .NET 6.0 runtime (how exciting!). It 
 
 The slider on the main screen is very ugly. I'm planning to change it once I figure out control templates in WPF.
 
-The program has essentially no unit tests, which I aim to fix.
+The program has essentially no unit tests.
+
+Once I get more comfortable with GitHub Actions I'd like to automate releases.
+
+I'm interested in adding more options for accessibility, such as a high-contrast mode and screen-reader automation for custom controls.
+
+I plan to make QuietTime open for localization into other languages.
 
 I have only tested QuietTime on my personal set-up. Please let me know if something doesn't work on your system!
 
