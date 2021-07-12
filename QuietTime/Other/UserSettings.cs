@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace QuietTime.Other
 {
-    class UserSettings
+    internal class UserSettings
     {
         private UserSettings() { }
 

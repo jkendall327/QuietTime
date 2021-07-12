@@ -12,7 +12,7 @@ namespace QuietTime.Services
     /// <summary>
     /// Encapsulates letting QuietTime automatically start on sign-in.
     /// </summary>
-    public class Autostarter
+    internal class Autostarter
     {
         private readonly INotifier _notifications;
         private readonly ILogger<SettingsPageVM> _logger;

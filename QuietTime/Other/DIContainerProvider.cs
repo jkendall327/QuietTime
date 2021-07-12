@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +20,7 @@ namespace QuietTime.Other
     /// <summary>
     /// Encapsulates setting up DI for the project.
     /// </summary>
-    class DIContainerProvider
+    internal class DIContainerProvider
     { 
         public async Task<ServiceProvider> GetContainer()
         {

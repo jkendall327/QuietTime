@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace QuietTime.Other
 {
     /// <summary>
     /// Used so the tray icon can inherit DataContext: https://thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/
     /// </summary>
-    public class BindingProxy : Freezable
+    internal class BindingProxy : Freezable
     {
         protected override Freezable CreateInstanceCore()
         {
