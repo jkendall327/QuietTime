@@ -30,6 +30,7 @@
     <None Remove="Resources\lock.png" />
     <None Remove="Resources\settings.png" />
     <None Remove="Resources\unlock.png" />
+    <None Remove="Models\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -78,6 +79,18 @@
     <None Update="usersettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Models\**" />
   </ItemGroup>
 
 </Project>

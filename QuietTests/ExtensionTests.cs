@@ -1,7 +1,7 @@
 using System;
 using FluentAssertions;
-using QuietTime.Core.Models;
-using QuietTime.Core.Other;
+using QuietTime.Core.AudioLocking;
+using QuietTime.Core.Scheduling;
 using Xunit;
 
 namespace QuietTests
@@ -13,7 +13,7 @@ namespace QuietTests
         [Theory]
         public void ToPercentage_ShouldNormalizeValues_WhenBelowZeroOrAboveOne(float value, int expected)
         {
-            var actual = Extensions.ToPercentage(value);
+            var actual = AudioLockerExtensions.ToPercentage(value);
 
             actual.Should().Be(expected);
         }

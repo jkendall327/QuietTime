@@ -4,8 +4,8 @@ using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using QuietTime.Other;
-using QuietTime.Views;
+using QuietTime.Settings;
+using QuietTime.Wpf.Views;
 
 namespace QuietTime
 {
@@ -13,7 +13,7 @@ namespace QuietTime
     {
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            var services = await new DIContainerProvider().GetContainer();
+            var services = await new ContainerProvider().GetContainer();
 
             var main = services.GetRequiredService<HostWindow>();
 
